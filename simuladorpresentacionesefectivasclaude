@@ -1,0 +1,1610 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Simulador de Presentaciones Efectivas</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --bg: #f0f4f8;
+    --surface: #ffffff;
+    --surface2: #f8fafc;
+    --primary: #3b5bdb;
+    --primary-light: #e8ecfd;
+    --primary-dark: #2c44b0;
+    --accent: #0ea5e9;
+    --success: #16a34a;
+    --success-light: #dcfce7;
+    --danger: #dc2626;
+    --danger-light: #fee2e2;
+    --warning: #d97706;
+    --warning-light: #fef3c7;
+    --text: #1e293b;
+    --text2: #475569;
+    --text3: #94a3b8;
+    --border: #e2e8f0;
+    --radius: 12px;
+    --shadow: 0 2px 12px rgba(0,0,0,0.08);
+    --shadow-lg: 0 8px 32px rgba(0,0,0,0.14);
+  }
+  body {
+    font-family: 'Segoe UI', system-ui, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  .screen { display: none; min-height: 100vh; }
+  .screen.active { display: flex; flex-direction: column; }
+
+  /* HEADER */
+  .sim-header {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 14px 24px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    position: sticky; top: 0; z-index: 100;
+  }
+  .sim-logo {
+    width: 36px; height: 36px; background: var(--primary);
+    border-radius: 8px; display: flex; align-items: center; justify-content: center;
+    color: white; font-size: 18px;
+  }
+  .sim-title { font-size: 16px; font-weight: 600; color: var(--text); }
+  .sim-subtitle { font-size: 12px; color: var(--text3); }
+  .progress-bar-wrap { flex: 1; max-width: 300px; }
+  .progress-label { font-size: 11px; color: var(--text3); margin-bottom: 4px; }
+  .progress-track { height: 6px; background: var(--border); border-radius: 3px; overflow: hidden; }
+  .progress-fill { height: 100%; background: var(--primary); border-radius: 3px; transition: width 0.4s ease; }
+  .score-badge {
+    background: var(--primary-light); color: var(--primary);
+    padding: 6px 14px; border-radius: 20px; font-size: 13px; font-weight: 600;
+    margin-left: auto;
+  }
+
+  /* WELCOME SCREEN */
+  .welcome-hero {
+    flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center;
+    padding: 40px 24px; text-align: center;
+  }
+  .stage-illustration {
+    width: 340px; height: 220px; position: relative; margin-bottom: 32px;
+  }
+  .stage-bg {
+    width: 100%; height: 100%; background: linear-gradient(160deg, #1e3a5f 0%, #0f2547 100%);
+    border-radius: 20px; overflow: hidden; position: relative;
+  }
+  .stage-curtain-l, .stage-curtain-r {
+    position: absolute; top: 0; width: 60px; height: 100%;
+    background: linear-gradient(90deg, #6b1515, #8b1a1a);
+  }
+  .stage-curtain-l { left: 0; }
+  .stage-curtain-r { right: 0; background: linear-gradient(270deg, #6b1515, #8b1a1a); }
+  .stage-screen {
+    position: absolute; top: 20px; left: 70px; right: 70px; height: 80px;
+    background: #e2e8f0; border-radius: 6px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 11px; color: #475569; font-weight: 600;
+  }
+  .stage-podium {
+    position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%);
+    width: 50px;
+  }
+  .podium-base {
+    width: 50px; height: 12px; background: #4a5568; border-radius: 4px;
+  }
+  .podium-stem {
+    width: 30px; height: 20px; background: #4a5568; border-radius: 4px;
+    margin: 0 auto;
+  }
+  .presenter {
+    position: absolute; bottom: 32px; left: 50%; transform: translateX(-50%);
+    display: flex; flex-direction: column; align-items: center;
+  }
+  .pres-head {
+    width: 22px; height: 22px; background: #f6c090; border-radius: 50%;
+    border: 2px solid #e5a070;
+  }
+  .pres-body {
+    width: 30px; height: 35px; background: #3b5bdb; border-radius: 4px 4px 0 0;
+    margin-top: 2px;
+  }
+  .pres-arm-l, .pres-arm-r {
+    position: absolute; width: 10px; height: 20px;
+    background: #3b5bdb; border-radius: 4px; top: 24px;
+  }
+  .pres-arm-l { left: -8px; transform: rotate(20deg); }
+  .pres-arm-r { right: -8px; transform: rotate(-20deg); }
+  .audience-row {
+    position: absolute; bottom: 0; left: 0; right: 0;
+    display: flex; justify-content: space-around; padding: 0 8px 6px;
+  }
+  .aud-head {
+    width: 14px; height: 14px; border-radius: 50%;
+    background: #94a3b8;
+  }
+  .spotlight {
+    position: absolute; top: 0; left: 50%; transform: translateX(-50%);
+    width: 80px; height: 130px;
+    background: radial-gradient(ellipse at top, rgba(255,240,100,0.18) 0%, transparent 80%);
+    pointer-events: none;
+  }
+  .welcome-h1 {
+    font-size: 28px; font-weight: 700; color: var(--text); margin-bottom: 12px;
+  }
+  .welcome-p {
+    font-size: 15px; color: var(--text2); max-width: 480px; line-height: 1.7;
+    margin-bottom: 28px;
+  }
+  .type-cards {
+    display: flex; gap: 14px; margin-bottom: 32px; flex-wrap: wrap; justify-content: center;
+  }
+  .type-card {
+    background: var(--surface); border: 2px solid var(--border);
+    border-radius: var(--radius); padding: 16px 20px; cursor: pointer;
+    transition: all 0.2s; min-width: 140px; text-align: center;
+  }
+  .type-card:hover { border-color: var(--primary); transform: translateY(-2px); box-shadow: var(--shadow); }
+  .type-card.selected { border-color: var(--primary); background: var(--primary-light); }
+  .type-card .tc-icon { font-size: 28px; margin-bottom: 6px; }
+  .type-card .tc-name { font-size: 13px; font-weight: 600; color: var(--text); }
+  .type-card .tc-desc { font-size: 11px; color: var(--text3); margin-top: 3px; }
+  .btn-primary {
+    background: var(--primary); color: white; border: none;
+    padding: 14px 36px; border-radius: 10px; font-size: 16px; font-weight: 600;
+    cursor: pointer; transition: all 0.2s; box-shadow: 0 4px 14px rgba(59,91,219,0.35);
+  }
+  .btn-primary:hover { background: var(--primary-dark); transform: translateY(-1px); }
+  .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+
+  /* MAIN SCENE */
+  .scene-container {
+    flex: 1; display: flex; flex-direction: column;
+  }
+  .scene-top {
+    background: var(--surface); padding: 20px 24px 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .module-nav {
+    display: flex; gap: 6px; overflow-x: auto; padding-bottom: 0;
+  }
+  .mod-tab {
+    padding: 8px 14px; border-radius: 8px 8px 0 0; font-size: 12px;
+    font-weight: 600; cursor: pointer; white-space: nowrap; border: none;
+    background: transparent; color: var(--text3); transition: all 0.2s;
+    border-bottom: 3px solid transparent; position: relative; top: 1px;
+  }
+  .mod-tab.active { color: var(--primary); border-bottom-color: var(--primary); background: var(--primary-light); }
+  .mod-tab.done { color: var(--success); }
+  .mod-tab.locked { opacity: 0.4; cursor: not-allowed; }
+
+  .scene-body {
+    flex: 1; display: flex; gap: 0;
+  }
+
+  /* LEFT: STAGE */
+  .stage-panel {
+    width: 320px; min-width: 280px; background: #1a2744;
+    display: flex; flex-direction: column; align-items: center;
+    padding: 24px 16px; gap: 12px; position: relative;
+  }
+  .stage-screen-big {
+    width: 100%; aspect-ratio: 16/9; background: #f0f4ff;
+    border-radius: 8px; overflow: hidden; border: 3px solid #0a1628;
+    display: flex; align-items: center; justify-content: center;
+    text-align: center; padding: 12px; position: relative;
+  }
+  .stage-screen-content { font-size: 12px; color: #334155; font-weight: 500; }
+  .stage-scene-main {
+    width: 100%; height: 130px; position: relative;
+    background: #0f1f3d; border-radius: 8px; overflow: hidden;
+  }
+  .scene-floor { position: absolute; bottom: 0; width: 100%; height: 30px; background: #162035; }
+  .scene-curtain-l { position: absolute; left: 0; top: 0; width: 28px; height: 100%; background: #6b1010; }
+  .scene-curtain-r { position: absolute; right: 0; top: 0; width: 28px; height: 100%; background: #6b1010; }
+  .scene-presenter {
+    position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%);
+    display: flex; flex-direction: column; align-items: center; transition: all 0.3s;
+  }
+  .sp-head { width: 18px; height: 18px; background: #f6c090; border-radius: 50%; border: 2px solid #e5a070; }
+  .sp-body { width: 26px; height: 32px; background: #3b5bdb; border-radius: 4px 4px 0 0; margin-top: 1px; }
+  .sp-arm-l, .sp-arm-r { position: absolute; width: 8px; height: 18px; background: #3b5bdb; border-radius: 4px; top: 20px; }
+  .sp-arm-l { left: -6px; transform: rotate(15deg); }
+  .sp-arm-r { right: -6px; transform: rotate(-15deg); }
+  .scene-audience {
+    position: absolute; bottom: 0; left: 0; right: 0;
+    display: flex; justify-content: space-around; padding: 0 8px;
+  }
+  .saud { display: flex; flex-direction: column; align-items: center; gap: 2px; }
+  .saud-head { width: 12px; height: 12px; border-radius: 50%; }
+  .saud-body { width: 14px; height: 10px; border-radius: 3px 3px 0 0; }
+  .scene-spotlight {
+    position: absolute; top: 0; left: 50%; transform: translateX(-50%);
+    width: 70px; height: 100%;
+    background: radial-gradient(ellipse at top, rgba(255,240,100,0.12) 0%, transparent 70%);
+  }
+  .emotion-bubble {
+    position: absolute; top: 8px; right: 36px;
+    background: white; border-radius: 12px; padding: 4px 8px;
+    font-size: 14px; box-shadow: var(--shadow); display: none;
+  }
+
+  .stage-feedback {
+    width: 100%; background: #0a1628; border-radius: 8px; padding: 12px;
+  }
+  .stage-feedback .sf-label { font-size: 10px; color: #64748b; font-weight: 600; text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 6px; }
+  .stage-feedback .sf-meters { display: flex; flex-direction: column; gap: 6px; }
+  .meter-row { display: flex; align-items: center; gap: 8px; }
+  .meter-name { font-size: 10px; color: #94a3b8; min-width: 70px; }
+  .meter-track { flex: 1; height: 5px; background: #1e3a5f; border-radius: 3px; overflow: hidden; }
+  .meter-fill { height: 100%; border-radius: 3px; transition: width 0.5s ease; }
+  .meter-fill.blue { background: #3b82f6; }
+  .meter-fill.green { background: #22c55e; }
+  .meter-fill.amber { background: #f59e0b; }
+  .meter-fill.red { background: #ef4444; }
+
+  /* RIGHT: CONTENT */
+  .content-panel {
+    flex: 1; padding: 24px; overflow-y: auto; background: var(--bg);
+  }
+  .module-header {
+    margin-bottom: 20px;
+  }
+  .module-tag {
+    display: inline-block; background: var(--primary-light); color: var(--primary);
+    font-size: 11px; font-weight: 700; padding: 4px 10px; border-radius: 20px;
+    text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 8px;
+  }
+  .module-h2 { font-size: 22px; font-weight: 700; color: var(--text); margin-bottom: 6px; }
+  .module-p { font-size: 14px; color: var(--text2); line-height: 1.7; margin-bottom: 16px; }
+
+  /* CHOICES */
+  .choices-grid { display: flex; flex-direction: column; gap: 10px; }
+  .choice-btn {
+    background: var(--surface); border: 2px solid var(--border);
+    border-radius: var(--radius); padding: 14px 16px; cursor: pointer;
+    text-align: left; font-size: 14px; color: var(--text); font-family: inherit;
+    transition: all 0.2s; display: flex; gap: 12px; align-items: flex-start;
+    width: 100%;
+  }
+  .choice-btn:hover:not(:disabled) { border-color: var(--primary); background: var(--primary-light); }
+  .choice-btn.correct { border-color: var(--success); background: var(--success-light); }
+  .choice-btn.wrong { border-color: var(--danger); background: var(--danger-light); }
+  .choice-btn.neutral { border-color: var(--warning); background: var(--warning-light); }
+  .choice-btn:disabled { cursor: default; }
+  .choice-letter {
+    width: 26px; height: 26px; border-radius: 50%;
+    background: var(--border); color: var(--text2); font-size: 12px;
+    font-weight: 700; display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .choice-btn.correct .choice-letter { background: var(--success); color: white; }
+  .choice-btn.wrong .choice-letter { background: var(--danger); color: white; }
+  .choice-btn.neutral .choice-letter { background: var(--warning); color: white; }
+  .choice-text { flex: 1; line-height: 1.5; }
+  .choice-icon { font-size: 18px; flex-shrink: 0; }
+
+  /* FEEDBACK BOX */
+  .feedback-box {
+    margin-top: 16px; border-radius: var(--radius); padding: 16px 18px;
+    display: none; animation: fadeIn 0.3s ease;
+  }
+  .feedback-box.correct { background: var(--success-light); border-left: 4px solid var(--success); }
+  .feedback-box.wrong { background: var(--danger-light); border-left: 4px solid var(--danger); }
+  .feedback-box.neutral { background: var(--warning-light); border-left: 4px solid var(--warning); }
+  .feedback-box .fb-title { font-size: 14px; font-weight: 700; margin-bottom: 4px; }
+  .feedback-box.correct .fb-title { color: var(--success); }
+  .feedback-box.wrong .fb-title { color: var(--danger); }
+  .feedback-box.neutral .fb-title { color: var(--warning); }
+  .feedback-box .fb-body { font-size: 13px; color: var(--text2); line-height: 1.6; }
+  .feedback-box .fb-tip {
+    margin-top: 8px; font-size: 12px; font-weight: 600; color: var(--primary);
+    padding-top: 8px; border-top: 1px solid rgba(0,0,0,0.06);
+  }
+
+  /* NEXT BTN */
+  .btn-next {
+    margin-top: 20px; background: var(--primary); color: white; border: none;
+    padding: 12px 28px; border-radius: 10px; font-size: 14px; font-weight: 600;
+    cursor: pointer; transition: all 0.2s; display: none;
+  }
+  .btn-next:hover { background: var(--primary-dark); }
+
+  /* SLIDE DESIGNER */
+  .slide-designer { display: flex; flex-direction: column; gap: 16px; }
+  .slide-preview-area {
+    background: #1e293b; border-radius: var(--radius); padding: 16px;
+    display: flex; gap: 12px; flex-wrap: wrap;
+  }
+  .slide-option {
+    flex: 1; min-width: 160px; aspect-ratio: 4/3;
+    border-radius: 8px; overflow: hidden; cursor: pointer;
+    border: 3px solid transparent; transition: all 0.2s; position: relative;
+  }
+  .slide-option:hover { border-color: var(--accent); transform: scale(1.02); }
+  .slide-option.selected { border-color: var(--success); }
+  .slide-option.wrong { border-color: var(--danger); }
+  .slide-label {
+    position: absolute; bottom: 0; left: 0; right: 0;
+    background: rgba(0,0,0,0.6); color: white; font-size: 10px;
+    font-weight: 600; padding: 4px 6px; text-align: center;
+  }
+
+  /* CHECKLIST */
+  .checklist { display: flex; flex-direction: column; gap: 8px; }
+  .check-item {
+    display: flex; align-items: flex-start; gap: 12px; background: var(--surface);
+    border: 1px solid var(--border); border-radius: 10px; padding: 12px 14px;
+    cursor: pointer; transition: all 0.2s;
+  }
+  .check-item:hover { border-color: var(--primary); background: var(--primary-light); }
+  .check-item.checked { border-color: var(--success); background: var(--success-light); }
+  .check-box {
+    width: 22px; height: 22px; border: 2px solid var(--border);
+    border-radius: 6px; flex-shrink: 0; display: flex; align-items: center;
+    justify-content: center; transition: all 0.2s;
+  }
+  .check-item.checked .check-box {
+    background: var(--success); border-color: var(--success); color: white;
+    font-size: 12px;
+  }
+  .check-text { font-size: 13px; color: var(--text); line-height: 1.5; flex: 1; }
+  .check-text strong { display: block; font-weight: 600; margin-bottom: 2px; }
+  .check-text span { color: var(--text2); }
+
+  /* STORYTELLING TIMELINE */
+  .story-arc {
+    background: var(--surface); border-radius: var(--radius); padding: 16px;
+    margin-bottom: 16px;
+  }
+  .arc-steps {
+    display: flex; gap: 0; align-items: stretch; margin: 12px 0;
+    border-radius: 8px; overflow: hidden;
+  }
+  .arc-step {
+    flex: 1; padding: 10px 8px; text-align: center; cursor: pointer;
+    border: none; font-family: inherit; font-size: 12px; font-weight: 600;
+    transition: all 0.2s; position: relative;
+  }
+  .arc-step::after {
+    content: ''; position: absolute; right: -10px; top: 50%;
+    transform: translateY(-50%);
+    border-left: 10px solid currentColor;
+    border-top: 20px solid transparent; border-bottom: 20px solid transparent;
+    z-index: 1;
+  }
+  .arc-step:last-child::after { display: none; }
+
+  /* DRAG & DROP ORDER */
+  .drag-list { display: flex; flex-direction: column; gap: 8px; }
+  .drag-item {
+    background: var(--surface); border: 2px solid var(--border);
+    border-radius: 10px; padding: 12px 14px; cursor: grab;
+    display: flex; align-items: center; gap: 10px; font-size: 13px;
+    transition: all 0.2s; user-select: none;
+  }
+  .drag-item:hover { border-color: var(--primary); }
+  .drag-item.dragging { opacity: 0.5; cursor: grabbing; }
+  .drag-handle { font-size: 16px; color: var(--text3); }
+  .drag-num {
+    width: 24px; height: 24px; background: var(--primary-light); color: var(--primary);
+    border-radius: 50%; font-size: 11px; font-weight: 700;
+    display: flex; align-items: center; justify-content: center;
+  }
+
+  /* TONO SLIDER */
+  .tone-slider-wrap { margin: 16px 0; }
+  .tone-labels { display: flex; justify-content: space-between; font-size: 11px; color: var(--text3); margin-bottom: 6px; }
+  input[type=range].tone-range {
+    width: 100%; height: 8px; -webkit-appearance: none; appearance: none;
+    background: linear-gradient(90deg, #3b5bdb, #0ea5e9, #16a34a);
+    border-radius: 4px; outline: none; cursor: pointer;
+  }
+  input[type=range].tone-range::-webkit-slider-thumb {
+    -webkit-appearance: none; width: 22px; height: 22px;
+    border-radius: 50%; background: white; border: 3px solid var(--primary);
+    cursor: pointer; box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+  }
+
+  /* HUMOR CARDS */
+  .humor-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .humor-card {
+    background: var(--surface); border: 2px solid var(--border);
+    border-radius: var(--radius); padding: 14px; cursor: pointer;
+    transition: all 0.2s; text-align: center; font-size: 13px;
+    color: var(--text);
+  }
+  .humor-card:hover { border-color: var(--primary); transform: translateY(-1px); }
+  .humor-card .hc-emoji { font-size: 28px; margin-bottom: 6px; }
+  .humor-card .hc-name { font-weight: 700; font-size: 13px; margin-bottom: 3px; }
+  .humor-card .hc-desc { font-size: 11px; color: var(--text3); line-height: 1.4; }
+  .humor-card.good { border-color: var(--success); background: var(--success-light); }
+  .humor-card.bad { border-color: var(--danger); background: var(--danger-light); }
+  .humor-card.ok { border-color: var(--warning); background: var(--warning-light); }
+
+  /* RESULTS */
+  .results-screen {
+    flex: 1; display: flex; flex-direction: column; align-items: center;
+    justify-content: center; padding: 40px 24px; text-align: center;
+  }
+  .score-circle {
+    width: 140px; height: 140px; border-radius: 50%;
+    border: 8px solid var(--primary); display: flex; flex-direction: column;
+    align-items: center; justify-content: center; margin-bottom: 24px;
+    background: var(--primary-light);
+  }
+  .score-num { font-size: 40px; font-weight: 800; color: var(--primary); }
+  .score-label { font-size: 12px; color: var(--text3); font-weight: 600; }
+  .results-h2 { font-size: 26px; font-weight: 700; margin-bottom: 10px; }
+  .results-p { font-size: 15px; color: var(--text2); max-width: 460px; margin-bottom: 28px; line-height: 1.7; }
+  .badges-row { display: flex; gap: 12px; flex-wrap: wrap; justify-content: center; margin-bottom: 28px; }
+  .badge-item {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 12px; padding: 12px 16px; min-width: 120px;
+    text-align: center;
+  }
+  .badge-item .bi-icon { font-size: 24px; margin-bottom: 4px; }
+  .badge-item .bi-name { font-size: 12px; font-weight: 700; color: var(--text); }
+  .badge-item .bi-desc { font-size: 11px; color: var(--text3); }
+  .btn-restart {
+    background: white; border: 2px solid var(--primary); color: var(--primary);
+    padding: 12px 28px; border-radius: 10px; font-size: 15px; font-weight: 600;
+    cursor: pointer; margin-left: 10px; transition: all 0.2s;
+  }
+  .btn-restart:hover { background: var(--primary); color: white; }
+
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+  @keyframes pulse { 0%,100% { transform: scale(1); } 50% { transform: scale(1.05); } }
+  .pulse { animation: pulse 1s ease infinite; }
+
+  .tip-box {
+    background: linear-gradient(135deg, #667eea15, #764ba215);
+    border: 1px solid #667eea30; border-radius: var(--radius);
+    padding: 12px 14px; margin-bottom: 16px; font-size: 13px; color: var(--text2);
+    line-height: 1.6;
+  }
+  .tip-box strong { color: var(--primary); }
+
+  .stat-row { display: flex; gap: 12px; margin-bottom: 16px; flex-wrap: wrap; }
+  .stat-card {
+    flex: 1; min-width: 100px; background: var(--surface);
+    border: 1px solid var(--border); border-radius: 10px; padding: 12px 14px;
+    text-align: center;
+  }
+  .stat-val { font-size: 22px; font-weight: 700; color: var(--primary); }
+  .stat-name { font-size: 11px; color: var(--text3); margin-top: 2px; }
+
+  .info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 16px; }
+  .info-card {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 10px; padding: 14px; cursor: pointer; transition: all 0.2s;
+  }
+  .info-card:hover { border-color: var(--primary); transform: translateY(-1px); }
+  .info-card.selected { border-color: var(--primary); background: var(--primary-light); }
+  .info-card .ic-icon { font-size: 22px; margin-bottom: 6px; }
+  .info-card .ic-title { font-size: 13px; font-weight: 700; color: var(--text); margin-bottom: 3px; }
+  .info-card .ic-body { font-size: 12px; color: var(--text2); line-height: 1.5; }
+
+  .slide-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .slide-thumb {
+    border-radius: 8px; overflow: hidden; cursor: pointer;
+    border: 3px solid transparent; transition: all 0.2s;
+    position: relative;
+  }
+  .slide-thumb:hover { transform: scale(1.02); border-color: #94a3b8; }
+  .slide-thumb.correct { border-color: var(--success); }
+  .slide-thumb.wrong { border-color: var(--danger); }
+
+  .practice-steps { display: flex; flex-direction: column; gap: 12px; }
+  .pstep {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 10px; overflow: hidden;
+  }
+  .pstep-header {
+    padding: 12px 14px; display: flex; align-items: center; gap: 10px;
+    cursor: pointer;
+  }
+  .pstep-num {
+    width: 28px; height: 28px; border-radius: 50%; background: var(--primary-light);
+    color: var(--primary); font-size: 13px; font-weight: 700;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .pstep-title { font-size: 14px; font-weight: 600; flex: 1; }
+  .pstep-body { padding: 0 14px 14px; font-size: 13px; color: var(--text2); line-height: 1.7; display: none; }
+  .pstep.open .pstep-body { display: block; }
+  .pstep-arrow { transition: transform 0.2s; font-size: 18px; color: var(--text3); }
+  .pstep.open .pstep-arrow { transform: rotate(180deg); }
+
+  .cierre-options { display: flex; flex-direction: column; gap: 10px; }
+
+  @media (max-width: 700px) {
+    .scene-body { flex-direction: column; }
+    .stage-panel { width: 100%; min-width: unset; }
+    .info-grid { grid-template-columns: 1fr; }
+    .slide-grid { grid-template-columns: 1fr; }
+    .humor-cards { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<!-- WELCOME SCREEN -->
+<div class="screen active" id="screen-welcome">
+  <div class="welcome-hero">
+    <div class="stage-illustration">
+      <div class="stage-bg">
+        <div class="stage-curtain-l"></div>
+        <div class="stage-curtain-r"></div>
+        <div class="stage-screen" style="font-size:11px; font-weight:700; color:#475569; letter-spacing:1px;">PRESENTACIÓN EFECTIVA</div>
+        <div class="spotlight"></div>
+        <div class="presenter">
+          <div class="pres-head"></div>
+          <div class="pres-body" style="position:relative;">
+            <div class="pres-arm-l"></div>
+            <div class="pres-arm-r"></div>
+          </div>
+        </div>
+        <div class="audience-row">
+          <div class="aud-head" style="background:#7c8fa6"></div>
+          <div class="aud-head" style="background:#8ba0b5"></div>
+          <div class="aud-head" style="background:#6b7f94"></div>
+          <div class="aud-head" style="background:#8ba0b5"></div>
+          <div class="aud-head" style="background:#7c8fa6"></div>
+          <div class="aud-head" style="background:#9bb0c5"></div>
+          <div class="aud-head" style="background:#6b7f94"></div>
+          <div class="aud-head" style="background:#7c8fa6"></div>
+          <div class="aud-head" style="background:#8ba0b5"></div>
+          <div class="aud-head" style="background:#6b7f94"></div>
+        </div>
+      </div>
+    </div>
+
+    <h1 class="welcome-h1">Simulador de Presentaciones Efectivas</h1>
+    <p class="welcome-p">Aprende a presentar ante audiencias profesionales tomando decisiones reales. Explora cada módulo, elige tus estrategias y recibe retroalimentación inmediata.</p>
+
+    <p style="font-size:14px; font-weight:600; color:var(--text); margin-bottom:12px;">¿Ante qué tipo de audiencia vas a presentar?</p>
+    <div class="type-cards">
+      <div class="type-card" onclick="selectType(this,'ejecutiva')" data-type="ejecutiva">
+        <div class="tc-icon">💼</div>
+        <div class="tc-name">Ejecutiva</div>
+        <div class="tc-desc">Directivos y C-Suite</div>
+      </div>
+      <div class="type-card" onclick="selectType(this,'comercial')" data-type="comercial">
+        <div class="tc-icon">📈</div>
+        <div class="tc-name">Comercial</div>
+        <div class="tc-desc">Clientes y ventas</div>
+      </div>
+      <div class="type-card" onclick="selectType(this,'educativa')" data-type="educativa">
+        <div class="tc-icon">🎓</div>
+        <div class="tc-name">Educativa</div>
+        <div class="tc-desc">Estudiantes y equipos</div>
+      </div>
+    </div>
+
+    <button class="btn-primary" id="btn-start" onclick="startSim()" disabled>
+      Comenzar simulación →
+    </button>
+  </div>
+</div>
+
+<!-- MAIN SIMULATION SCREEN -->
+<div class="screen" id="screen-sim">
+  <div class="sim-header">
+    <div class="sim-logo">🎤</div>
+    <div>
+      <div class="sim-title">Simulador de Presentaciones</div>
+      <div class="sim-subtitle" id="header-type">Audiencia ejecutiva</div>
+    </div>
+    <div class="progress-bar-wrap">
+      <div class="progress-label" id="progress-label">Módulo 1 de 10</div>
+      <div class="progress-track"><div class="progress-fill" id="progress-fill" style="width:10%"></div></div>
+    </div>
+    <div class="score-badge">⭐ <span id="score-display">0</span> pts</div>
+  </div>
+
+  <div class="scene-top">
+    <div class="module-nav" id="module-nav"></div>
+  </div>
+
+  <div class="scene-body">
+    <!-- LEFT: STAGE -->
+    <div class="stage-panel">
+      <div class="stage-screen-big">
+        <div class="stage-screen-content" id="slide-content">
+          Tu presentación aparece aquí
+        </div>
+      </div>
+      <div class="stage-scene-main">
+        <div class="scene-curtain-l"></div>
+        <div class="scene-curtain-r"></div>
+        <div class="scene-spotlight"></div>
+        <div class="scene-presenter" id="scene-presenter">
+          <div class="sp-head"></div>
+          <div class="sp-body" style="position:relative;">
+            <div class="sp-arm-l"></div>
+            <div class="sp-arm-r"></div>
+          </div>
+        </div>
+        <div class="scene-audience" id="scene-audience"></div>
+        <div class="scene-floor"></div>
+        <div class="emotion-bubble" id="emotion-bubble">😐</div>
+      </div>
+      <div class="stage-feedback">
+        <div class="sf-label">Indicadores en tiempo real</div>
+        <div class="sf-meters">
+          <div class="meter-row">
+            <div class="meter-name">Atención</div>
+            <div class="meter-track"><div class="meter-fill blue" id="m-atencion" style="width:50%"></div></div>
+          </div>
+          <div class="meter-row">
+            <div class="meter-name">Credibilidad</div>
+            <div class="meter-track"><div class="meter-fill green" id="m-credibilidad" style="width:50%"></div></div>
+          </div>
+          <div class="meter-row">
+            <div class="meter-name">Conexión</div>
+            <div class="meter-track"><div class="meter-fill amber" id="m-conexion" style="width:50%"></div></div>
+          </div>
+          <div class="meter-row">
+            <div class="meter-name">Retención</div>
+            <div class="meter-track"><div class="meter-fill" style="background:#a78bfa; width:50%" id="m-retencion"></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- RIGHT: MODULE CONTENT -->
+    <div class="content-panel" id="content-panel">
+      <!-- Dynamic content loaded here -->
+    </div>
+  </div>
+</div>
+
+<!-- RESULTS SCREEN -->
+<div class="screen" id="screen-results">
+  <div class="sim-header">
+    <div class="sim-logo">🏆</div>
+    <div><div class="sim-title">Resultados Finales</div><div class="sim-subtitle">Simulación completada</div></div>
+  </div>
+  <div class="results-screen">
+    <div class="score-circle">
+      <div class="score-num" id="final-score">0</div>
+      <div class="score-label">de 100 pts</div>
+    </div>
+    <h2 class="results-h2" id="results-title">¡Excelente presentador!</h2>
+    <p class="results-p" id="results-desc">Has demostrado dominar los elementos clave de una presentación efectiva.</p>
+    <div class="badges-row" id="badges-row"></div>
+    <div style="display:flex; gap:10px; flex-wrap:wrap; justify-content:center;">
+      <button class="btn-primary" onclick="restartSim()">Volver a intentar</button>
+      <button class="btn-restart" onclick="showTips()">Ver guía completa</button>
+    </div>
+  </div>
+</div>
+
+<script>
+let selectedType = '';
+let currentModule = 0;
+let score = 0;
+let moduleScores = [];
+let answeredModules = {};
+
+const typeLabels = {
+  'ejecutiva': 'Audiencia ejecutiva (C-Suite)',
+  'comercial': 'Audiencia comercial (clientes)',
+  'educativa': 'Audiencia educativa (equipo/estudiantes)'
+};
+
+const modules = [
+  { id: 'audiencia', name: 'Conocer la audiencia', icon: '👥' },
+  { id: 'objetivo', name: 'Definir el objetivo', icon: '🎯' },
+  { id: 'apertura', name: 'Apertura poderosa', icon: '🚀' },
+  { id: 'mensajes', name: 'Mensajes clave', icon: '💬' },
+  { id: 'diapositivas', name: 'Diseño de slides', icon: '🖼️' },
+  { id: 'storytelling', name: 'Narrativa y storytelling', icon: '📖' },
+  { id: 'presencia', name: 'Tono y presencia', icon: '🎭' },
+  { id: 'humor', name: 'Uso del humor', icon: '😄' },
+  { id: 'practica', name: 'Práctica y ensayo', icon: '🔄' },
+  { id: 'cierre', name: 'Cierre memorable', icon: '🏁' },
+];
+
+function selectType(el, type) {
+  document.querySelectorAll('.type-card').forEach(c => c.classList.remove('selected'));
+  el.classList.add('selected');
+  selectedType = type;
+  document.getElementById('btn-start').disabled = false;
+}
+
+function startSim() {
+  document.getElementById('screen-welcome').classList.remove('active');
+  document.getElementById('screen-sim').classList.add('active');
+  document.getElementById('header-type').textContent = typeLabels[selectedType];
+  buildNav();
+  buildAudience();
+  loadModule(0);
+}
+
+function buildNav() {
+  const nav = document.getElementById('module-nav');
+  nav.innerHTML = modules.map((m, i) => `
+    <button class="mod-tab ${i === 0 ? 'active' : 'locked'}" id="tab-${i}" onclick="tryGoModule(${i})">
+      ${m.icon} ${m.name}
+    </button>
+  `).join('');
+}
+
+function tryGoModule(i) {
+  if (i > currentModule && !answeredModules[currentModule]) return;
+  if (i <= currentModule || answeredModules[i] !== undefined) {
+    loadModule(i);
+  }
+}
+
+function buildAudience() {
+  const aud = document.getElementById('scene-audience');
+  const colors = ['#7c8fa6','#8ba0b5','#6b7f94','#9bb0c5','#a0b4c8','#7c8fa6','#8ba0b5'];
+  aud.innerHTML = colors.map(c => `
+    <div class="saud">
+      <div class="saud-head" style="background:${c}"></div>
+      <div class="saud-body" style="background:${c}88"></div>
+    </div>
+  `).join('');
+}
+
+function updateMeters(atencion, credibilidad, conexion, retencion, emotion) {
+  document.getElementById('m-atencion').style.width = atencion + '%';
+  document.getElementById('m-credibilidad').style.width = credibilidad + '%';
+  document.getElementById('m-conexion').style.width = conexion + '%';
+  document.getElementById('m-retencion').style.width = retencion + '%';
+  if (emotion) {
+    const eb = document.getElementById('emotion-bubble');
+    eb.style.display = 'block';
+    eb.textContent = emotion;
+    setTimeout(() => eb.style.display = 'none', 2500);
+  }
+}
+
+function updateSlide(content) {
+  document.getElementById('slide-content').innerHTML = content;
+}
+
+function addScore(pts) {
+  score += pts;
+  document.getElementById('score-display').textContent = score;
+}
+
+function loadModule(idx) {
+  currentModule = idx;
+  document.querySelectorAll('.mod-tab').forEach((t, i) => {
+    t.classList.remove('active');
+    if (i < idx) { t.classList.add('done'); t.classList.remove('locked'); }
+    else if (i === idx) { t.classList.add('active'); t.classList.remove('locked','done'); }
+    else if (answeredModules[i] !== undefined) { t.classList.remove('locked'); }
+    else { t.classList.add('locked'); }
+  });
+  const pct = Math.round(((idx + 1) / modules.length) * 100);
+  document.getElementById('progress-fill').style.width = pct + '%';
+  document.getElementById('progress-label').textContent = `Módulo ${idx + 1} de ${modules.length}`;
+
+  const renderers = [
+    renderAudiencia, renderObjetivo, renderApertura, renderMensajes,
+    renderDiapositivas, renderStorytelling, renderPresencia, renderHumor,
+    renderPractica, renderCierre
+  ];
+  renderers[idx]();
+}
+
+function nextModule() {
+  if (currentModule < modules.length - 1) {
+    const next = currentModule + 1;
+    document.querySelector(`#tab-${next}`).classList.remove('locked');
+    loadModule(next);
+  } else {
+    showResults();
+  }
+}
+
+// =============================================
+// MODULE RENDERERS
+// =============================================
+
+function renderAudiencia() {
+  updateSlide('<strong>¿Quién es tu audiencia?</strong><br><span style="font-size:10px; color:#64748b;">Conocer antes de hablar</span>');
+  updateMeters(30, 40, 30, 30, '🤔');
+
+  const typeData = {
+    ejecutiva: {
+      q: 'Vas a presentar ante el equipo directivo de una empresa (CEO, CFO, VP). ¿Cuál es tu primer paso estratégico?',
+      choices: [
+        { text: 'Investigar qué métricas y KPIs importan más a cada directivo presente', correct: true, fb: '¡Perfecto! Los ejecutivos piensan en términos de impacto, ROI y decisiones estratégicas. Conocer sus prioridades específicas te permite enfocar cada mensaje en lo que realmente les mueve.', tip: 'Consejo PRO: Pide una reunión previa de 10 minutos con el sponsor para entender el "mood" del comité.' },
+        { text: 'Preparar una presentación muy detallada y técnica para demostrar profundidad', wrong: true, fb: 'Incorrecto. Los ejecutivos no tienen tiempo ni paciencia para el detalle técnico excesivo. Quieren síntesis, impacto y decisiones claras. Un exceso de detalle genera aburrimiento y pérdida de credibilidad.' },
+        { text: 'Llegar con energía y confiar en tu capacidad de improvisar según las reacciones', wrong: true, fb: 'Incorrecto. La improvisación sin conocimiento previo es riesgosa ante ejecutivos. Ellos detectan inmediatamente cuando alguien no ha hecho la tarea. La preparación es no-negociable.' },
+      ]
+    },
+    comercial: {
+      q: 'Vas a presentar tu producto ante un potencial cliente. ¿Cuál es tu primer paso estratégico?',
+      choices: [
+        { text: 'Investigar los pain points, competidores actuales y el presupuesto disponible del cliente', correct: true, fb: '¡Exacto! En ventas, el conocimiento del cliente es poder. Saber qué le duele, qué alternativas considera y cuánto puede invertir te permite personalizar cada argumento y aumentar dramáticamente tu tasa de cierre.' },
+        { text: 'Comenzar presentando todas las características y funcionalidades de tu producto', wrong: true, fb: 'Incorrecto. Este es el error más común en ventas. Los clientes no compran características, compran soluciones a sus problemas. Si hablas de ti mismo antes de entender al cliente, pierdes la atención.' },
+        { text: 'Enviar el brochure por email para que el cliente llegue informado', wrong: true, fb: 'Incorrecto. El brochure sin contexto raramente genera interés real. La investigación previa te permite llegar con preguntas inteligentes y propuestas específicas, no genéricas.' },
+      ]
+    },
+    educativa: {
+      q: 'Vas a capacitar a un equipo de 20 personas en una nueva herramienta. ¿Cuál es tu primer paso?',
+      choices: [
+        { text: 'Evaluar el nivel de conocimiento previo y resistencia al cambio del grupo', correct: true, fb: '¡Correcto! En educación, el punto de partida del aprendiz determina todo. Conocer si son principiantes o avanzados, y si hay resistencia al cambio, te permite diseñar actividades, ejemplos y el ritmo adecuado.' },
+        { text: 'Preparar una presentación estándar igual para todos los grupos que capacitas', wrong: true, fb: 'Incorrecto. El "copy-paste" de presentaciones sin personalización produce aprendizaje superficial. Cada grupo tiene contexto, nivel y motivaciones distintas que deben reflejarse en el diseño de la sesión.' },
+        { text: 'Empezar directamente con los contenidos para aprovechar el tiempo al máximo', wrong: true, fb: 'Incorrecto. Saltar el diagnóstico inicial es uno de los errores más costosos. Sin saber dónde está el grupo, puedes hablar demasiado básico (aburrimiento) o demasiado avanzado (confusión y desconexión).' },
+      ]
+    }
+  };
+
+  const d = typeData[selectedType];
+  const panel = document.getElementById('content-panel');
+  panel.innerHTML = `
+    <div class="module-header">
+      <div class="module-tag">Módulo 1 — Conocer la audiencia</div>
+      <h2 class="module-h2">👥 ¿A quién le hablas?</h2>
+      <p class="module-p">${d.q}</p>
+    </div>
+    <div class="tip-box">
+      <strong>Recuerda:</strong> Las mejores presentaciones no comienzan con slides, comienzan con preguntas. Cuanto más sabes de tu audiencia, más relevante y persuasivo serás.
+    </div>
+    <div class="choices-grid" id="choices-grid">
+      ${d.choices.map((c, i) => `
+        <button class="choice-btn" onclick="answerAudiencia(${i})" data-idx="${i}">
+          <div class="choice-letter">${String.fromCharCode(65+i)}</div>
+          <div class="choice-text">${c.text}</div>
+        </button>
+      `).join('')}
+    </div>
+    <div class="feedback-box" id="feedback-box"></div>
+    <button class="btn-next" id="btn-next" onclick="nextModule()">Siguiente módulo →</button>
+  `;
+
+  window._moduleData = d.choices;
+}
+
+function answerAudiencia(idx) {
+  if (answeredModules[0] !== undefined) return;
+  const choices = window._moduleData;
+  const ch = choices[idx];
+  const btns = document.querySelectorAll('.choice-btn');
+  btns.forEach((b, i) => {
+    b.disabled = true;
+    if (choices[i].correct) b.classList.add('correct');
+    else if (choices[i].wrong) b.classList.add('wrong');
+  });
+  const fb = document.getElementById('feedback-box');
+  fb.style.display = 'block';
+  if (ch.correct) {
+    fb.className = 'feedback-box correct';
+    fb.innerHTML = `<div class="fb-title">✅ ¡Excelente decisión!</div><div class="fb-body">${ch.fb}</div>${ch.tip ? `<div class="fb-tip">💡 ${ch.tip}</div>` : ''}`;
+    addScore(10); answeredModules[0] = 10;
+    updateMeters(75, 80, 70, 65, '😊');
+    updateSlide('<strong style="color:#16a34a">✓ Audiencia analizada</strong><br><span style="font-size:10px; color:#64748b;">Conocimiento = poder</span>');
+  } else {
+    fb.className = 'feedback-box wrong';
+    fb.innerHTML = `<div class="fb-title">❌ Estrategia equivocada</div><div class="fb-body">${ch.fb}</div>`;
+    answeredModules[0] = 0;
+    updateMeters(25, 30, 25, 25, '😐');
+    updateSlide('<strong style="color:#dc2626">Audiencia desconocida</strong><br><span style="font-size:10px; color:#64748b;">Presentación en riesgo</span>');
+  }
+  document.getElementById('btn-next').style.display = 'inline-block';
+}
+
+function renderObjetivo() {
+  updateSlide('<strong>¿Cuál es tu objetivo?</strong><br><span style="font-size:10px; color:#64748b;">Define antes de diseñar</span>');
+
+  const panel = document.getElementById('content-panel');
+  panel.innerHTML = `
+    <div class="module-header">
+      <div class="module-tag">Módulo 2 — Objetivo de la presentación</div>
+      <h2 class="module-h2">🎯 Define tu objetivo con precisión</h2>
+      <p class="module-p">Selecciona el tipo de objetivo correcto para tu presentación y luego elige el objetivo SMART más efectivo según tu contexto.</p>
+    </div>
+    <div class="tip-box"><strong>El error más común:</strong> La mayoría de presentadores confunde "informar" con "persuadir". Un objetivo vago produce presentaciones vagas. Un objetivo específico produce resultados específicos.</div>
+    <div class="info-grid" id="obj-type-grid">
+      <div class="info-card" onclick="selectObjType(this,'informar')">
+        <div class="ic-icon">📢</div>
+        <div class="ic-title">Informar</div>
+        <div class="ic-body">Transmitir datos, hechos, actualizaciones. La audiencia debe saber algo nuevo.</div>
+      </div>
+      <div class="info-card" onclick="selectObjType(this,'persuadir')">
+        <div class="ic-icon">💡</div>
+        <div class="ic-title">Persuadir</div>
+        <div class="ic-body">Cambiar una creencia o actitud. La audiencia debe pensar distinto.</div>
+      </div>
+      <div class="info-card" onclick="selectObjType(this,'mover')">
+        <div class="ic-icon">🚀</div>
+        <div class="ic-title">Mover a la acción</div>
+        <div class="ic-body">Generar un comportamiento concreto. La audiencia debe hacer algo.</div>
+      </div>
+      <div class="info-card" onclick="selectObjType(this,'inspirar')">
+        <div class="ic-icon">✨</div>
+        <div class="ic-title">Inspirar</div>
+        <div class="ic-body">Generar emoción y propósito. La audiencia debe sentir algo.</div>
+      </div>
+    </div>
+    <div class="feedback-box" id="obj-feedback" style="display:none;"></div>
+    <button class="btn-next" id="btn-next" onclick="nextModule()" style="display:none;">Siguiente módulo →</button>
+  `;
+}
+
+function selectObjType(el, type) {
+  if (answeredModules[1] !== undefined) return;
+  document.querySelectorAll('#obj-type-grid .info-card').forEach(c => c.classList.remove('selected'));
+  el.classList.add('selected');
+
+  const typeMatch = {
+    ejecutiva: { best: 'mover', label: 'Mover a la acción' },
+    comercial: { best: 'mover', label: 'Mover a la acción' },
+    educativa: { best: 'informar', label: 'Informar + Persuadir' }
+  };
+
+  const fb = document.getElementById('obj-feedback');
+  fb.style.display = 'block';
+  const best = typeMatch[selectedType].best;
+
+  const explanations = {
+    informar: selectedType === 'educativa'
+      ? { cls: 'correct', title: '✅ ¡Buena elección para contexto educativo!', body: 'En un contexto educativo, informar con claridad es fundamental. Aunque también querrás persuadir sobre la relevancia del contenido. Combina ambos: informa los hechos, persuade sobre su importancia.', tip: 'Objetivo SMART ejemplo: "Al finalizar la sesión, el 90% de los participantes sabrá usar las 3 funciones principales de la herramienta y podrá aplicarlas en su próximo proyecto."' }
+      : { cls: 'neutral', title: '⚠️ Objetivo demasiado pasivo', body: 'Informar es útil pero insuficiente para una audiencia ejecutiva o comercial. Los ejecutivos y clientes necesitan ser movidos a tomar una decisión o acción. Solo informar no genera compromiso.', tip: 'Reformula: En lugar de "quiero que sepan sobre X", di "quiero que aprueben X" o "quiero que compren X".' },
+    persuadir: { cls: 'neutral', title: '👍 Buen objetivo, pero incompleto', body: 'Persuadir es mejor que solo informar, pero en presentaciones ejecutivas y comerciales necesitas ir un paso más allá: de la creencia al compromiso. La persuasión sin llamado a la acción deja el trabajo a medias.', tip: 'Combina persuadir + acción: "Quiero que crean en la solución Y que aprueben el presupuesto hoy."' },
+    mover: selectedType === 'educativa'
+      ? { cls: 'neutral', title: '⚠️ Considera el contexto educativo', body: 'Mover a la acción es ideal para contextos comerciales y ejecutivos. En educación, el foco debe ser primero en el aprendizaje y comprensión. La acción viene después de la comprensión.', tip: 'En educativo: define primero qué aprenderán, luego qué harán con ese aprendizaje.' }
+      : { cls: 'correct', title: '✅ ¡Objetivo perfecto!', body: 'Exacto. Tanto en presentaciones ejecutivas como comerciales, el objetivo más poderoso es mover a la audiencia a tomar una acción concreta. Esto hace que tu presentación tenga un propósito medible y claro.', tip: 'Objetivo SMART ejemplo: "Al terminar esta presentación, el comité ejecutivo aprobará el presupuesto de $200K para el proyecto X en Q1."' },
+    inspirar: { cls: 'neutral', title: '⚠️ Útil, pero arriesgado como objetivo único', body: 'Inspirar es poderoso en contextos de liderazgo o cultura organizacional, pero como objetivo único en una presentación ejecutiva o comercial, puede parecer vago. La inspiración debe servir a un objetivo concreto.', tip: 'Úsalo como herramienta, no como fin: "Inspiro para que quieran tomar la decisión que les propongo."' },
+  };
+
+  const exp = explanations[type];
+  fb.className = 'feedback-box ' + exp.cls;
+  fb.innerHTML = `<div class="fb-title">${exp.title}</div><div class="fb-body">${exp.body}</div><div class="fb-tip">💡 ${exp.tip}</div>`;
+
+  if (exp.cls === 'correct') { addScore(10); answeredModules[1] = 10; updateMeters(65, 75, 60, 70, '🎯'); }
+  else { answeredModules[1] = 5; addScore(5); updateMeters(55, 60, 50, 55, '🤔'); }
+
+  updateSlide(`<strong style="font-size:11px">Objetivo definido:</strong><br><span style="font-size:10px; color:#334155">Mover a la acción con impacto medible</span>`);
+  document.getElementById('btn-next').style.display = 'inline-block';
+  document.querySelectorAll('#obj-type-grid .info-card').forEach(c => c.onclick = null);
+}
+
+function renderApertura() {
+  updateSlide('<strong>🚀 APERTURA</strong><br><span style="font-size:10px; color:#64748b;">Los primeros 30 segundos son decisivos</span>');
+  updateMeters(40, 50, 35, 40, '👀');
+
+  const aperturas = [
+    {
+      label: 'A', icon: '❓',
+      title: 'Pregunta provocadora',
+      desc: '"¿Cuánto dinero perdió tu empresa el año pasado por ineficiencias que nadie está midiendo?"',
+      quality: 'correct',
+      fb: '¡Excelente apertura! Una pregunta provocadora crea curiosidad inmediata y pone al cerebro en modo activo. Hace que la audiencia se involucre desde el segundo cero. Funciona especialmente bien con ejecutivos y audiencias de negocios.',
+      tip: 'La pregunta debe incomodar levemente. Si todos responden "sí, claro" sin pensar, no es suficientemente provocadora.'
+    },
+    {
+      label: 'B', icon: '📊',
+      title: 'Datos sorprendentes',
+      desc: '"El 73% de las presentaciones corporativas no generan ninguna acción concreta. Hoy vamos a cambiar eso."',
+      quality: 'correct',
+      fb: '¡Muy buena apertura! Un dato sorprendente y relevante activa el cerebro y establece urgencia. Si el dato conecta con el dolor o la oportunidad de la audiencia, la atención queda capturada. Ideal para audiencias analíticas.',
+      tip: 'Asegúrate de que el dato sea verificable y relevante para esta audiencia específica. Los datos genéricos no impactan.'
+    },
+    {
+      label: 'C', icon: '👋',
+      title: 'Presentación personal larga',
+      desc: '"Buenos días, soy Juan Pérez, Gerente de Proyectos desde hace 15 años, con experiencia en... [2 minutos de bio]"',
+      quality: 'wrong',
+      fb: 'Apertura débil. Comenzar con una presentación personal extensa pierde la atención de la audiencia en los momentos más valiosos. Los primeros 30 segundos son oro puro — la audiencia está más receptiva en ese momento. Tu credibilidad se construye mejor a través de tu contenido, no de tu CV.',
+      tip: 'Si debes presentarte, hazlo en máximo 15 segundos. Tu nombre + una credencial relevante para el tema + ya.'
+    },
+    {
+      label: 'D', icon: '📋',
+      title: 'Agenda de la presentación',
+      desc: '"Hoy veremos: primero el contexto, luego el análisis, después las recomendaciones y finalmente el plan de acción..."',
+      quality: 'neutral',
+      fb: 'Apertura mediocre. Comenzar con la agenda es predecible y aburrido. Comunica "esto es una presentación estándar", lo cual reduce expectativas. Úsalo máximo como segundo slide, nunca como apertura, y solo si la audiencia necesita orientación.',
+      tip: 'Si quieres usar una agenda, hazla visual y breve. Máximo 5 puntos, con una frase que cree suspenso al final.'
+    }
+  ];
+
+  const panel = document.getElementById('content-panel');
+  panel.innerHTML = `
+    <div class="module-header">
+      <div class="module-tag">Módulo 3 — Apertura poderosa</div>
+      <h2 class="module-h2">🚀 ¿Cómo abres tu presentación?</h2>
+      <p class="module-p">Los primeros 30 segundos determinan si la audiencia te dará su atención. Elige la técnica de apertura más efectiva para tu presentación:</p>
+    </div>
+    <div class="tip-box"><strong>Regla de oro:</strong> Nunca comiences con "Buenos días, hoy voy a hablarles sobre...". Eso es la apertura más olvidable que existe.</div>
+    <div class="choices-grid" id="apertura-grid">
+      ${aperturas.map((a, i) => `
+        <button class="choice-btn" onclick="answerApertura(${i})" data-idx="${i}">
+          <div class="choice-letter">${a.label}</div>
+          <div class="choice-text"><strong>${a.icon} ${a.title}</strong><br><em style="font-size:12px; color:var(--text2)">${a.desc}</em></div>
+        </button>
+      `).join('')}
+    </div>
+    <div class="feedback-box" id="feedback-box"></div>
+    <button class="btn-next" id="btn-next" onclick="nextModule()" style="display:none;">Siguiente módulo →</button>
+  `;
+  window._aperturas = aperturas;
+}
+
+function answerApertura(idx) {
+  if (answeredModules[2] !== undefined) return;
+  const aperturas = window._aperturas;
+  const a = aperturas[idx];
+  document.querySelectorAll('#apertura-grid .choice-btn').forEach((b, i) => {
+    b.disabled = true;
+    b.classList.add(aperturas[i].quality);
+  });
+  const fb = document.getElementById('feedback-box');
+  fb.style.display = 'block';
+  fb.className = 'feedback-box ' + a.quality;
+  fb.innerHTML = `<div class="fb-title">${a.quality==='correct'?'✅ ¡Excelente apertura!':a.quality==='neutral'?'⚠️ Apertura mediocre':'❌ Apertura débil'}</div><div class="fb-body">${a.fb}</div><div class="fb-tip">💡 ${a.tip}</div>`;
+
+  if (a.quality === 'correct') { addScore(10); answeredModules[2] = 10; updateMeters(85, 80, 75, 80, '🤩'); updateSlide('<strong style="color:#16a34a">✓ Apertura impactante</strong><br><span style="font-size:10px; color:#334155">Audiencia enganchada</span>'); }
+  else if (a.quality === 'neutral') { addScore(5); answeredModules[2] = 5; updateMeters(55, 60, 50, 55, '😑'); updateSlide('<strong style="color:#d97706">⚠ Apertura predecible</strong><br><span style="font-size:10px; color:#334155">Mejorable</span>'); }
+  else { addScore(0); answeredModules[2] = 0; updateMeters(25, 40, 25, 30, '😴'); updateSlide('<strong style="color:#dc2626">✗ Apertura débil</strong><br><span style="font-size:10px; color:#334155">Atención perdida</span>'); }
+
+  document.getElementById('btn-next').style.display = 'inline-block';
+}
+
+function renderMensajes() {
+  updateSlide('<strong>💬 MENSAJES CLAVE</strong><br><span style="font-size:10px; color:#64748b">Máximo 3 ideas por presentación</span>');
+  updateMeters(60, 70, 55, 65);
+
+  const panel = document.getElementById('content-panel');
+  panel.innerHTML = `
+    <div class="module-header">
+      <div class="module-tag">Módulo 4 — Mensajes clave</div>
+      <h2 class="module-h2">💬 La regla del 1-3-7</h2>
+      <p class="module-p">El cerebro humano solo retiene 3-4 ideas después de una presentación. ¿Cuál es la estructura correcta de mensajes?</p>
+    </div>
+    <div class="tip-box"><strong>La regla del 1-3-7:</strong> 1 mensaje principal, 3 mensajes de soporte, 7 palabras máximo por mensaje clave. Todo lo demás es contexto y apoyo.</div>
+    <div class="checklist" id="msg-checklist">
+      ${[
+        { t: 'Un mensaje CENTRAL cristalizado', d: 'Si la audiencia recuerda solo UNA cosa, ¿cuál debe ser? Defínela en máximo 10 palabras. Ej: "Reducir costos en 30% es posible en 90 días."', key: 'central' },
+        { t: 'Máximo 3 mensajes de soporte', d: 'Cada uno debe responder a "¿por qué creer el mensaje central?". Son tus argumentos principales, no datos adicionales.', key: 'soporte' },
+        { t: 'Cada mensaje conecta con un beneficio', d: 'No hables de características o procesos. Traduce cada punto a un beneficio concreto para esta audiencia específica.', key: 'beneficio' },
+        { t: 'Los mensajes son memorables (breves y concretos)', d: 'Evita frases vagas como "mejoramos la eficiencia". Di "reducimos el tiempo de respuesta de 5 días a 4 horas".', key: 'memo' },
+        { t: 'Hay consistencia entre mensajes y objetivo', d: 'Cada mensaje debe empujar hacia el mismo objetivo definido en el módulo anterior. Si no contribuye al objetivo, elimínalo.', key: 'consist' },
+      ].map(item => `
+        <div class="check-item" onclick="toggleCheck(this,'${item.key}')" data-key="${item.key}">
+          <div class="check-box"></div>
+          <div class="check-text"><strong>${item.t}</strong><span>${item.d}</span></div>
+        </div>
+      `).join('')}
+    </div>
+    <div style="margin-top:12px; padding:12px 14px; background:var(--surface); border-radius:10px; border:1px solid var(--border); display:flex; align-items:center; gap:12px;">
+      <div style="font-size:24px">📊</div>
+      <div><div style="font-size:13px; font-weight:700; color:var(--text)">Tu progreso de mensajes</div><div style="font-size:12px; color:var(--text3)" id="check-progress">0 de 5 elementos definidos</div></div>
+    </div>
+    <div class="feedback-box" id="feedback-box" style="display:none;"></div>
+    <button class="btn-next" id="btn-next" onclick="nextModule()" style="display:none;">Siguiente módulo →</button>
+  `;
+  window._checks = {};
+}
+
+function toggleCheck(el, key) {
+  el.classList.toggle('checked');
+  if (el.classList.contains('checked')) {
+    el.querySelector('.check-box').textContent = '✓';
+    window._checks[key] = true;
+  } else {
+    el.querySelector('.check-box').textContent = '';
+    delete window._checks[key];
+  }
+  const count = Object.keys(window._checks).length;
+  document.getElementById('check-progress').textContent = `${count} de 5 elementos definidos`;
+  if (count >= 3 && answeredModules[3] === undefined) {
+    const pts = count >= 5 ? 10 : count >= 4 ? 8 : 6;
+    addScore(pts); answeredModules[3] = pts;
+    const fb = document.getElementById('feedback-box');
+    fb.style.display = 'block';
+    fb.className = 'feedback-box ' + (count >= 5 ? 'correct' : 'neutral');
+    fb.innerHTML = `<div class="fb-title">${count >= 5 ? '✅ ¡Mensajes perfectamente estructurados!' : '👍 Buen avance en tus mensajes'}</div><div class="fb-body">Tienes ${count} elementos definidos. ${count >= 5 ? 'Una presentación con mensajes bien estructurados tiene hasta 3 veces más retención que una sin estructura.' : 'Intenta completar los 5 para maximizar el impacto.'}</div>`;
+    updateMeters(80, 85, 75, 85, '💡');
+    updateSlide(`<strong style="font-size:11px; color:#16a34a">✓ ${count} mensajes estructurados</strong><br><span style="font-size:10px; color:#334155">Claridad = retención</span>`);
+    document.getElementById('btn-next').style.display = 'inline-block';
+  }
+}
+
+function renderDiapositivas() {
+  updateSlide('<strong>🖼️ DISEÑO DE SLIDES</strong><br><span style="font-size:10px; color:#64748b">Menos es más</span>');
+  updateMeters(55, 65, 50, 60, '🤔');
+
+  const slides = [
+    {
+      bg: 'linear-gradient(135deg, #1e3a5f, #2563eb)',
+      content: `<div style="color:white; padding:8px; font-size:8px; text-align:left;">
+        <div style="font-size:13px; font-weight:700; margin-bottom:6px; line-height:1.2;">Reducir costos 30% en 90 días</div>
+        <div style="font-size:9px; opacity:0.8; margin-bottom:8px;">La solución que estabas esperando</div>
+        <div style="display:flex; gap:8px; justify-content:space-around;">
+          <div style="text-align:center"><div style="font-size:16px; font-weight:800; color:#60a5fa">30%</div><div style="font-size:7px; opacity:0.7">Reducción</div></div>
+          <div style="text-align:center"><div style="font-size:16px; font-weight:800; color:#34d399">90</div><div style="font-size:7px; opacity:0.7">Días</div></div>
+          <div style="text-align:center"><div style="font-size:16px; font-weight:800; color:#fbbf24">3x</div><div style="font-size:7px; opacity:0.7">ROI</div></div>
+        </div></div>`,
+      label: 'Slide A — Visual y conciso',
+      quality: 'correct',
+      fb: '¡Diseño excelente! Este slide aplica las mejores prácticas: una idea central clara, datos visuales impactantes, contraste fuerte, y sin saturación de texto. La audiencia puede procesar todo en menos de 5 segundos.',
+      tip: 'Regla 5x5: máximo 5 líneas de texto, máximo 5 palabras por línea. Si no cabe, es otro slide.'
+    },
+    {
+      bg: '#f8fafc',
+      content: `<div style="color:#1e293b; padding:6px; font-size:7px; text-align:left; overflow:hidden;">
+        <div style="font-size:8px; font-weight:700; margin-bottom:4px;">Análisis de la situación actual del mercado</div>
+        <div style="font-size:6.5px; margin-bottom:2px;">• El mercado ha experimentado cambios significativos en los últimos 36 meses incluyendo variaciones en la demanda</div>
+        <div style="font-size:6.5px; margin-bottom:2px;">• Nuestros competidores han implementado estrategias de precio que afectan nuestro posicionamiento actual</div>
+        <div style="font-size:6.5px; margin-bottom:2px;">• Los clientes demandan mayor personalización y tiempo de respuesta más rápido que antes</div>
+        <div style="font-size:6.5px; margin-bottom:2px;">• La cadena de suministro presenta disrupciones que impactan la operación en todos los niveles</div>
+        <div style="font-size:6.5px; margin-bottom:2px;">• Es necesario revisar el modelo de negocio para adaptarse a las nuevas condiciones del entorno</div>
+        <div style="font-size:6.5px;">• Propuesta: implementar cambios graduales en Q2 sujetos a aprobación del comité directivo ejecutivo</div>
+      </div>`,
+      label: 'Slide B — Lleno de texto',
+      quality: 'wrong',
+      fb: 'Diseño deficiente. Este es el slide "mata presentaciones" más común: exceso de texto, fuente pequeña, sin jerarquía visual, sin un mensaje central claro. La audiencia leerá el slide en lugar de escucharte, o simplemente se desconectará.',
+      tip: 'Si necesitas incluir ese texto, conviértelo en un documento separado (handout). El slide es el apoyo visual, no el guion.'
+    },
+    {
+      bg: 'linear-gradient(135deg, #fef3c7, #fde68a)',
+      content: `<div style="padding:8px; text-align:center;">
+        <div style="font-size:9px; color:#92400e; font-weight:700; margin-bottom:6px;">Propuesta Q1 2025</div>
+        <table style="width:100%; font-size:7px; color:#78350f; border-collapse:collapse">
+          <tr style="background:#fcd34d50"><td style="padding:2px 3px; border:1px solid #fcd34d">Métrica</td><td style="padding:2px 3px; border:1px solid #fcd34d">2023</td><td style="padding:2px 3px; border:1px solid #fcd34d">2024</td><td style="padding:2px 3px; border:1px solid #fcd34d">Meta</td></tr>
+          <tr><td style="padding:2px 3px; border:1px solid #fcd34d">Ventas</td><td style="padding:2px 3px; border:1px solid #fcd34d">$2.1M</td><td style="padding:2px 3px; border:1px solid #fcd34d">$2.8M</td><td style="padding:2px 3px; border:1px solid #fcd34d">$3.5M</td></tr>
+          <tr><td style="padding:2px 3px; border:1px solid #fcd34d">Clientes</td><td style="padding:2px 3px; border:1px solid #fcd34d">142</td><td style="padding:2px 3px; border:1px solid #fcd34d">198</td><td style="padding:2px 3px; border:1px solid #fcd34d">260</td></tr>
+          <tr><td style="padding:2px 3px; border:1px solid #fcd34d">NPS</td><td style="padding:2px 3px; border:1px solid #fcd34d">62</td><td style="padding:2px 3px; border:1px solid #fcd34d">71</td><td style="padding:2px 3px; border:1px solid #fcd34d">80</td></tr>
+        </table>
+      </div>`,
+      label: 'Slide C — Tabla de datos',
+      quality: 'neutral',
+      fb: 'Diseño aceptable pero mejorable. Las tablas son útiles para mostrar comparaciones, pero dificultan la comprensión rápida. La audiencia tarda en encontrar el punto relevante. Mejor convertirlo en un gráfico o highlight del dato más importante.',
+      tip: 'Usa tablas solo cuando necesitas que la audiencia compare múltiples dimensiones. Siempre resalta (con color o tamaño) el dato que quieres que vean primero.'
+    },
+    {
+      bg: 'linear-gradient(135deg, #0f172a, #1e1b4b)',
+      content: `<div style="color:white; padding:10px; display:flex; flex-direction:column; align-items:center; justify-content:center; height:100%; text-align:center;">
+        <div style="font-size:18px; margin-bottom:6px;">📉</div>
+        <div style="font-size:11px; font-weight:800; color:#f87171; margin-bottom:4px;">-$4.2M</div>
+        <div style="font-size:8px; opacity:0.7; line-height:1.4;">Costo anual de no actuar ahora</div>
+      </div>`,
+      label: 'Slide D — Dato único impactante',
+      quality: 'correct',
+      fb: '¡Diseño brillante! Un solo slide con un único dato poderoso genera más impacto que 10 slides con múltiples puntos. Este tipo de slide crea silencio y reflexión en la sala, que es exactamente lo que quieres en momentos decisivos.',
+      tip: 'Usa este tipo de slide estratégicamente, no más de 2-3 veces por presentación, en los momentos de mayor impacto emocional.'
+    }
+  ];
+
+  const panel = document.getElementById('content-panel');
+  panel.innerHTML = `
+    <div class="module-header">
+      <div class="module-tag">Módulo 5 — Diseño de slides</div>
+      <h2 class="module-h2">🖼️ Elige el mejor diseño de slide</h2>
+      <p class="module-p">Selecciona todos los slides que consideras bien diseñados y que usarías en tu presentación:</p>
+    </div>
+    <div class="tip-box"><strong>Principio de diseño:</strong> Un slide = Una idea. Si tienes dos ideas, tienes dos slides. La claridad visual es una forma de respeto por el tiempo de tu audiencia.</div>
+    <div class="slide-grid" id="slide-grid">
+      ${slides.map((s, i) => `
+        <div class="slide-thumb" onclick="selectSlide(this,${i})" data-idx="${i}">
+          <div style="background:${s.bg}; width:100%; aspect-ratio:4/3; display:flex; align-items:center; justify-content:center; overflow:hidden;">
+            ${s.content}
+          </div>
+          <div style="position:absolute; bottom:0; left:0; right:0; background:rgba(0,0,0,0.6); color:white; font-size:9px; font-weight:600; padding:4px 6px; text-align:center;">${s.label}</div>
+        </div>
+      `).join('')}
+    </div>
+    <div class="feedback-box" id="slide-feedback" style="display:none;"></div>
+    <button class="btn-next" id="btn-next" onclick="nextModule()" style="display:none;">Siguiente módulo →</button>
+  `;
+  window._slides = slides;
+  window._slideSelections = [];
+}
+
+function selectSlide(el, idx) {
+  if (answeredModules[4] !== undefined) return;
+  const s = window._slides[idx];
+  el.classList.toggle('selected');
+
+  if (window._slideSelections.includes(idx)) {
+    window._slideSelections = window._slideSelections.filter(i => i !== idx);
+    el.classList.remove('correct','wrong');
+  } else {
+    window._slideSelections.push(idx);
+    el.classList.add(s.quality === 'correct' ? 'correct' : s.quality === 'wrong' ? 'wrong' : 'selected');
+  }
+
+  if (window._slideSelections.length >= 2) {
+    const fb = document.getElementById('slide-feedback');
+    fb.style.display = 'block';
+    const goodSelected = window._slideSelections.filter(i => window._slides[i].quality === 'correct').length;
+    const badSelected = window._slideSelections.filter(i => window._slides[i].quality === 'wrong').length;
+
+    let cls, title, body;
+    if (goodSelected >= 2 && badSelected === 0) {
+      cls = 'correct'; title = '✅ ¡Excelente criterio de diseño!';
+      body = 'Seleccionaste los slides mejor diseñados: el slide visual con datos clave y el slide de dato único impactante. Ambos aplican el principio de "una idea por slide" y están diseñados para impactar en segundos.';
+      addScore(10); answeredModules[4] = 10; updateMeters(85, 88, 80, 85, '😍');
+    } else if (goodSelected >= 1 && badSelected === 0) {
+      cls = 'neutral'; title = '👍 Buen instinto';
+      body = 'Seleccionaste al menos un slide bien diseñado. Los slides A y D son los más efectivos por su claridad y foco en un único mensaje visual poderoso.';
+      addScore(6); answeredModules[4] = 6; updateMeters(70, 75, 65, 70, '🙂');
+    } else {
+      cls = 'wrong'; title = '⚠️ Revisa tu criterio';
+      body = 'Incluiste slides con problemas de diseño. El slide B (exceso de texto) es uno de los errores más comunes y más dañinos para la retención de mensajes.';
+      addScore(3); answeredModules[4] = 3; updateMeters(45, 50, 40, 45, '😬');
+    }
+
+    fb.className = 'feedback-box ' + cls;
+    const firstGood = window._slides.find(s2 => s2.quality === 'correct');
+    fb.innerHTML = `<div class="fb-title">${title}</div><div class="fb-body">${body}</div>${firstGood ? `<div class="fb-tip">💡 ${firstGood.tip}</div>` : ''}`;
+    updateSlide('<strong style="color:#16a34a; font-size:11px">✓ Diseño optimizado</strong><br><span style="font-size:10px">Claridad visual máxima</span>');
+    document.getElementById('btn-next').style.display = 'inline-block';
+  }
+}
+
+function renderStorytelling() {
+  updateSlide('<strong>📖 NARRATIVA</strong><br><span style="font-size:10px; color:#64748b">El arco del héroe aplicado</span>');
+  updateMeters(70, 75, 80, 75, '📖');
+
+  const panel = document.getElementById('content-panel');
+  panel.innerHTML = `
+    <div class="module-header">
+      <div class="module-tag">Módulo 6 — Narrativa y storytelling</div>
+      <h2 class="module-h2">📖 Ordena el flujo narrativo correcto</h2>
+      <p class="module-p">Arrastra y ordena estos elementos en la secuencia más efectiva para una presentación persuasiva:</p>
+    </div>
+    <div class="tip-box"><strong>La estructura de Story Brand:</strong> Las mejores presentaciones siguen un arco narrativo donde la audiencia es el héroe y tu solución es la guía. El cerebro humano procesa historias 22 veces mejor que datos puros.</div>
+    <div class="drag-list" id="drag-list">
+      ${shuffleArr([
+        { id: 'a', order: 1, text: '🎯 Estado deseado / Visión del futuro', desc: 'Qué logrará la audiencia si toma tu propuesta' },
+        { id: 'b', order: 2, text: '😤 El problema o tensión actual', desc: 'El dolor que existe hoy, con datos concretos' },
+        { id: 'c', order: 3, text: '💡 Tu solución / propuesta', desc: 'Cómo resuelves exactamente ese problema' },
+        { id: 'd', order: 4, text: '📊 Evidencia y prueba social', desc: 'Casos de éxito, datos, testimonios' },
+        { id: 'e', order: 5, text: '🚀 Llamado a la acción', desc: 'Qué necesitas que hagan ahora mismo' },
+      ]).map((item, i) => `
+        <div class="drag-item" draggable="true" data-id="${item.id}" data-order="${item.order}" ondragstart="onDragStart(event)" ondragover="onDragOver(event)" ondrop="onDrop(event)">
+          <div class="drag-handle">⠿</div>
+          <div class="drag-num">${i+1}</div>
+          <div style="flex:1"><strong style="font-size:13px">${item.text}</strong><div style="font-size:11px; color:var(--text3); margin-top:2px">${item.desc}</div></div>
+        </div>
+      `).join('')}
+    </div>
+    <button onclick="checkStoryOrder()" style="margin-top:12px; background:var(--primary); color:white; border:none; padding:10px 20px; border-radius:8px; font-size:13px; font-weight:600; cursor:pointer;">
+      Verificar mi orden →
+    </button>
+    <div class="feedback-box" id="story-feedback" style="display:none;"></div>
+    <button class="btn-next" id="btn-next" onclick="nextModule()" style="display:none;">Siguiente módulo →</button>
+  `;
+  window._dragSrc = null;
+}
+
+function shuffleArr(arr) {
+  const a = [...arr]; for (let i = a.length-1; i > 0; i--) { const j = Math.floor(Math.random()*(i+1)); [a[i],a[j]] = [a[j],a[i]]; } return a;
+}
+
+function onDragStart(e) { window._dragSrc = e.currentTarget; e.dataTransfer.effectAllowed = 'move'; }
+function onDragOver(e) { e.preventDefault(); e.dataTransfer.dropEffect = 'move'; }
+function onDrop(e) {
+  e.preventDefault();
+  const src = window._dragSrc; const tgt = e.currentTarget;
+  if (src === tgt) return;
+  const list = document.getElementById('drag-list');
+  const items = [...list.querySelectorAll('.drag-item')];
+  const si = items.indexOf(src); const ti = items.indexOf(tgt);
+  if (si < ti) list.insertBefore(src, tgt.nextSibling); else list.insertBefore(src, tgt);
+  items.forEach((item, i) => item.querySelector('.drag-num').textContent = i+1);
+}
+
+function checkStoryOrder() {
+  if (answeredModules[5] !== undefined) return;
+  const items = [...document.querySelectorAll('#drag-list .drag-item')];
+  const order = items.map(i => parseInt(i.dataset.order));
+  const correct = [1,2,3,4,5];
+  const matches = order.filter((v, i) => v === correct[i]).length;
+
+  const fb = document.getElementById('story-feedback');
+  fb.style.display = 'block';
+
+  if (matches >= 5) {
+    fb.className = 'feedback-box correct';
+    fb.innerHTML = `<div class="fb-title">✅ ¡Flujo narrativo perfecto!</div><div class="fb-body">Ordenaste correctamente el arco narrativo más persuasivo: visión → problema → solución → prueba → acción. Esta estructura activa el cerebro emocional antes que el racional, haciendo que la audiencia quiera tu propuesta antes de que la pidas.</div><div class="fb-tip">💡 En contextos ejecutivos, a veces se invierte: el "elevator pitch" pone la solución y acción al inicio (BLUF: Bottom Line Up Front).</div>`;
+    addScore(10); answeredModules[5] = 10; updateMeters(90, 88, 92, 90, '🌟');
+  } else if (matches >= 3) {
+    fb.className = 'feedback-box neutral';
+    fb.innerHTML = `<div class="fb-title">👍 Buen flujo, con algunos ajustes</div><div class="fb-body">Tienes ${matches}/5 elementos en el orden correcto. El orden ideal es: Visión → Problema → Solución → Evidencia → Acción. Este arco funciona porque establece el "qué podría ser" antes de hablar del "qué está mal".</div>`;
+    addScore(6); answeredModules[5] = 6; updateMeters(75, 78, 80, 75, '🙂');
+  } else {
+    fb.className = 'feedback-box wrong';
+    fb.innerHTML = `<div class="fb-title">❌ El flujo necesita trabajo</div><div class="fb-body">Solo ${matches}/5 elementos están en la posición correcta. Un flujo narrativo desordenado confunde a la audiencia y reduce dramáticamente la persuasión. El orden ideal: 1-Visión → 2-Problema → 3-Solución → 4-Evidencia → 5-Acción.</div>`;
+    addScore(2); answeredModules[5] = 2; updateMeters(55, 60, 58, 55, '😬');
+  }
+  updateSlide('<strong style="font-size:11px">📖 Narrativa estructurada</strong><br><span style="font-size:10px; color:#334155">Arco del héroe activo</span>');
+  document.getElementById('btn-next').style.display = 'inline-block';
+}
+
+function renderPresencia() {
+  updateSlide('<strong>🎭 PRESENCIA</strong><br><span style="font-size:10px; color:#64748b">Cuerpo, voz y energía</span>');
+  updateMeters(65, 70, 65, 68);
+
+  const panel = document.getElementById('content-panel');
+  panel.innerHTML = `
+    <div class="module-header">
+      <div class="module-tag">Módulo 7 — Tono y presencia</div>
+      <h2 class="module-h2">🎭 Ajusta tu presencia al contexto</h2>
+      <p class="module-p">El 55% de tu comunicación es lenguaje corporal, 38% es tono de voz, y solo el 7% son las palabras. Selecciona el nivel de intensidad correcto para tu audiencia:</p>
+    </div>
+    <div class="tip-box"><strong>Principio de calibración:</strong> El tono ideal no es siempre "máxima energía". Es el tono que genera credibilidad y conexión con ESTA audiencia específica.</div>
+    <div class="tone-slider-wrap">
+      <div style="font-size:13px; font-weight:600; margin-bottom:8px;">¿Qué nivel de energía/tono eliges?</div>
+      <div class="tone-labels"><span>😐 Muy formal y austero</span><span>🎯 Profesional balanceado</span><span>🔥 Alta energía</span></div>
+      <input type="range" class="tone-range" min="1" max="10" value="5" id="tone-slider" oninput="updateTone(this.value)">
+      <div style="text-align:center; margin-top:8px;" id="tone-value-label"><span style="font-size:20px">🎯</span> <strong>Nivel 5 — Profesional balanceado</strong></div>
+    </div>
+    <div style="background:var(--surface); border-radius:var(--radius); padding:14px; border:1px solid var(--border); margin-top:12px;" id="tone-advice">
+      <div style="font-size:13px; color:var(--text2); line-height:1.7">Ajusta el slider para ver el consejo correspondiente.</div>
+    </div>
+    <div class="feedback-box" id="tone-feedback" style="display:none;"></div>
+    <button class="btn-next" id="btn-next" onclick="nextModule()" style="display:none;">Siguiente módulo →</button>
+  `;
+}
+
+function updateTone(val) {
+  val = parseInt(val);
+  const labels = {
+    1: ['😑','Muy formal y austero','Distante y frío para la mayoría de audiencias. Solo puede funcionar en contextos legales o académicos muy formales.','wrong'],
+    2: ['😐','Formal reservado','Puede percibirse como inseguro o poco entusiasta. La audiencia pierde conexión.','wrong'],
+    3: ['🙁','Formal con poca energía','Funciona en contextos muy específicos pero rara vez genera influencia real.','neutral'],
+    4: ['😊','Profesional formal','Adecuado para presentaciones de alta dirección donde se busca sobriedad. Cuidado con sonar monótono.','neutral'],
+    5: ['🎯','Profesional balanceado','El punto ideal para la mayoría de presentaciones ejecutivas y comerciales. Credibilidad + conexión humana.','correct'],
+    6: ['😄','Profesional cálido','Excelente para presentaciones comerciales y equipos. Genera confianza y apertura.','correct'],
+    7: ['😎','Energético y seguro','Muy efectivo en presentaciones de ventas, pitches y contextos donde necesitas generar entusiasmo.','correct'],
+    8: ['⚡','Alta energía motivacional','Funciona bien en lanzamientos y eventos de motivación. Puede ser excesivo en reuniones ejecutivas pequeñas.','neutral'],
+    9: ['🔥','Muy alta energía','Arriesgado en muchos contextos. Puede percibirse como poco profesional o exagerado ante directivos.','neutral'],
+    10: ['💥','Energía máxima','Solo funciona en grandes eventos o discursos inspiracionales. En otros contextos, distrae del mensaje.','wrong'],
+  };
+  const [emoji, title, desc, cls] = labels[val];
+  document.getElementById('tone-value-label').innerHTML = `<span style="font-size:20px">${emoji}</span> <strong>Nivel ${val} — ${title}</strong>`;
+  const advice = document.getElementById('tone-advice');
+  const colors = { correct: 'var(--success-light)', neutral: 'var(--warning-light)', wrong: 'var(--danger-light)' };
+  advice.style.background = colors[cls];
+  advice.innerHTML = `<div style="font-size:13px; color:var(--text2); line-height:1.7"><strong style="display:block; margin-bottom:4px">${title}</strong>${desc}</div>`;
+
+  if (answeredModules[6] === undefined) {
+    const typeIdeal = { ejecutiva: [4,5,6], comercial: [6,7,8], educativa: [5,6,7] };
+    const ideal = typeIdeal[selectedType];
+    if (ideal.includes(val)) {
+      answeredModules[6] = 10; addScore(10);
+      updateMeters(85, 90, 85, 88, '💪');
+      updateSlide(`<strong style="font-size:11px; color:#16a34a">✓ Tono calibrado</strong><br><span style="font-size:10px">Nivel ${val} — ${title}</span>`);
+      const fb = document.getElementById('tone-feedback');
+      fb.style.display = 'block'; fb.className = 'feedback-box correct';
+      fb.innerHTML = `<div class="fb-title">✅ ¡Tono perfecto para tu audiencia ${selectedType}!</div><div class="fb-body">${desc} Has seleccionado el rango de energía más efectivo para este tipo de presentación. Recuerda: el tono también fluctúa durante la presentación — sube en momentos de emoción y baja para enfatizar datos importantes.</div><div class="fb-tip">💡 Técnica del semáforo: Verde = anécdotas y humor, Amarillo = argumentos y datos, Rojo = el momento decisivo de pedir la acción.</div>`;
+      document.getElementById('btn-next').style.display = 'inline-block';
+    }
+  }
+}
+
+function renderHumor() {
+  updateSlide('<strong>😄 HUMOR</strong><br><span style="font-size:10px; color:#64748b">El lubricante social de la persuasión</span>');
+  updateMeters(75, 72, 80, 74);
+
+  const panel = document.getElementById('content-panel');
+  panel.innerHTML = `
+    <div class="module-header">
+      <div class="module-tag">Módulo 8 — Uso estratégico del humor</div>
+      <h2 class="module-h2">😄 ¿Qué tipo de humor usarías?</h2>
+      <p class="module-p">El humor usado correctamente aumenta la retención, la credibilidad y la conexión. Pero mal usado puede destruir tu presentación. Selecciona el tipo de humor más seguro y efectivo:</p>
+    </div>
+    <div class="tip-box"><strong>Dato clave:</strong> El humor apropiado puede aumentar la persuasión hasta en un 22% según estudios de retórica aplicada. Pero el humor inapropiado lo destruye todo.</div>
+    <div class="humor-cards" id="humor-grid">
+      ${[
+        { emoji:'🪞', name:'Humor autodeprecativo', desc:'Reírse de uno mismo o de situaciones propias. "La última vez que intenté presentar con este software, desapareció todo. Así que hoy tengo backup del backup."', cls:'good' },
+        { emoji:'🌍', name:'Observaciones universales', desc:'Humor sobre situaciones que todos han vivido. "¿A quién más le ha pasado que sale del elevador en el piso equivocado porque iba en su celular?"', cls:'good' },
+        { emoji:'🎭', name:'Anécdotas con giro inesperado', desc:'Una historia que termina diferente a lo que esperabas. Efectivo para capturar atención y generar "engagement" emocional.', cls:'good' },
+        { emoji:'🧑‍🤝‍🧑', name:'Bromas sobre personas del grupo', desc:'"Juan, como tú nunca llega a tiempo..." o "María que siempre pregunta lo más difícil..." Aunque sea amistoso, puede incomodar.', cls:'bad' },
+        { emoji:'⚡', name:'Humor político o controversial', desc:'Chistes sobre partidos, líderes, religión o grupos sociales. Altamente arriesgado: garantiza alienar a algún segmento de la audiencia.', cls:'bad' },
+        { emoji:'🤔', name:'Chistes preparados o forzados', desc:'"¿Escucharon el que dice...?" Los chistes preparados que no fluyen naturalmente generan silencio incómodo y dañan la credibilidad.', cls:'bad' },
+      ].map((h, i) => `
+        <div class="humor-card" onclick="selectHumor(this,'${h.cls}','${h.name}','${h.desc}')">
+          <div class="hc-emoji">${h.emoji}</div>
+          <div class="hc-name">${h.name}</div>
+          <div class="hc-desc">${h.desc}</div>
+        </div>
+      `).join('')}
+    </div>
+    <div class="feedback-box" id="humor-feedback" style="display:none;"></div>
+    <button class="btn-next" id="btn-next" onclick="nextModule()" style="display:none;">Siguiente módulo →</button>
+  `;
+}
+
+function selectHumor(el, cls, name, desc) {
+  if (answeredModules[7] !== undefined) return;
+  el.classList.add(cls);
+  answeredModules[7] = cls === 'good' ? 10 : 0;
+  if (cls === 'good') addScore(10); else addScore(0);
+
+  const fb = document.getElementById('humor-feedback');
+  fb.style.display = 'block';
+  if (cls === 'good') {
+    fb.className = 'feedback-box correct';
+    fb.innerHTML = `<div class="fb-title">✅ ¡Excelente elección de humor!</div><div class="fb-body">"${name}" es uno de los tipos de humor más seguros y efectivos en presentaciones profesionales. Genera conexión sin riesgos de ofender, y si falla, no daña tu credibilidad porque claramente no era un chiste preparado.</div><div class="fb-tip">💡 La regla del humor en presentaciones: si tienes dudas de si es apropiado, no lo uses. El humor debe fluir naturalmente, no forzarse.</div>`;
+    updateMeters(88, 85, 92, 88, '😂');
+    updateSlide('<strong style="color:#16a34a; font-size:11px">✓ Humor efectivo</strong><br><span style="font-size:10px">Conexión + credibilidad</span>');
+  } else {
+    fb.className = 'feedback-box wrong';
+    fb.innerHTML = `<div class="fb-title">❌ Humor de alto riesgo</div><div class="fb-body">"${name}" puede dañar seriamente tu presentación. ${desc} En un contexto profesional, el humor nunca debe ir a costa de personas específicas, grupos o temas controversiales.</div><div class="fb-tip">💡 Alternativa segura: el humor autodeprecativo y las observaciones universales son los únicos tipos de humor verdaderamente seguros en cualquier contexto profesional.</div>`;
+    updateMeters(50, 45, 55, 48, '😬');
+    updateSlide('<strong style="color:#dc2626; font-size:11px">⚠ Humor mal elegido</strong><br><span style="font-size:10px">Credibilidad en riesgo</span>');
+  }
+  document.getElementById('btn-next').style.display = 'inline-block';
+}
+
+function renderPractica() {
+  updateSlide('<strong>🔄 PRÁCTICA</strong><br><span style="font-size:10px; color:#64748b">La presentación perfecta no existe sin ensayo</span>');
+  updateMeters(80, 82, 78, 80);
+
+  const panel = document.getElementById('content-panel');
+  panel.innerHTML = `
+    <div class="module-header">
+      <div class="module-tag">Módulo 9 — Práctica y ensayo</div>
+      <h2 class="module-h2">🔄 Protocolo de ensayo efectivo</h2>
+      <p class="module-p">Los mejores presentadores del mundo practican entre 1 hora por cada 10 minutos de presentación. Explora las etapas del ensayo y decide cuáles incluirías:</p>
+    </div>
+    <div class="tip-box"><strong>Dato de TED Talks:</strong> Los presentadores de TED practican sus charlas entre 50 y 200 horas. Steve Jobs pasaba semanas ensayando cada keynote de Apple. La fluidez que ves es el resultado de trabajo invisible.</div>
+    <div class="practice-steps" id="practice-steps">
+      ${[
+        { n:1, t:'Ensayo mental', b:'Cierra los ojos y visualiza toda la presentación de inicio a fin. ¿Qué dices exactamente en la apertura? ¿Cómo fluye de un punto al otro? El ensayo mental activa las mismas vías neurales que la práctica física, reduciendo el nerviosismo hasta en un 45%.' },
+        { n:2, t:'Ensayo de voz en voz alta (solo)', b:'Practica en voz alta, solo. No solo en tu cabeza. El cerebro procesa el lenguaje hablado diferente al escrito. Muchas frases que "suenan bien" en papel se sienten artificiales al hablarlas. Necesitas al menos 3-5 run-throughs completos.' },
+        { n:3, t:'Grabación en video', b:'Grábate con tu teléfono. Es incómodo pero invaluable. Verás posturas que no notabas, escucharás muletillas repetitivas ("mmm", "este", "como que"), y notarás el ritmo y el tono de tu voz desde fuera. Un ensayo grabado vale por 10 sin grabar.' },
+        { n:4, t:'Ensayo con audiencia real', b:'Presenta ante 1-3 personas que te den retroalimentación honesta (no solo ánimo). Pídeles específicamente: ¿Qué mensaje recuerdas más? ¿Qué parte te aburrió? ¿Hubo algo confuso? Sus respuestas te dirán qué funciona y qué no.' },
+        { n:5, t:'Ensayo técnico y logístico', b:'Prueba el proyector, el micrófono, los slides en la pantalla real, el control de presentación, y el tiempo exacto. Llega 30-45 minutos antes para resolver problemas técnicos sin presión. El 80% de los "accidentes" en presentaciones son problemas técnicos previsibles.' },
+        { n:6, t:'Simulación de preguntas difíciles', b:'Prepara respuestas para las 5-7 preguntas más difíciles que podrían hacerte. Practica responder en 30-60 segundos. El Q&A es donde se gana o pierde la credibilidad que construiste durante la presentación.' },
+      ].map(s => `
+        <div class="pstep" onclick="togglePStep(this)">
+          <div class="pstep-header">
+            <div class="pstep-num">${s.n}</div>
+            <div class="pstep-title">${s.t}</div>
+            <div class="pstep-arrow">⌄</div>
+          </div>
+          <div class="pstep-body">${s.b}</div>
+        </div>
+      `).join('')}
+    </div>
+    <div style="margin-top:16px; padding:14px; background:var(--success-light); border-radius:var(--radius); border:1px solid #bbf7d0; font-size:13px; color:#166534;" id="practice-score">
+      <strong>👆 Abre cada etapa para explorarla</strong><br>Mientras más etapas explores, mejores puntos obtienes.
+    </div>
+    <button class="btn-next" id="btn-next" onclick="nextModule()" style="display:none;">Siguiente módulo →</button>
+  `;
+  window._openSteps = 0;
+}
+
+function togglePStep(el) {
+  const wasOpen = el.classList.contains('open');
+  el.classList.toggle('open');
+  if (!wasOpen) {
+    window._openSteps = (window._openSteps || 0) + 1;
+    const pts = Math.min(window._openSteps * 2, 10);
+    if (answeredModules[8] === undefined || pts > answeredModules[8]) {
+      if (answeredModules[8] === undefined) addScore(pts);
+      else addScore(pts - answeredModules[8]);
+      answeredModules[8] = pts;
+    }
+    document.getElementById('practice-score').innerHTML = `
+      <strong>📚 ${window._openSteps} de 6 etapas exploradas</strong><br>
+      ${window._openSteps >= 6 ? '🏆 ¡Explorador completo! Tienes todos los elementos de un ensayo profesional de élite.' :
+        window._openSteps >= 4 ? '⭐ Excelente. Combinar estas etapas te dará una ventaja enorme el día de la presentación.' :
+        window._openSteps >= 2 ? '👍 Buen progreso. Sigue explorando para maximizar tu preparación.' :
+        'Sigue explorando para aprender más.'}
+    `;
+    updateMeters(Math.min(70 + window._openSteps*3, 98), Math.min(72 + window._openSteps*3, 98), Math.min(70 + window._openSteps*3, 98), Math.min(68 + window._openSteps*3, 98));
+    updateSlide(`<strong style="font-size:11px; color:#16a34a">✓ ${window._openSteps}/6 etapas de ensayo</strong><br><span style="font-size:10px; color:#334155">Preparación = confianza</span>`);
+    if (window._openSteps >= 3) document.getElementById('btn-next').style.display = 'inline-block';
+  }
+}
+
+function renderCierre() {
+  updateSlide('<strong>🏁 CIERRE</strong><br><span style="font-size:10px; color:#64748b">La última impresión dura para siempre</span>');
+  updateMeters(75, 78, 72, 76, '🤔');
+
+  const cierres = [
+    { t:'Cierre de acción concreta', d:'Terminar con un paso específico, claro y con fecha. "Necesito que hoy aprueben los $50K del presupuesto para arrancar el 15 de enero."', q:'correct', fb:'¡Cierre perfecto para audiencias ejecutivas y comerciales! Un cierre con acción concreta convierte una presentación en una decisión. La claridad en el siguiente paso elimina la ambigüedad y facilita el sí.', tip:'El cierre de acción es el único que crea momentum real. Sin un siguiente paso claro, toda la presentación se pierde en "lo pensamos".' },
+    { t:'Cierre de resumen de mensajes', d:'Repasar los 3 puntos principales: "Hoy vimos que X, que Y, y que Z. Muchas gracias." ', q:'neutral', fb:'Cierre funcional pero poco memorable. Resumir ayuda a la retención pero no genera acción. La audiencia sale sabiendo más, pero no necesariamente comprometida a hacer algo. Combínalo siempre con un llamado a la acción.', tip:'El resumen es útil ANTES del cierre final. "Vimos X, Y, Z — por eso hoy necesito que aprueben [acción concreta]."' },
+    { t:'Cierre con historia de impacto', d:'Terminar con una historia corta y poderosa que encapsule el mensaje central y genere emoción antes del llamado a la acción.', q:'correct', fb:'¡Cierre altamente efectivo! Una historia bien elegida al cierre activa la memoria emocional, que es la que retiene mejor la información. El cerebro recuerda "cómo me hizo sentir" más tiempo que "qué información recibí".', tip:'La historia del cierre debe ser breve (60-90 segundos), relevante al mensaje central, y siempre terminar en el futuro que tu propuesta hace posible.' },
+    { t:'Cierre de agradecimiento prolongado', d:'"Quiero agradecerles mucho su tiempo, realmente se los agradezco, fue un honor estar aquí, muchas gracias a todos y al equipo..."', q:'wrong', fb:'Cierre débil. Terminar con agradecimientos extensos desperdicia el momento más valioso de la presentación: el final. El efecto de recencia dice que lo último que escucha la audiencia es lo que más recuerda. Terminar con "gracias" hace que eso sea lo más memorable.', tip:'El agradecimiento va antes del cierre final, no en él. Tu última palabra debe ser tu mensaje central o tu llamado a la acción.' },
+    { t:'Cierre con pregunta retórica + silencio', d:'Terminar con una pregunta que invite a la reflexión y luego permanecer en silencio 3-5 segundos antes de bajar el slide. "¿Cuándo fue la última vez que su empresa tomó una decisión de esta magnitud con esta certeza?"', q:'correct', fb:'¡Cierre sofisticado y memorable! El silencio intencional después de una pregunta poderosa es una de las técnicas de mayor impacto en oradores de alto nivel. Crea un momento de introspección que hace que la audiencia llegue sola a tu conclusión.', tip:'El silencio solo funciona si tú estás cómodo en él. Si te sientes incómodo y lo rompes, pierde todo su poder. Practica el silencio tanto como las palabras.' },
+  ];
+
+  const panel = document.getElementById('content-panel');
+  panel.innerHTML = `
+    <div class="module-header">
+      <div class="module-tag">Módulo 10 — Cierre memorable</div>
+      <h2 class="module-h2">🏁 Elige tu estrategia de cierre</h2>
+      <p class="module-p">El efecto de recencia dice que lo último que decimos es lo más recordado. Elige tu técnica de cierre (puedes elegir una o varias que combinarías):</p>
+    </div>
+    <div class="tip-box"><strong>Nunca termines con:</strong> "¿Preguntas?", "Eso era todo", o diapositivas de "GRACIAS". Son los cierres más olvidables que existen. El cierre es tu último acto — hazlo memorable.</div>
+    <div class="cierre-options" id="cierre-grid">
+      ${cierres.map((c, i) => `
+        <button class="choice-btn" onclick="answerCierre(${i})" data-idx="${i}">
+          <div class="choice-letter">${String.fromCharCode(65+i)}</div>
+          <div class="choice-text">
+            <strong>${c.t}</strong>
+            <div style="font-size:12px; color:var(--text2); margin-top:3px; font-style:italic;">${c.d}</div>
+          </div>
+        </button>
+      `).join('')}
+    </div>
+    <div class="feedback-box" id="cierre-feedback" style="display:none;"></div>
+    <button class="btn-next" id="btn-next" onclick="showResults()" style="display:none; background:#16a34a;">
+      Ver mis resultados finales 🏆
+    </button>
+  `;
+  window._cierres = cierres;
+}
+
+function answerCierre(idx) {
+  if (answeredModules[9] !== undefined) return;
+  const c = window._cierres[idx];
+  document.querySelectorAll('#cierre-grid .choice-btn').forEach((b, i) => {
+    b.disabled = true;
+    b.classList.add(window._cierres[i].q);
+  });
+  const fb = document.getElementById('cierre-feedback');
+  fb.style.display = 'block';
+  fb.className = 'feedback-box ' + c.q;
+  const titles = { correct:'✅ ¡Cierre de alto impacto!', neutral:'⚠️ Cierre funcional', wrong:'❌ Cierre que no cierra' };
+  fb.innerHTML = `<div class="fb-title">${titles[c.q]}</div><div class="fb-body">${c.fb}</div><div class="fb-tip">💡 ${c.tip}</div>`;
+
+  if (c.q === 'correct') { addScore(10); answeredModules[9] = 10; updateMeters(95, 93, 95, 95, '🏆'); updateSlide('<strong style="color:#16a34a; font-size:11px">🏆 ¡Cierre poderoso!</strong><br><span style="font-size:10px; color:#334155">Impresión final inolvidable</span>'); }
+  else if (c.q === 'neutral') { addScore(5); answeredModules[9] = 5; updateMeters(75, 78, 72, 76, '🙂'); updateSlide('<strong style="color:#d97706; font-size:11px">⚠ Cierre mejorable</strong><br><span style="font-size:10px; color:#334155">Funcional pero no memorable</span>'); }
+  else { addScore(0); answeredModules[9] = 0; updateMeters(55, 58, 50, 54, '😕'); updateSlide('<strong style="color:#dc2626; font-size:11px">✗ Cierre débil</strong><br><span style="font-size:10px; color:#334155">Oportunidad perdida</span>'); }
+
+  document.getElementById('btn-next').style.display = 'inline-block';
+}
+
+function showResults() {
+  document.getElementById('screen-sim').classList.remove('active');
+  document.getElementById('screen-results').classList.add('active');
+
+  const pct = Math.min(Math.round((score / 100) * 100), 100);
+  document.getElementById('final-score').textContent = score;
+
+  let title, desc;
+  if (score >= 85) { title = '🏆 ¡Presentador de élite!'; desc = 'Has demostrado dominar los 10 pilares de una presentación efectiva. Tu audiencia tendrá una experiencia memorable y estarás generando el impacto que buscas. Sigue practicando y seras imparable.'; }
+  else if (score >= 65) { title = '⭐ ¡Sólido presentador profesional!'; desc = 'Tienes bases muy fuertes. Con algunos ajustes en los módulos donde perdiste puntos, llegarás al nivel de presentador de élite. La diferencia entre bueno y excelente es práctica deliberada.'; }
+  else if (score >= 45) { title = '📈 Presentador en desarrollo'; desc = 'Tienes potencial real, pero hay áreas clave que necesitan trabajo. Revisa los módulos donde no obtuviste la máxima puntuación y practica esas técnicas específicamente. El crecimiento exponencial está cerca.'; }
+  else { title = '🌱 Punto de partida poderoso'; desc = 'Toda gran habilidad comienza igual: desde cero con curiosidad. Vuelve a explorar cada módulo, aplica una técnica a la vez, y verás cómo cada presentación te convierte en un mejor comunicador. El camino está claro.'; }
+
+  document.getElementById('results-title').textContent = title;
+  document.getElementById('results-desc').textContent = desc;
+
+  const badges = [];
+  if (answeredModules[0] >= 10) badges.push({ icon:'🔍', name:'Investigador', desc:'Conoces tu audiencia' });
+  if (answeredModules[2] >= 10) badges.push({ icon:'🚀', name:'Impacto inicial', desc:'Apertura poderosa' });
+  if (answeredModules[4] >= 10) badges.push({ icon:'🖼️', name:'Diseño claro', desc:'Slides efectivos' });
+  if (answeredModules[5] >= 8) badges.push({ icon:'📖', name:'Narrador', desc:'Storytelling maestro' });
+  if (answeredModules[7] >= 10) badges.push({ icon:'😄', name:'Humor calibrado', desc:'Humor estratégico' });
+  if (score >= 80) badges.push({ icon:'🏆', name:'Presentador élite', desc: `${score}/100 puntos` });
+
+  document.getElementById('badges-row').innerHTML = badges.length > 0
+    ? badges.map(b => `<div class="badge-item"><div class="bi-icon">${b.icon}</div><div class="bi-name">${b.name}</div><div class="bi-desc">${b.desc}</div></div>`).join('')
+    : '<div style="font-size:13px; color:var(--text3)">Completa más módulos para ganar insignias</div>';
+}
+
+function restartSim() {
+  score = 0; currentModule = 0; answeredModules = {}; selectedType = '';
+  document.getElementById('score-display').textContent = '0';
+  document.getElementById('screen-results').classList.remove('active');
+  document.getElementById('screen-welcome').classList.add('active');
+  document.querySelectorAll('.type-card').forEach(c => c.classList.remove('selected'));
+  document.getElementById('btn-start').disabled = true;
+}
+
+function showTips() {
+  window.open('https://www.google.com/search?q=presentaciones+efectivas+técnicas+profesionales', '_blank');
+}
+</script>
+</body>
+</html>
