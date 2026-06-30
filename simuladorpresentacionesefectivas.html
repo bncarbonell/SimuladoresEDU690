@@ -371,12 +371,12 @@
                     ejecutiva: {
                         options: [
                             { text: "Mantener un tono firme, seguro, y modular la velocidad para enfatizar las decisiones urgentes, usando un humor muy sutil o nulo.", correct: true, feedback: "Correcto. El tono ejecutivo requiere asertividad y aplomo. El humor debe ser escaso y muy corporativo si se usa." },
-                            { text: "Caminar exageradamente por toda la sala y soltar un chiste subido de tono para romper el hielo.", correct: false, feedback: "Fatal. Pierdes autoridad y respeto. En entornos corporativos de alto nivel, esto se percibe como falta de profesionalismo." }
+                            { text: "Caminar exageradamente por toda la sala y soltar un chiste subido de tono para romper el hielo.", correct: false, feedback: "Fatal. Pierdes autoridad y respeto. En entornos corporativos de alto nivel, esto se percebe como falta de profesionalismo." }
                         ]
                     },
                     comercial: {
                         options: [
-                            { text: "Usar un tono entusiasta, hacer pausas dramáticas tras lanzar una ventaja competitiva y sonreír con naturalidad.", correct: true, feedback: "¡Así se hace! La energía es contagiosa. Tu presencia proyecta convicción absoluta en lo que estás ofreciendo." },
+                            { text: "Usar un tono emocionante, hacer pausas dramáticas tras lanzar una ventaja competitiva y sonreír con naturalidad.", correct: true, feedback: "¡Así se hace! La energía es contagiosa. Tu presencia proyecta convicción absoluta en lo que estás ofreciendo." },
                             { text: "Mantener los brazos cruzados, leer tus notas sin mirar a los ojos y hablar en un tono plano y monótono.", correct: false, feedback: "Nadie le compra a alguien que no demuestra pasión ni seguridad. Mataste la venta." }
                         ]
                     },
@@ -414,24 +414,26 @@
 
         // Estado del Simulador
         let currentTrack = ""; 
-        let currentStepIndex = -1; // -1 significa pantalla de selección de audiencia
+        let currentStepIndex = -1; 
         let resonanceScore = 100;
 
-        const speakerElem = document.getElementById('speaker');
-        const screenElem = document.getElementById('screen');
-        const audienceTitleElem = document.getElementById('audience-title');
-        const audienceIconsElem = document.getElementById('audience-icons');
-        const stepTitleElem = document.getElementById('step-title');
-        const stepDescElem = document.getElementById('step-desc');
-        const optionsContainer = document.getElementById('options-container');
-        const feedbackElem = document.getElementById('feedback');
-        const btnNext = document.getElementById('btn-next');
-        const progressBar = document.getElementById('progress');
-        const scoreElem = document.getElementById('score-engagement');
-        const trackElem = document.getElementById('current-track');
+        let speakerElem, screenElem, audienceTitleElem, audienceIconsElem, stepTitleElem, stepDescElem, optionsContainer, feedbackElem, btnNext, progressBar, scoreElem, trackElem;
 
-        // Inicializar Simulador
+        // Inicializar Simulador de forma segura mapeando los nodos una vez cargado el DOM
         function initSimulator() {
+            speakerElem = document.getElementById('speaker');
+            screenElem = document.getElementById('screen');
+            audienceTitleElem = document.getElementById('audience-title');
+            audienceIconsElem = document.getElementById('audience-icons');
+            stepTitleElem = document.getElementById('step-title');
+            stepDescElem = document.getElementById('step-desc');
+            optionsContainer = document.getElementById('options-container');
+            feedbackElem = document.getElementById('feedback');
+            btnNext = document.getElementById('btn-next');
+            progressBar = document.getElementById('progress');
+            scoreElem = document.getElementById('score-engagement');
+            trackElem = document.getElementById('current-track');
+
             currentTrack = "";
             currentStepIndex = -1;
             resonanceScore = 100;
@@ -439,13 +441,13 @@
             trackElem.textContent = "Ninguno";
             progressBar.style.width = "0%";
             feedbackElem.style.display = "none";
-            btnNext.style.style = "none";
+            btnNext.style.display = "none";
             
             speakerElem.className = "speaker-avatar speaker-pose-neutral";
             speakerElem.textContent = "👔";
-            screenElem.innerHTML = `<div style="font-size: 1.2rem; color: var(--secondary); margin-bottom: 5px;">¡Bienvenido!</div><p style="font-weight: normal; font-size:0.8rem;">Selecciona tu audiencia para encender el proyector.</p>`;
+            screenElem.innerHTML = `<div style="font-size: 1.2rem; color: #3b82f6; margin-bottom: 5px;">¡Bienvenido!</div><p style="font-weight: normal; font-size:0.8rem;">Selecciona tu audiencia para encender el proyector.</p>`;
             screenElem.style.backgroundColor = "white";
-            screenElem.style.color = "var(--dark)";
+            screenElem.style.color = "#0f172a";
             audienceTitleElem.textContent = "Público Esperando";
             audienceIconsElem.textContent = "👥👥👥";
 
@@ -469,24 +471,21 @@
 
         // Manejar la decisión tomada por el usuario
         function handleChoice(option, isAudienceStep) {
-            // Deshabilitar botones de opciones tras elegir
             const buttons = optionsContainer.querySelectorAll('.btn-option');
             buttons.forEach(b => b.disabled = true);
 
             feedbackElem.style.display = "block";
             
             if (isAudienceStep) {
-                // Configurar tipo de audiencia
                 currentTrack = option.track;
                 trackElem.textContent = currentTrack.toUpperCase();
                 feedbackElem.className = "feedback-box feedback-success";
                 feedbackElem.innerHTML = `<strong>🎯 Audiencia Definida:</strong> ${option.feedback}`;
                 
-                // Actualizar UI del Escenario según la audiencia
                 if(currentTrack === 'ejecutiva') {
                     audienceTitleElem.textContent = "Junta Directiva (CEO, CFO)";
                     audienceIconsElem.textContent = "🧐💼📈";
-                    screenElem.innerHTML = "📊 OBJETIVO EXECUTIVO:<br><span style='font-weight:normal; font-size:0.85rem;'>Aprobación presupuestal y ROI</span>";
+                    screenElem.innerHTML = "📊 OBJETIVO EJECUTIVO:<br><span style='font-weight:normal; font-size:0.85rem;'>Aprobación presupuestal y ROI</span>";
                 } else if(currentTrack === 'comercial') {
                     audienceTitleElem.textContent = "Clientes Potenciales";
                     audienceIconsElem.textContent = "🤝💰🛒";
@@ -500,13 +499,11 @@
                 speakerElem.className = "speaker-avatar speaker-pose-happy";
                 btnNext.style.display = "block";
             } else {
-                // Pasos de la presentación
                 if (option.correct) {
                     feedbackElem.className = "feedback-box feedback-success";
                     feedbackElem.innerHTML = `<strong>✅ ¡Excelente decisión!:</strong> ${option.feedback}`;
                     speakerElem.className = "speaker-avatar speaker-pose-happy";
                     speakerElem.textContent = "😎🎤";
-                    // Cambiar el slide virtual simulando éxito
                     screenElem.style.backgroundColor = "#ecfdf5";
                     screenElem.innerHTML = `<div>✨ Slide Optimizado</div><p style='font-weight:normal; font-size:0.75rem; color:#065f46; margin-top:5px;'>Conectando de forma asertiva con el público.</p>`;
                 } else {
@@ -516,7 +513,6 @@
                     scoreElem.textContent = resonanceScore;
                     speakerElem.className = "speaker-avatar speaker-pose-sad";
                     speakerElem.textContent = "😰💧";
-                    // Cambiar el slide virtual simulando error
                     screenElem.style.backgroundColor = "#fef2f2";
                     screenElem.innerHTML = `<div>⚠️ Audiencia Distraída</div><p style='font-weight:normal; font-size:0.75rem; color:#991b1b; margin-top:5px;'>Se perdió la atención o el foco del mensaje.</p>`;
                 }
@@ -530,26 +526,22 @@
             btnNext.style.display = "none";
             speakerElem.className = "speaker-avatar speaker-pose-neutral";
             screenElem.style.backgroundColor = "white";
-            screenElem.style.color = var(--dark);
+            screenElem.style.color = "#0f172a";
 
             currentStepIndex++;
             const totalSteps = simulatorData.steps.length;
             
-            // Actualizar barra de progreso
             const progressPercent = ((currentStepIndex + 1) / (totalSteps + 1)) * 100;
             progressBar.style.width = `${progressPercent}%`;
 
             if (currentStepIndex < totalSteps) {
-                // Cargar siguiente paso del track seleccionado
                 const stepData = simulatorData.steps[currentStepIndex];
                 stepTitleElem.textContent = stepData.title;
                 stepDescElem.textContent = stepData.desc;
                 
-                // Obtener opciones específicas para este track
                 const currentOptions = stepData[currentTrack].options;
                 renderOptions(currentOptions, false);
             } else {
-                // Fin del juego / Conclusiones del entrenamiento
                 showFinalResults();
             }
         }
@@ -576,9 +568,9 @@
             }
 
             stepDescElem.innerHTML = `
-                <div style="background-color:#f1f5f9; padding:20px; border-radius:8px; margin-bottom:15px; border-left: 5px solid var(--primary)">
+                <div style="background-color:#f1f5f9; padding:20px; border-radius:8px; margin-bottom:15px; border-left: 5px solid #1e293b">
                     <h3 style="margin-bottom:8px;">Resultados de Resonancia: ${resonanceScore}%</h3>
-                    <p style="font-weight:normal; font-size:1rem; color:var(--dark);">${finalEvaluation}</p>
+                    <p style="font-weight:normal; font-size:1rem; color:#0f172a;">${finalEvaluation}</p>
                 </div>
                 <h4 style="margin-top:20px; margin-bottom:10px;">Pilares del éxito repasados:</h4>
                 <ul style="margin-left: 20px; font-weight:normal; line-height:1.6; font-size:0.9rem;">
@@ -598,7 +590,6 @@
             optionsContainer.appendChild(btnReset);
         }
 
-        // Encender el simulador al cargar
         window.onload = initSimulator;
     </script>
 </body>
