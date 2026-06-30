@@ -1,0 +1,596 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simulador de Presentaciones Efectivas</title>
+    <style>
+        :root {
+            --primary: #1e293b;
+            --secondary: #3b82f6;
+            --success: #10b981;
+            --danger: #ef4444;
+            --warning: #f59e0b;
+            --light: #f8fafc;
+            --dark: #0f172a;
+            --text-muted: #64748b;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #e2e8f0;
+            color: var(--dark);
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        header {
+            background: linear-gradient(135deg, var(--primary), var(--dark));
+            color: white;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
+        }
+
+        header h1 {
+            font-size: 1.8rem;
+            margin-bottom: 5px;
+        }
+
+        header p {
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+
+        .container {
+            flex: 1;
+            max-width: 1100px;
+            width: 100%;
+            margin: 20px auto;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 10px 15px -3px rgba(0,0,0,0.05);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        /* Escenario Virtual */
+        .stage-area {
+            background: linear-gradient(to bottom, #334155, #1e293b);
+            padding: 30px;
+            position: relative;
+            min-height: 250px;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            border-bottom: 8px solid #475569;
+        }
+
+        .speaker-zone {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            z-index: 2;
+            width: 25%;
+        }
+
+        .speaker-avatar {
+            width: 80px;
+            height: 80px;
+            background-color: #ffedd5;
+            border-radius: 50%;
+            border: 4px solid var(--secondary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            box-shadow: 0 0 15px rgba(59, 130, 246, 0.5);
+            transition: transform 0.3s;
+        }
+
+        .speaker-pose-neutral { transform: scale(1); }
+        .speaker-pose-happy { transform: scale(1.1) rotate(5deg); border-color: var(--success); }
+        .speaker-pose-sad { transform: scale(0.9) rotate(-5deg); border-color: var(--danger); }
+
+        .slide-screen {
+            width: 45%;
+            height: 160px;
+            background-color: white;
+            border-radius: 6px;
+            box-shadow: 0 0 25px rgba(255,255,255,0.2), inset 0 0 10px rgba(0,0,0,0.1);
+            padding: 15px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            font-weight: bold;
+            font-size: 0.9rem;
+            border: 4px solid #94a3b8;
+            color: var(--dark);
+        }
+
+        .audience-zone {
+            width: 25%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: white;
+            text-align: center;
+        }
+
+        .audience-icons {
+            display: flex;
+            gap: 10px;
+            font-size: 1.8rem;
+            margin-top: 10px;
+            opacity: 0.8;
+        }
+
+        /* Panel de Control de la Simulación */
+        .control-panel {
+            padding: 30px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .progress-bar-container {
+            width: 100%;
+            background-color: #e2e8f0;
+            height: 10px;
+            border-radius: 5px;
+            margin-bottom: 25px;
+            overflow: hidden;
+        }
+
+        .progress-bar {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(to right, var(--secondary), var(--success));
+            transition: width 0.5s ease;
+        }
+
+        .step-title {
+            font-size: 1.4rem;
+            color: var(--primary);
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .step-description {
+            color: var(--text-muted);
+            margin-bottom: 20px;
+            line-height: 1.5;
+        }
+
+        .options-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        @media (min-width: 768px) {
+            .options-grid { grid-template-columns: 1fr 1fr; }
+        }
+
+        .btn-option {
+            background-color: var(--light);
+            border: 2px solid #cbd5e1;
+            padding: 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            text-align: left;
+            font-size: 0.95rem;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .btn-option:hover {
+            border-color: var(--secondary);
+            background-color: #eff6ff;
+            transform: translateY(-2px);
+        }
+
+        .btn-option::before {
+            content: '➔';
+            color: var(--secondary);
+            font-weight: bold;
+        }
+
+        /* Feedback modal / box */
+        .feedback-box {
+            display: none;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 25px;
+            line-height: 1.5;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .feedback-success { background-color: #ecfdf5; border-left: 5px solid var(--success); color: #065f46; }
+        .feedback-danger { background-color: #fef2f2; border-left: 5px solid var(--danger); color: #991b1b; }
+
+        .btn-next {
+            background-color: var(--dark);
+            color: white;
+            border: none;
+            padding: 12px 28px;
+            border-radius: 6px;
+            font-weight: bold;
+            cursor: pointer;
+            align-self: flex-end;
+            display: none;
+            transition: background 0.2s;
+        }
+
+        .btn-next:hover {
+            background-color: var(--secondary);
+        }
+
+        /* Score & Stats */
+        .stats-container {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 15px;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+        .stat-item {
+            background: #f1f5f9;
+            padding: 6px 12px;
+            border-radius: 20px;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Simulador de Presentaciones de Alto Impacto</h1>
+        <p>Domina el arte de convencer a audiencias Ejecutivas, Comerciales y Educativas</p>
+    </header>
+
+    <div class="container">
+        <div class="stage-area">
+            <div class="speaker-zone">
+                <div id="speaker" class="speaker-avatar speaker-pose-neutral">👔</div>
+                <div style="color: white; margin-top: 8px; font-weight: bold; font-size: 0.85rem;">Tú (Expositor)</div>
+            </div>
+
+            <div id="screen" class="slide-screen">
+                <div style="font-size: 1.2rem; color: var(--secondary); margin-bottom: 5px;">¡Bienvenido!</div>
+                <p style="font-weight: normal; font-size:0.8rem;">Selecciona tu audiencia para encender el proyector.</p>
+            </div>
+
+            <div class="audience-zone">
+                <div id="audience-title" style="font-weight: bold; font-size: 1rem;">Público Esperando</div>
+                <div id="audience-icons" class="audience-icons">👥👥👥</div>
+            </div>
+        </div>
+
+        <div class="control-panel">
+            <div class="stats-container">
+                <div class="stat-item">⚡ Resonancia: <span id="score-engagement">100</span>%</div>
+                <div class="stat-item">🎯 Tipo de Enfoque: <span id="current-track">Ninguno</span></div>
+            </div>
+
+            <div class="progress-bar-container">
+                <div id="progress" class="progress-bar"></div>
+            </div>
+
+            <h2 id="step-title" class="step-title">Paso 1: Conoce a tu Audiencia</h2>
+            <p id="step-desc" class="step-description">Para diseñar una presentación efectiva, primero debes saber ante quién vas a hablar. Elige el tipo de audiencia para este reto simulado:</p>
+
+            <div id="options-container" class="options-grid">
+                </div>
+
+            <div id="feedback" class="feedback-box"></div>
+
+            <button id="btn-next" class="btn-next" onclick="nextStep()">Avanzar al siguiente paso ➔</button>
+        </div>
+    </div>
+
+    <script>
+        // Configuración de los Pasos del Simulador
+        const simulatorData = {
+            audienceSelect: {
+                title: "🎯 Paso 1: Conoce a tu Audiencia y define Objetivo",
+                desc: "Cada público busca algo diferente. Elige qué tipo de presentación quieres entrenar hoy:",
+                options: [
+                    { text: "Audiencia Ejecutiva (C-Suite, Directores, Inversionistas)", track: "ejecutiva", feedback: "¡Excelente elección! Los ejecutivos valoran el tiempo, van directo al grano, buscan data dura, ROI y soluciones estratégicas.", correct: true },
+                    { text: "Audiencia Comercial (Clientes Potenciales, Compradores)", track: "comercial", feedback: "¡Gran reto! Los clientes buscan saber cómo resuelves sus problemas específicos, qué beneficios obtienen y el valor diferencial.", correct: true },
+                    { text: "Audiencia Educativa (Estudiantes, Profesionales buscando aprender)", track: "educativa", feedback: "¡Perfecto! Este público requiere claridad pedagógica, estructura paso a paso, inspiración y aplicación práctica.", correct: true }
+                ]
+            },
+            steps: [
+                {
+                    title: "🚀 Paso 2: Apertura Poderosa",
+                    desc: "Tienes menos de 60 segundos para capturar la atención. ¿Cómo decides iniciar tu presentación?",
+                    ejecutiva: {
+                        options: [
+                            { text: "Mostrar una gráfica de resultados financieros devastadores del mercado y plantear la solución directa.", correct: true, feedback: "¡Excelente! Los ejecutivos conectan rápido con métricas críticas de negocio y retos del sector." },
+                            { text: "Contar un chiste sobre economía y pasar los primeros 3 minutos agradeciendo a todos los comités.", correct: false, feedback: "Error. Los ejecutivos sienten que les estás haciendo perder el tiempo. El humor no alineado o rodeos destruyen tu credibilidad de inmediato." }
+                        ]
+                    },
+                    comercial: {
+                        options: [
+                            { text: "Presentar una historia corta sobre un cliente real que sufría el mismo problema que ellos y cómo lo superó.", correct: true, feedback: "¡Brillante! El Storytelling basado en empatía y dolores del cliente genera conexión inmediata." },
+                            { text: "Leer las 15 certificaciones internacionales de tu empresa y el organigrama corporativo.", correct: false, feedback: "Mal inicio. Al cliente no le interesa quién eres tú hasta que entienda qué puedes hacer por él." }
+                        ]
+                    },
+                    educativa: {
+                        options: [
+                            { text: "Hacer una pregunta provocadora al público que active su curiosidad sobre el tema.", correct: true, feedback: "¡Muy bien! Despiertas la participación activa y el deseo de descubrir la respuesta a lo largo de la sesión." },
+                            { text: "Empezar dictando la definición teórica más larga del diccionario sin pausas.", correct: false, feedback: "Aburrido. La audiencia se desconectará mentalmente y empezará a mirar sus teléfonos." }
+                        ]
+                    }
+                },
+                {
+                    title: "📊 Paso 3: Diseño de Diapositivas y Mensajes Clave",
+                    desc: "Es momento de proyectar tus apoyos visuales en la pantalla. ¿Cómo estructuras tus slides?",
+                    ejecutiva: {
+                        options: [
+                            { text: "Un slide limpio con un gráfico macro de tendencias y un solo mensaje clave en negrita.", correct: true, feedback: "¡Perfecto! Menos es más. Permite que se enfoquen en tu análisis y no en descifrar una lámina compleja." },
+                            { text: "Una diapositiva saturada con 8 tablas de Excel en tamaño de letra 10 para que vean que investigaste.", correct: false, feedback: "Fatiga visual instantánea. Provocarás que te interrumpan para cuestionar micro-datos en vez de la estrategia central." }
+                        ]
+                    },
+                    comercial: {
+                        options: [
+                            { text: "Diapositivas altamente visuales que muestran el 'Antes' y el 'Después' del uso de tu producto.", correct: true, feedback: "¡Ideal! La demostración visual del beneficio concreto vende muchísimo más que mil palabras técnicas." },
+                            { text: "Llenar el slide de viñetas de texto (bullets) detallando cada característica técnica del manual.", correct: false, feedback: "Las características aburren, los beneficios convencen. Estás abrumando a tu prospecto comercial." }
+                        ]
+                    },
+                    educativa: {
+                        options: [
+                            { text: "Esquemas conceptuales paso a paso y mapas mentales sencillos que guíen el flujo narrativo.", correct: true, feedback: "¡Gran técnica! Facilitas la retención cognitiva y permites que sigan el hilo conductor sin perderse." },
+                            { text: "Copiar párrafos enteros del libro de texto para que los alumnos los transcriban en sus cuadernos.", correct: false, feedback: "Eso no es educar, es dictar visualmente. Pierdes el dinamismo de una verdadera ponencia pedagógica." }
+                        ]
+                    }
+                },
+                {
+                    title: "🧠 Paso 4: Tono, Presencia y Uso Estratégico del Humor",
+                    desc: "La audiencia empieza a mostrar señales de cansancio a mitad de la sesión. ¿Cómo manejas tu presencia?",
+                    ejecutiva: {
+                        options: [
+                            { text: "Mantener un tono firme, seguro, y modular la velocidad para enfatizar las decisiones urgentes, usando un humor muy sutil o nulo.", correct: true, feedback: "Correcto. El tono ejecutivo requiere asertividad y aplomo. El humor debe ser escaso y muy corporativo si se usa." },
+                            { text: "Caminar exageradamente por toda la sala y soltar un chiste subido de tono para romper el hielo.", correct: false, feedback: "Fatal. Pierdes autoridad y respeto. En entornos corporativos de alto nivel, esto se percebe como falta de profesionalismo." }
+                        ]
+                    },
+                    comercial: {
+                        options: [
+                            { text: "Usar un tono emocionante, hacer pausas dramáticas tras lanzar una ventaja competitiva y sonreír con naturalidad.", correct: true, feedback: "¡Así se hace! La energía es contagiosa. Tu presencia proyecta convicción absoluta en lo que estás ofreciendo." },
+                            { text: "Mantener los brazos cruzados, leer tus notas sin mirar a los ojos y hablar en un tono plano y monótono.", correct: false, feedback: "Nadie le compra a alguien que no demuestra pasión ni seguridad. Mataste la venta." }
+                        ]
+                    },
+                    educativa: {
+                        options: [
+                            { text: "Usar analogías divertidas cotidianas, variar el tono de voz para mantener la atención alta y ensayar dinámicas breves.", correct: true, feedback: "¡Excelente! El humor educativo y las analogías anclan el conocimiento y mantienen el cerebro de la audiencia despierto." },
+                            { text: "Gritar para imponer orden y reprender seriamente a los que bostecen.", correct: false, feedback: "Generas un clima de tensión defensivo que bloquea por completo el aprendizaje y la empatía." }
+                        ]
+                    }
+                },
+                {
+                    title: "🏁 Paso 5: El Cierre Memorable",
+                    desc: "Llegó el momento final. ¿Cómo decides terminar tu intervención para asegurar el impacto?",
+                    ejecutiva: {
+                        options: [
+                            { text: "Lanzar un 'Call to Action' explícito especificando los siguientes pasos de inversión y el retorno esperado.", correct: true, feedback: "¡Brillante! Los ejecutivos terminan listos para tomar la decisión que les solicitaste." },
+                            { text: "Decir 'Bueno, eso es todo lo que tenía, ¿alguien tiene alguna pregunta?' con voz titubeante.", correct: false, feedback: "Un cierre débil debilita todo el impacto previo. Termina siempre con fuerza y dirección clara." }
+                        ]
+                    },
+                    comercial: {
+                        options: [
+                            { text: "Ofrecer una oferta exclusiva de cierre o piloto limitado, cerrando con una frase potente sobre la transformación del cliente.", correct: true, feedback: "¡Magnífico! Creas urgencia comercial y dejas una sensación de oportunidad imperdible en la mente del comprador." },
+                            { text: "Terminar abruptamente diciendo que los precios están en un PDF que les enviarás la próxima semana.", correct: false, feedback: "Enfriaste el lead. El momento de mayor intención de compra es justo al terminar tu presentación." }
+                        ]
+                    },
+                    educativa: {
+                        options: [
+                            { text: "Hacer un resumen de 3 frases con las grandes ideas clave y cerrar con una cita inspiradora que los invite a actuar.", correct: true, feedback: "¡Fantástico! Se van a casa con los conceptos masticados y con la motivación alta para aplicar lo aprendido." },
+                            { text: "Dejar que el tiempo se agote y salir corriendo del salón porque viene otra clase.", correct: false, feedback: "Deja una sensación de desorganización total. El cierre pedagógico es vital para consolidar la memoria a largo plazo." }
+                        ]
+                    }
+                }
+            ]
+        };
+
+        // Estado del Simulador
+        let currentTrack = ""; 
+        let currentStepIndex = -1; 
+        let resonanceScore = 100;
+
+        let speakerElem, screenElem, audienceTitleElem, audienceIconsElem, stepTitleElem, stepDescElem, optionsContainer, feedbackElem, btnNext, progressBar, scoreElem, trackElem;
+
+        // Inicializar Simulador de forma segura mapeando los nodos una vez cargado el DOM
+        function initSimulator() {
+            speakerElem = document.getElementById('speaker');
+            screenElem = document.getElementById('screen');
+            audienceTitleElem = document.getElementById('audience-title');
+            audienceIconsElem = document.getElementById('audience-icons');
+            stepTitleElem = document.getElementById('step-title');
+            stepDescElem = document.getElementById('step-desc');
+            optionsContainer = document.getElementById('options-container');
+            feedbackElem = document.getElementById('feedback');
+            btnNext = document.getElementById('btn-next');
+            progressBar = document.getElementById('progress');
+            scoreElem = document.getElementById('score-engagement');
+            trackElem = document.getElementById('current-track');
+
+            currentTrack = "";
+            currentStepIndex = -1;
+            resonanceScore = 100;
+            scoreElem.textContent = resonanceScore;
+            trackElem.textContent = "Ninguno";
+            progressBar.style.width = "0%";
+            feedbackElem.style.display = "none";
+            btnNext.style.display = "none";
+            
+            speakerElem.className = "speaker-avatar speaker-pose-neutral";
+            speakerElem.textContent = "👔";
+            screenElem.innerHTML = `<div style="font-size: 1.2rem; color: #3b82f6; margin-bottom: 5px;">¡Bienvenido!</div><p style="font-weight: normal; font-size:0.8rem;">Selecciona tu audiencia para encender el proyector.</p>`;
+            screenElem.style.backgroundColor = "white";
+            screenElem.style.color = "#0f172a";
+            audienceTitleElem.textContent = "Público Esperando";
+            audienceIconsElem.textContent = "👥👥👥";
+
+            stepTitleElem.textContent = simulatorData.audienceSelect.title;
+            stepDescElem.textContent = simulatorData.audienceSelect.desc;
+
+            renderOptions(simulatorData.audienceSelect.options, true);
+        }
+
+        // Renderizar opciones en el panel
+        function renderOptions(options, isAudienceStep) {
+            optionsContainer.innerHTML = "";
+            options.forEach(opt => {
+                const btn = document.createElement('button');
+                btn.className = "btn-option";
+                btn.textContent = opt.text;
+                btn.onclick = () => handleChoice(opt, isAudienceStep);
+                optionsContainer.appendChild(btn);
+            });
+        }
+
+        // Manejar la decisión tomada por el usuario
+        function handleChoice(option, isAudienceStep) {
+            const buttons = optionsContainer.querySelectorAll('.btn-option');
+            buttons.forEach(b => b.disabled = true);
+
+            feedbackElem.style.display = "block";
+            
+            if (isAudienceStep) {
+                currentTrack = option.track;
+                trackElem.textContent = currentTrack.toUpperCase();
+                feedbackElem.className = "feedback-box feedback-success";
+                feedbackElem.innerHTML = `<strong>🎯 Audiencia Definida:</strong> ${option.feedback}`;
+                
+                if(currentTrack === 'ejecutiva') {
+                    audienceTitleElem.textContent = "Junta Directiva (CEO, CFO)";
+                    audienceIconsElem.textContent = "🧐💼📈";
+                    screenElem.innerHTML = "📊 OBJETIVO EJECUTIVO:<br><span style='font-weight:normal; font-size:0.85rem;'>Aprobación presupuestal y ROI</span>";
+                } else if(currentTrack === 'comercial') {
+                    audienceTitleElem.textContent = "Clientes Potenciales";
+                    audienceIconsElem.textContent = "🤝💰🛒";
+                    screenElem.innerHTML = "💡 ENFOQUE COMERCIAL:<br><span style='font-weight:normal; font-size:0.85rem;'>Conversión de Leads y Ventas</span>";
+                } else {
+                    audienceTitleElem.textContent = "Estudiantes / Profesionales";
+                    audienceIconsElem.textContent = "🎓📝🤔";
+                    screenElem.innerHTML = "🏫 META EDUCATIVA:<br><span style='font-weight:normal; font-size:0.85rem;'>Transferencia de Conocimiento</span>";
+                }
+                
+                speakerElem.className = "speaker-avatar speaker-pose-happy";
+                btnNext.style.display = "block";
+            } else {
+                if (option.correct) {
+                    feedbackElem.className = "feedback-box feedback-success";
+                    feedbackElem.innerHTML = `<strong>✅ ¡Excelente decisión!:</strong> ${option.feedback}`;
+                    speakerElem.className = "speaker-avatar speaker-pose-happy";
+                    speakerElem.textContent = "😎🎤";
+                    screenElem.style.backgroundColor = "#ecfdf5";
+                    screenElem.innerHTML = `<div>✨ Slide Optimizado</div><p style='font-weight:normal; font-size:0.75rem; color:#065f46; margin-top:5px;'>Conectando de forma asertiva con el público.</p>`;
+                } else {
+                    feedbackElem.className = "feedback-box feedback-danger";
+                    feedbackElem.innerHTML = `<strong>❌ Decisión Incorrecta:</strong> ${option.feedback}`;
+                    resonanceScore = Math.max(0, resonanceScore - 25);
+                    scoreElem.textContent = resonanceScore;
+                    speakerElem.className = "speaker-avatar speaker-pose-sad";
+                    speakerElem.textContent = "😰💧";
+                    screenElem.style.backgroundColor = "#fef2f2";
+                    screenElem.innerHTML = `<div>⚠️ Audiencia Distraída</div><p style='font-weight:normal; font-size:0.75rem; color:#991b1b; margin-top:5px;'>Se perdió la atención o el foco del mensaje.</p>`;
+                }
+                btnNext.style.display = "block";
+            }
+        }
+
+        // Avanzar en la simulación
+        function nextStep() {
+            feedbackElem.style.display = "none";
+            btnNext.style.display = "none";
+            speakerElem.className = "speaker-avatar speaker-pose-neutral";
+            screenElem.style.backgroundColor = "white";
+            screenElem.style.color = "#0f172a";
+
+            currentStepIndex++;
+            const totalSteps = simulatorData.steps.length;
+            
+            const progressPercent = ((currentStepIndex + 1) / (totalSteps + 1)) * 100;
+            progressBar.style.width = `${progressPercent}%`;
+
+            if (currentStepIndex < totalSteps) {
+                const stepData = simulatorData.steps[currentStepIndex];
+                stepTitleElem.textContent = stepData.title;
+                stepDescElem.textContent = stepData.desc;
+                
+                const currentOptions = stepData[currentTrack].options;
+                renderOptions(currentOptions, false);
+            } else {
+                showFinalResults();
+            }
+        }
+
+        // Mostrar Pantalla de Resultados Finales
+        function showFinalResults() {
+            progressBar.style.width = "100%";
+            optionsContainer.innerHTML = "";
+            
+            stepTitleElem.textContent = "🏆 ¡Simulación Finalizada!";
+            
+            let finalEvaluation = "";
+            if (resonanceScore >= 90) {
+                finalEvaluation = "¡Eres un presentador maestro! Has adaptado tu flow narrativo, diseño visual y tono a las necesidades exactas de tu audiencia. Sabes cómo estructurar una apertura poderosa y cerrar buscando impacto medible. ¡Listo para los grandes escenarios!";
+                speakerElem.textContent = "🏆👑";
+                speakerElem.className = "speaker-avatar speaker-pose-happy";
+            } else if (resonanceScore >= 60) {
+                finalEvaluation = "Buen trabajo, tu presentación tiene una estructura sólida, pero tuviste algunos deslices de enfoque. Recuerda que las audiencias ejecutivas exigen velocidad, las comerciales beneficios directos, y las educativas dinamismo. ¡Afila esos detalles!";
+                speakerElem.textContent = "👍✨";
+            } else {
+                finalEvaluation = "Tu presentación sufrió una alta desconexión con el público. Es crucial recordar que exponer no es leer láminas saturadas ni usar el mismo tono para todos. Enfócate siempre en el objetivo de tu audiencia antes de abrir tu software de diseño de slides. ¡Inténtalo de nuevo!";
+                speakerElem.textContent = "🤕📖";
+                speakerElem.className = "speaker-avatar speaker-pose-sad";
+            }
+
+            stepDescElem.innerHTML = `
+                <div style="background-color:#f1f5f9; padding:20px; border-radius:8px; margin-bottom:15px; border-left: 5px solid #1e293b">
+                    <h3 style="margin-bottom:8px;">Resultados de Resonancia: ${resonanceScore}%</h3>
+                    <p style="font-weight:normal; font-size:1rem; color:#0f172a;">${finalEvaluation}</p>
+                </div>
+                <h4 style="margin-top:20px; margin-bottom:10px;">Pilares del éxito repasados:</h4>
+                <ul style="margin-left: 20px; font-weight:normal; line-height:1.6; font-size:0.9rem;">
+                    <li><strong>Conocer a la audiencia:</strong> Ajustar contenido a lo que les interesa y no a lo que tú quieres decir.</li>
+                    <li><strong>Apertura Poderosa:</strong> Capturar la atención en los primeros segundos (data, historias o preguntas).</li>
+                    <li><strong>Diseño y Mensajes Clave:</strong> Diapositivas limpias, conceptuales y de alta legibilidad.</li>
+                    <li><strong>Presencia y Tono:</strong> Modular la voz y usar el humor de forma estratégica según el entorno.</li>
+                    <li><strong>Cierre Memorable:</strong> Finalizar con un llamado a la acción (Call to Action) nítido e inspirador.</li>
+                </ul>
+            `;
+
+            const btnReset = document.createElement('button');
+            btnReset.className = "btn-next";
+            btnReset.style.display = "block";
+            btnReset.textContent = "🔄 Volver a Entrenar (Elegir otra Audiencia)";
+            btnReset.onclick = () => initSimulator();
+            optionsContainer.appendChild(btnReset);
+        }
+
+        window.onload = initSimulator;
+    </script>
+</body>
+</html>
