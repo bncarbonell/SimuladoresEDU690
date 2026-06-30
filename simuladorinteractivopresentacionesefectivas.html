@@ -1,0 +1,715 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Simulador Interactivo - Presentaciones Efectivas</title>
+
+<style>
+
+*{
+box-sizing:border-box;
+margin:0;
+padding:0;
+font-family:Segoe UI,Arial,sans-serif;
+}
+
+body{
+background:#eef4fb;
+color:#2b2b2b;
+}
+
+header{
+background:linear-gradient(135deg,#2057d4,#4d95ff);
+color:white;
+padding:20px;
+text-align:center;
+box-shadow:0 5px 15px rgba(0,0,0,.2);
+}
+
+header h1{
+font-size:30px;
+margin-bottom:8px;
+}
+
+header p{
+opacity:.95;
+}
+
+.container{
+max-width:1400px;
+margin:auto;
+padding:20px;
+display:grid;
+grid-template-columns:420px 1fr;
+gap:20px;
+}
+
+@media(max-width:1000px){
+.container{
+grid-template-columns:1fr;
+}
+}
+
+.panel{
+background:white;
+border-radius:15px;
+padding:18px;
+box-shadow:0 8px 20px rgba(0,0,0,.08);
+}
+
+h2{
+margin-bottom:10px;
+color:#2452b7;
+}
+
+#scene{
+height:560px;
+background:linear-gradient(#dfefff,#c9ddf6);
+border-radius:15px;
+position:relative;
+overflow:hidden;
+border:3px solid #d5e3ff;
+}
+
+.stage{
+position:absolute;
+bottom:0;
+width:100%;
+height:170px;
+background:#7b5b47;
+}
+
+.screen{
+position:absolute;
+top:40px;
+left:50%;
+transform:translateX(-50%);
+width:260px;
+height:150px;
+background:white;
+border:8px solid #333;
+border-radius:8px;
+display:flex;
+align-items:center;
+justify-content:center;
+font-size:20px;
+font-weight:bold;
+color:#3567d6;
+}
+
+.presenter{
+position:absolute;
+bottom:135px;
+left:50%;
+transform:translateX(-50%);
+cursor:pointer;
+transition:.3s;
+}
+
+.presenter:hover{
+transform:translateX(-50%) scale(1.05);
+}
+
+.head{
+width:45px;
+height:45px;
+background:#ffd8b5;
+border-radius:50%;
+margin:auto;
+}
+
+.body{
+width:70px;
+height:90px;
+background:#2057d4;
+margin:auto;
+border-radius:8px;
+position:relative;
+}
+
+.arm{
+position:absolute;
+width:50px;
+height:10px;
+background:#ffd8b5;
+top:20px;
+}
+
+.arm.left{
+left:-40px;
+transform:rotate(20deg);
+}
+
+.arm.right{
+right:-40px;
+transform:rotate(-25deg);
+}
+
+.legs{
+display:flex;
+justify-content:space-between;
+width:40px;
+margin:auto;
+}
+
+.leg{
+width:10px;
+height:45px;
+background:#333;
+}
+
+.audience{
+position:absolute;
+bottom:15px;
+width:100%;
+display:flex;
+justify-content:center;
+gap:8px;
+}
+
+.person{
+width:34px;
+height:54px;
+position:relative;
+cursor:pointer;
+transition:.2s;
+}
+
+.person:hover{
+transform:translateY(-4px);
+}
+
+.person .h{
+width:18px;
+height:18px;
+background:#ffd8b5;
+border-radius:50%;
+margin:auto;
+}
+
+.person .b{
+width:24px;
+height:30px;
+margin:auto;
+background:#5a6f9f;
+border-radius:5px;
+}
+
+.controls{
+margin-top:15px;
+display:flex;
+flex-wrap:wrap;
+gap:8px;
+}
+
+button{
+background:#2f6eff;
+border:none;
+color:white;
+padding:10px 15px;
+border-radius:8px;
+cursor:pointer;
+transition:.25s;
+}
+
+button:hover{
+background:#1b4fc6;
+}
+
+.option{
+margin:10px 0;
+padding:12px;
+border-radius:10px;
+background:#edf4ff;
+cursor:pointer;
+transition:.25s;
+border:2px solid transparent;
+}
+
+.option:hover{
+border-color:#2f6eff;
+}
+
+.feedback{
+margin-top:15px;
+padding:15px;
+border-radius:10px;
+display:none;
+font-weight:600;
+}
+
+.good{
+background:#dff7df;
+color:#176117;
+}
+
+.bad{
+background:#ffe3e3;
+color:#8b0000;
+}
+
+.progress{
+height:18px;
+background:#ddd;
+border-radius:20px;
+overflow:hidden;
+margin:12px 0;
+}
+
+.bar{
+height:100%;
+width:0%;
+background:linear-gradient(90deg,#39b54a,#72d657);
+transition:.4s;
+}
+
+.score{
+font-size:22px;
+font-weight:bold;
+color:#2057d4;
+margin-bottom:10px;
+}
+
+small{
+color:#777;
+}
+
+.tip{
+margin-top:15px;
+background:#fff7db;
+padding:12px;
+border-radius:10px;
+}
+
+#questionTitle{
+margin-bottom:10px;
+}
+
+</style>
+</head>
+
+<body>
+
+<header>
+<h1>🎤 Simulador Interactivo de Presentaciones Efectivas</h1>
+<p>Aprende tomando decisiones como si estuvieras presentando frente a una audiencia profesional.</p>
+</header>
+
+<div class="container">
+
+<div class="panel">
+
+<h2>Escenario</h2>
+
+<div id="scene">
+
+<div class="screen" id="screen">
+Tu presentación
+</div>
+
+<div class="presenter" onclick="presenterTip()">
+
+<div class="head"></div>
+
+<div class="body">
+<div class="arm left"></div>
+<div class="arm right"></div>
+</div>
+
+<div class="legs">
+<div class="leg"></div>
+<div class="leg"></div>
+</div>
+
+</div>
+
+<div class="audience">
+
+<div class="person" onclick="audienceInfo()">
+<div class="h"></div>
+<div class="b"></div>
+</div>
+
+<div class="person" onclick="audienceInfo()">
+<div class="h"></div>
+<div class="b"></div>
+</div>
+
+<div class="person" onclick="audienceInfo()">
+<div class="h"></div>
+<div class="b"></div>
+</div>
+
+<div class="person" onclick="audienceInfo()">
+<div class="h"></div>
+<div class="b"></div>
+</div>
+
+<div class="person" onclick="audienceInfo()">
+<div class="h"></div>
+<div class="b"></div>
+</div>
+
+<div class="person" onclick="audienceInfo()">
+<div class="h"></div>
+<div class="b"></div>
+</div>
+
+</div>
+
+<div class="stage"></div>
+
+</div>
+
+<div class="tip" id="dynamicTip">
+Haz clic sobre el presentador o sobre la audiencia para explorar consejos.
+</div>
+
+</div>
+
+<div class="panel">
+
+<div class="score">
+Puntuación:
+<span id="score">0</span>/10
+</div>
+
+<div class="progress">
+<div class="bar" id="bar"></div>
+</div>
+
+<h2 id="questionTitle"></h2>
+
+<div id="options"></div>
+
+<div id="feedback" class="feedback"></div>
+
+<div class="controls">
+
+<button onclick="nextQuestion()">
+Siguiente decisión ▶
+</button>
+
+<button onclick="restart()">
+Reiniciar
+</button>
+
+</div>
+
+<br>
+
+<small>
+Cada decisión representa un momento real de una presentación profesional.
+</small>
+
+</div>
+
+</div>
+
+<script>
+
+const questions=[
+
+{
+title:"1. Antes de preparar la presentación, ¿qué haces primero?",
+screen:"Audiencia",
+correct:0,
+why:"Conocer a la audiencia permite adaptar el lenguaje, ejemplos y profundidad.",
+options:[
+"Investigar quién es la audiencia y qué necesita.",
+"Crear muchas diapositivas llamativas.",
+"Elegir una plantilla con muchos colores."
+]
+},
+
+{
+title:"2. ¿Cuál es el objetivo más importante?",
+screen:"Objetivo",
+correct:1,
+why:"Toda presentación necesita un objetivo claro para guiar el mensaje.",
+options:[
+"Hablar durante mucho tiempo.",
+"Definir exactamente qué quiero que la audiencia piense, sienta o haga.",
+"Mostrar todos los datos posibles."
+]
+},
+
+{
+title:"3. Elige la mejor apertura.",
+screen:"Apertura",
+correct:2,
+why:"Una apertura poderosa capta la atención desde los primeros segundos.",
+options:[
+"Leer todo el índice.",
+"Presentarte durante cinco minutos.",
+"Comenzar con una historia, dato sorprendente o pregunta poderosa."
+]
+},
+
+{
+title:"4. Mensajes clave",
+screen:"Ideas",
+correct:0,
+why:"Las audiencias recuerdan pocas ideas. Prioriza tres mensajes principales.",
+options:[
+"Tres mensajes clave fáciles de recordar.",
+"Veinte ideas diferentes.",
+"Improvisar completamente."
+]
+},
+
+{
+title:"5. Diseño de diapositivas",
+screen:"Slides",
+correct:1,
+why:"Las diapositivas apoyan al orador, no lo reemplazan.",
+options:[
+"Llenarlas de texto.",
+"Pocas palabras, imágenes claras y buen contraste.",
+"Muchos efectos de animación."
+]
+},
+
+{
+title:"6. Storytelling",
+screen:"Historia",
+correct:2,
+why:"Las historias ayudan a conectar emocionalmente y recordar mejor el contenido.",
+options:[
+"Solo mostrar cifras.",
+"Leer el informe completo.",
+"Construir una narrativa con inicio, desarrollo y cierre."
+]
+},
+
+{
+title:"7. Presencia",
+screen:"Presencia",
+correct:0,
+why:"La comunicación no verbal transmite seguridad y credibilidad.",
+options:[
+"Mirar al público, variar la voz y usar pausas.",
+"Mirar siempre al piso.",
+"Leer cada palabra."
+]
+},
+
+{
+title:"8. Humor",
+screen:"Humor",
+correct:1,
+why:"El humor funciona cuando es breve, respetuoso y relevante.",
+options:[
+"Hacer bromas constantemente.",
+"Usarlo con moderación y según el contexto.",
+"Evitar cualquier emoción."
+]
+},
+
+{
+title:"9. Ensayo",
+screen:"Ensayo",
+correct:2,
+why:"Practicar mejora el tiempo, la seguridad y la claridad.",
+options:[
+"No ensayar.",
+"Improvisar todo.",
+"Practicar varias veces con cronómetro."
+]
+},
+
+{
+title:"10. Cierre",
+screen:"Cierre",
+correct:1,
+why:"Un cierre memorable resume la idea principal y llama a la acción.",
+options:[
+"Decir simplemente 'eso era todo'.",
+"Resumir el mensaje principal y finalizar con una llamada a la acción.",
+"Terminar sin avisar."
+]
+}
+
+];
+
+let current=0;
+let score=0;
+
+function loadQuestion(){
+
+let q=questions[current];
+
+document.getElementById("questionTitle").innerHTML=
+q.title;
+
+document.getElementById("screen").innerHTML=q.screen;
+
+let html="";
+
+q.options.forEach((o,i)=>{
+
+html+=`
+<div class="option" onclick="choose(${i})">
+${o}
+</div>
+`;
+
+});
+
+document.getElementById("options").innerHTML=html;
+
+document.getElementById("feedback").style.display="none";
+
+}
+
+function choose(index){
+
+let q=questions[current];
+
+let fb=document.getElementById("feedback");
+
+if(index===q.correct){
+
+score++;
+
+document.getElementById("score").innerHTML=score;
+
+fb.className="feedback good";
+
+fb.innerHTML=
+"✅ Excelente decisión.<br><br>"+q.why;
+
+}else{
+
+fb.className="feedback bad";
+
+fb.innerHTML=
+"❌ Puede mejorar.<br><br>"+q.why;
+
+}
+
+fb.style.display="block";
+
+let p=(score/10)*100;
+
+document.getElementById("bar").style.width=p+"%";
+
+}
+
+function nextQuestion(){
+
+if(current<questions.length-1){
+
+current++;
+loadQuestion();
+
+}else{
+
+let msg="";
+
+if(score>=9){
+
+msg="🏆 ¡Excelente! Presentarías con gran impacto ante una audiencia profesional.";
+
+}else if(score>=7){
+
+msg="👏 Muy buen trabajo. Solo necesitas pulir algunos aspectos.";
+
+}else if(score>=5){
+
+msg="🙂 Vas por buen camino. Practica más el storytelling y el cierre.";
+
+}else{
+
+msg="📚 Sigue practicando. Toda gran presentación comienza con preparación.";
+
+}
+
+document.getElementById("questionTitle").innerHTML="Simulación finalizada";
+
+document.getElementById("options").innerHTML=`
+<h3>${msg}</h3>
+
+<br>
+
+<h4>Tipos de presentación:</h4>
+
+<ul style="margin-left:20px;line-height:1.8">
+
+<li>🎓 Educativa → enseñar.</li>
+
+<li>💼 Ejecutiva → apoyar decisiones.</li>
+
+<li>📈 Comercial → persuadir para generar acción.</li>
+
+</ul>
+
+`;
+
+document.getElementById("feedback").style.display="none";
+
+}
+
+}
+
+function restart(){
+
+current=0;
+score=0;
+
+document.getElementById("score").innerHTML=0;
+
+document.getElementById("bar").style.width="0%";
+
+loadQuestion();
+
+}
+
+function presenterTip(){
+
+const tips=[
+
+"🎤 Habla con energía y utiliza pausas para dar énfasis.",
+
+"👀 Mantén contacto visual con diferentes personas.",
+
+"😊 Sonríe cuando sea natural.",
+
+"👐 Usa gestos para reforzar ideas.",
+
+"📖 Cuenta historias, no solo datos."
+
+];
+
+document.getElementById("dynamicTip").innerHTML=tips[Math.floor(Math.random()*tips.length)];
+
+}
+
+function audienceInfo(){
+
+const tips=[
+
+"💡 La audiencia quiere entender cómo le beneficia tu mensaje.",
+
+"🎯 Adapta ejemplos según el perfil del público.",
+
+"🤝 Ejecutivos buscan decisiones; clientes buscan soluciones; estudiantes buscan aprendizaje.",
+
+"📊 Observa sus reacciones y ajusta el ritmo.",
+
+"❓Hacer preguntas mantiene la atención."
+
+];
+
+document.getElementById("dynamicTip").innerHTML=tips[Math.floor(Math.random()*tips.length)];
+
+}
+
+loadQuestion();
+
+</script>
+
+</body>
+</html>
