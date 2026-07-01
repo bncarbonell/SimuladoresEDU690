@@ -61,7 +61,6 @@
             padding-bottom: 10px;
         }
 
-        /* Estructura del Diagrama Visual del Corazón */
         .heart-diagram {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -94,7 +93,6 @@
             box-shadow: 0 5px 15px rgba(0,0,0,0.08);
         }
 
-        /* Lado Derecho (Sangre desoxigenada - Azul suave) */
         .deox-side {
             background-color: var(--blue-light);
             color: #1a4a75;
@@ -106,7 +104,6 @@
             border-color: var(--blue-deox);
         }
 
-        /* Lado Izquierdo (Sangre oxigenada - Rojo suave) */
         .ox-side {
             background-color: var(--red-light);
             color: #7d2626;
@@ -117,3 +114,184 @@
             color: white;
             border-color: var(--red-ox);
         }
+
+        .info-panel {
+            background: #f1f5f9;
+            border-left: 5px solid #cbd5e1;
+            padding: 20px;
+            border-radius: 4px;
+            min-height: 60px;
+            margin-top: 25px;
+            transition: all 0.3s;
+        }
+
+        .scenario-box {
+            background: #fafafa;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 25px;
+        }
+
+        .options-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-top: 20px;
+        }
+
+        .option-btn {
+            background: white;
+            border: 1px solid var(--border);
+            padding: 15px;
+            text-align: left;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: background 0.2s;
+        }
+
+        .option-btn:hover {
+            background: #f1f5f9;
+        }
+
+        .feedback {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 8px;
+            display: none;
+            font-weight: 500;
+        }
+
+        .feedback.correct {
+            display: block;
+            background-color: #e8f8f0;
+            color: #1e7e34;
+            border-left: 4px solid var(--success);
+        }
+
+        .feedback.incorrect {
+            display: block;
+            background-color: #fff5ed;
+            color: #b95c00;
+            border-left: 4px solid var(--warning);
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1>Simulador Cardiovascular Interactivo</h1>
+        <p>Explora la anatomía funcional del corazón y toma decisiones críticas de salud</p>
+    </header>
+
+    <div class="section">
+        <h2>1. Anatomía y Circulación del Corazón</h2>
+        <p>El corazón funciona como una doble bomba. Haz clic en cada una de las partes del diagrama para comprender cómo fluye la sangre y cuál es el rol de cada cavidad o vaso:</p>
+        
+        <div class="heart-diagram">
+            <div class="column-title">Lado Derecho (Desoxigenada)</div>
+            <div class="column-title">Lado Izquierdo (Oxigenada)</div>
+            
+            <div class="cardio-part deox-side" onclick="showFeature('venas', this)">Venas Cavas</div>
+            <div class="cardio-part ox-side" onclick="showFeature('aorta', this)">Arteria Aorta</div>
+            
+            <div class="cardio-part deox-side" onclick="showFeature('ad', this)">Aurícula Derecha</div>
+            <div class="cardio-part ox-side" onclick="showFeature('ai', this)">Aurícula Izquierda</div>
+            
+            <div class="cardio-part deox-side" onclick="showFeature('vd', this)">Ventrículo Derecho</div>
+            <div class="cardio-part ox-side" onclick="showFeature('vi', this)">Ventrículo Izquierdo</div>
+        </div>
+
+        <div class="info-panel" id="infoPanel">
+            <span style="color: #64748b; font-style: italic;">Haz clic en cualquier sección del diagrama de arriba para desplegar la información médica...</span>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>2. Escenario Clínico: Emergencia Cardiovascular</h2>
+        <div class="scenario-box">
+            <p><strong>Situación:</strong> Estás almorzando en un lugar público cuando un adulto mayor de la mesa de al lado se lleva la mano al centro del pecho de forma súbita, expresa tener un dolor opresivo muy fuerte que se extiende a su brazo izquierdo, palidece, empieza a sudar frío y, a los pocos segundos, pierde el conocimiento desplomándose en el suelo. No responde a estímulos físicos ni verbales.</p>
+            <p><em>¿Cuál es la secuencia de acciones correcta que debes iniciar?</em></p>
+
+            <div class="options-list">
+                <button class="option-btn" onclick="evaluateChoice('A')">
+                    <strong>A)</strong> Intentar incorporarlo en una silla, darle un vaso de agua fresca para que recupere la conciencia y masajear su brazo izquierdo para activar la circulación.
+                </button>
+                <button class="option-btn" onclick="evaluateChoice('B')">
+                    <strong>B)</strong> Confirmar que no respira, llamar inmediatamente a emergencias (pidiendo un DEA/Desfibrilador) e iniciar compresiones torácicas fuertes y rápidas en el centro del pecho (RCP).
+                </button>
+                <button class="option-btn" onclick="evaluateChoice('C')">
+                    <strong>C)</strong> Buscar su pulso durante 5 minutos para estar completamente seguro, y si no lo encuentras, correr a buscar una farmacia cercana para comprar una aspirina.
+                </button>
+            </div>
+
+            <div id="feedbackContainer" class="feedback"></div>
+        </div>
+    </div>
+</div>
+
+<script>
+    const cardiovascularData = {
+        venas: {
+            title: "Venas Cavas (Superior e Inferior)",
+            desc: "Son las grandes autopistas encargadas de recoger toda la sangre del cuerpo que ya se ha quedado sin oxígeno y cargada de dióxido de carbono tras nutrir los tejidos. Depositan este flujo directamente en la Aurícula Derecha.",
+            border: "#4a90e2"
+        },
+        aorta: {
+            title: "Arteria Aorta",
+            desc: "Es la arteria más grande e importante del organismo. Recibe la sangre ricamente oxigenada del ventrículo izquierdo y la propulsa a gran presión hacia el resto de los órganos, la cabeza y las extremidades.",
+            border: "#e35b5b"
+        },
+        ad: {
+            title: "Aurícula Derecha",
+            desc: "Es la cámara receptora del lado derecho. Al llenarse con la sangre desoxigenada proveniente de las venas cavas, se contrae y la envía hacia abajo al ventrículo derecho a través de la válvula tricúspide.",
+            border: "#4a90e2"
+        },
+        ai: {
+            title: "Aurícula Izquierda",
+            desc: "Esta cavidad recibe la sangre que acaba de ser oxigenada y purificada en los pulmones a través de las venas pulmonares. Al contraerse, impulsa la sangre al ventrículo izquierdo cruzando la válvula mitral.",
+            border: "#e35b5b"
+        },
+        vd: {
+            title: "Ventrículo Derecho",
+            desc: "Cámara muscular que bombea la sangre desoxigenada hacia la arteria pulmonar para enviarla directo a los pulmones. Allí, la sangre liberará el CO₂ y captará oxígeno fresco mediante el proceso de hematosis.",
+            border: "#4a90e2"
+        },
+        vi: {
+            title: "Ventrículo Izquierdo",
+            desc: "Es la cámara con las paredes musculares más gruesas del corazón. Necesita una fuerza tremenda para bombear la sangre oxigenada con la presión suficiente a través de la aorta para que alcance hasta el último rincón del cuerpo.",
+            border: "#e35b5b"
+        }
+    };
+
+    function showFeature(partKey, element) {
+        const data = cardiovascularData[partKey];
+        const panel = document.getElementById('infoPanel');
+        
+        if (data) {
+            panel.style.borderLeftColor = data.border;
+            panel.innerHTML = `<strong>${data.title}:</strong> ${data.desc}`;
+            document.querySelectorAll('.cardio-part').forEach(p => p.classList.remove('active'));
+            element.classList.add('active');
+        }
+    }
+
+    function evaluateChoice(choice) {
+        const fBox = document.getElementById('feedbackContainer');
+        
+        if (choice === 'B') {
+            fBox.className = "feedback correct";
+            fBox.innerHTML = "<strong>¡Excelente y Vital Decisión!</strong> El dolor opresivo irradiado y el desmayo sugieren un posible Paro Cardiorrespiratorio secundario a un infarto. Cada minuto cuenta: activar el sistema de emergencias, pedir un desfibrilador (DEA) e iniciar RCP (compresiones) mantiene el flujo de sangre oxigenada hacia el cerebro, salvando vidas.";
+        } else if (choice === 'A') {
+            fBox.className = "feedback incorrect";
+            fBox.innerHTML = "<strong>Acción Insegura.</strong> Sentar a una persona inconsciente corta aún más el flujo de sangre al cerebro y puede provocar caídas graves. Un vaso de agua representa un riesgo inminente de asfixia/broncoaspiración si el paciente no puede tragar de forma voluntaria.";
+        } else if (choice === 'C') {
+            fBox.className = "feedback incorrect";
+            fBox.innerHTML = "<strong>Acción Ineficiente.</strong> Perder 5 minutos buscando el pulso retrasa de forma crítica el inicio de las maniobras de reanimación. Si la persona no responde y no respira normalmente, se asume el paro cardíaco y se debe actuar de inmediato; dejar la escena para ir a comprar medicación empeora drásticamente el profeso.";
+        }
+    }
+</script>
+
+</body>
+</html>
