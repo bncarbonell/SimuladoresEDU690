@@ -1,0 +1,1037 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Desafío de Presentaciones de Impacto</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --navy: #0A0F26;
+    --navy-elevated: #10173A;
+    --surface: #161E48;
+    --border: rgba(147, 125, 255, 0.20);
+    --violet: #7C5CFF;
+    --violet-dim: #5B42C4;
+    --lavender: #D9D2FF;
+    --white: #F5F6FC;
+    --muted: #9AA3CC;
+    --success: #4ADE80;
+    --error: #FB7C86;
+    --gold: #F5C451;
+    --font-display: 'Space Grotesk', sans-serif;
+    --font-body: 'Inter', sans-serif;
+    --font-mono: 'IBM Plex Mono', monospace;
+  }
+
+  *{ box-sizing: border-box; }
+
+  html, body{
+    margin:0;
+    padding:0;
+    background: var(--navy);
+    color: var(--white);
+    font-family: var(--font-body);
+    min-height: 100vh;
+  }
+
+  body{
+    background:
+      radial-gradient(circle at 15% -10%, rgba(124,92,255,0.22), transparent 45%),
+      radial-gradient(circle at 100% 110%, rgba(124,92,255,0.14), transparent 40%),
+      var(--navy);
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    padding: 32px 20px 64px;
+  }
+
+  /* ---------- Header ---------- */
+  .app-header{
+    width:100%;
+    max-width: 760px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    margin-bottom: 28px;
+  }
+
+  .brand{
+    display:flex;
+    align-items:center;
+    gap:10px;
+  }
+
+  .brand-mark{
+    width: 30px; height:30px;
+    flex-shrink:0;
+  }
+
+  .brand-name{
+    font-family: var(--font-display);
+    font-weight:600;
+    font-size: 15px;
+    letter-spacing: 0.01em;
+    color: var(--lavender);
+  }
+
+  .stations-nav{
+    display:flex;
+    gap:8px;
+    align-items:center;
+  }
+
+  .station-dot{
+    width:8px; height:8px;
+    border-radius:50%;
+    background: var(--border);
+    transition: background 0.3s ease, transform 0.3s ease;
+  }
+  .station-dot.done{ background: var(--success); }
+  .station-dot.active{ background: var(--violet); transform: scale(1.4); }
+
+  /* ---------- Card shell ---------- */
+  .stage{
+    width:100%;
+    max-width: 760px;
+  }
+
+  .card{
+    background: linear-gradient(180deg, var(--surface), var(--navy-elevated));
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 44px 40px;
+    box-shadow: 0 30px 60px -30px rgba(0,0,0,0.6);
+    animation: rise 0.45s ease both;
+  }
+
+  @keyframes rise{
+    from{ opacity:0; transform: translateY(14px); }
+    to{ opacity:1; transform: translateY(0); }
+  }
+
+  @media (max-width: 600px){
+    .card{ padding: 30px 22px; border-radius:16px; }
+  }
+
+  .eyebrow{
+    font-family: var(--font-mono);
+    font-size: 12px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--violet);
+    display:flex;
+    align-items:center;
+    gap:8px;
+    margin-bottom: 14px;
+  }
+
+  .eyebrow .source-tag{
+    color: var(--muted);
+    font-weight: 500;
+  }
+
+  h1{
+    font-family: var(--font-display);
+    font-size: 30px;
+    line-height:1.22;
+    margin: 0 0 12px;
+    letter-spacing: -0.01em;
+  }
+
+  h2.question-text{
+    font-family: var(--font-display);
+    font-size: 22px;
+    line-height:1.35;
+    font-weight: 600;
+    margin: 0 0 26px;
+  }
+
+  p.lead{
+    color: var(--muted);
+    font-size: 15px;
+    line-height:1.6;
+    margin: 0 0 26px;
+  }
+
+  .intro-desc{
+    background: rgba(124,92,255,0.08);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 18px 20px;
+    font-size: 14.5px;
+    line-height: 1.6;
+    color: var(--lavender);
+    margin-bottom: 20px;
+  }
+
+  .progress-note{
+    background: rgba(245,196,81,0.08);
+    border: 1px solid rgba(245,196,81,0.35);
+    border-radius: 12px;
+    padding: 14px 18px;
+    font-size: 13.5px;
+    line-height: 1.55;
+    color: var(--gold);
+    margin-bottom: 28px;
+  }
+
+  .journey-preview{
+    display:grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    margin-bottom: 30px;
+  }
+
+  .journey-step{
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 14px 12px;
+    text-align:left;
+  }
+  .journey-step .num{
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--violet);
+    margin-bottom: 6px;
+    display:block;
+  }
+  .journey-step .label{
+    font-family: var(--font-display);
+    font-size: 13.5px;
+    font-weight: 600;
+    color: var(--white);
+  }
+  @media (max-width: 600px){
+    .journey-preview{ grid-template-columns: 1fr; }
+  }
+
+  /* ---------- Buttons ---------- */
+  .btn{
+    font-family: var(--font-body);
+    font-weight: 600;
+    font-size: 15px;
+    padding: 14px 26px;
+    border-radius: 12px;
+    border: none;
+    cursor: pointer;
+    transition: transform 0.15s ease, opacity 0.15s ease, background 0.2s ease;
+  }
+  .btn-primary{
+    background: var(--violet);
+    color: #fff;
+    width: 100%;
+  }
+  .btn-primary:hover{ background: #8E71FF; }
+  .btn-primary:disabled{
+    background: rgba(124,92,255,0.25);
+    color: rgba(255,255,255,0.4);
+    cursor: not-allowed;
+  }
+  .btn-secondary{
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--lavender);
+    width: 100%;
+    margin-top: 12px;
+  }
+  .btn-secondary:hover{ border-color: var(--violet); }
+  .btn:active{ transform: scale(0.98); }
+
+  .btn-row{
+    display:flex;
+    gap: 10px;
+  }
+  .btn-row .btn{ margin-top:0; }
+  .btn-back{
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--muted);
+    flex: 0 0 auto;
+    width: auto;
+    padding: 14px 20px;
+  }
+  .btn-back:hover{ border-color: var(--violet); color: var(--lavender); }
+
+  .btn-link{
+    background:none;
+    border:none;
+    color: var(--muted);
+    font-family: var(--font-body);
+    font-size: 13px;
+    text-decoration: underline;
+    cursor:pointer;
+    padding: 6px 0;
+  }
+  .btn-link:hover{ color: var(--lavender); }
+
+  /* ---------- Options ---------- */
+  .options{
+    display:flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 12px;
+  }
+
+  .option{
+    text-align:left;
+    background: rgba(255,255,255,0.02);
+    border: 1px solid var(--border);
+    color: var(--white);
+    font-family: var(--font-body);
+    font-size: 15px;
+    line-height:1.5;
+    padding: 15px 18px;
+    border-radius: 12px;
+    cursor: pointer;
+    display:flex;
+    align-items:flex-start;
+    gap: 12px;
+    transition: border-color 0.15s ease, background 0.15s ease;
+  }
+  .option:hover:not(.locked){
+    border-color: var(--violet);
+    background: rgba(124,92,255,0.08);
+  }
+  .option .letter{
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--muted);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    width: 22px; height:22px;
+    display:flex; align-items:center; justify-content:center;
+    flex-shrink:0;
+  }
+  .option.selected{
+    border-color: var(--violet);
+    background: rgba(124,92,255,0.12);
+  }
+  .option.selected .letter{ border-color: var(--violet); color: var(--violet); background: rgba(124,92,255,0.18); }
+  .option.locked{ cursor: default; }
+
+  .option.correct{
+    border-color: var(--success);
+    background: rgba(74,222,128,0.10);
+  }
+  .option.correct .letter{ border-color: var(--success); color: var(--success); background: rgba(74,222,128,0.16); }
+  .option.incorrect{
+    border-color: var(--error);
+    background: rgba(251,124,134,0.10);
+  }
+  .option.incorrect .letter{ border-color: var(--error); color: var(--error); background: rgba(251,124,134,0.16); }
+
+  .feedback{
+    border-radius: 12px;
+    padding: 13px 16px;
+    font-size: 14px;
+    line-height:1.55;
+    margin-bottom: 22px;
+    display:flex;
+    gap:10px;
+    align-items:flex-start;
+  }
+  .feedback .fmark{ font-weight:700; flex-shrink:0; }
+  .feedback-correct{
+    background: rgba(74,222,128,0.08);
+    border: 1px solid rgba(74,222,128,0.35);
+    color: var(--success);
+  }
+  .feedback-incorrect{
+    background: rgba(251,124,134,0.08);
+    border: 1px solid rgba(251,124,134,0.35);
+    color: var(--error);
+  }
+  .feedback .ftext{ color: var(--lavender); }
+
+  /* ---------- Badge interstitial ---------- */
+  .badge-reveal{
+    text-align:center;
+    padding: 12px 0 6px;
+  }
+  .badge-icon{
+    width: 84px; height:84px;
+    margin: 4px auto 22px;
+  }
+  .badge-name{
+    font-family: var(--font-display);
+    font-size: 24px;
+    font-weight: 700;
+    margin: 0 0 8px;
+  }
+  .badge-tag{
+    font-family: var(--font-mono);
+    font-size: 12px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--violet);
+    margin-bottom: 18px;
+  }
+  .badge-copy{
+    color: var(--muted);
+    font-size: 14.5px;
+    line-height: 1.6;
+    margin-bottom: 30px;
+  }
+
+  /* ---------- Results ---------- */
+  .gauge-wrap{
+    display:flex;
+    justify-content:center;
+    margin: 6px 0 22px;
+  }
+  .gauge-score{
+    font-family: var(--font-display);
+    font-size: 34px;
+    font-weight: 700;
+    fill: var(--white);
+  }
+  .gauge-label{
+    font-family: var(--font-mono);
+    font-size: 11px;
+    fill: var(--muted);
+  }
+
+  .level-chip{
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    border: 1px solid var(--border);
+    background: rgba(124,92,255,0.08);
+    border-radius: 999px;
+    padding: 8px 18px 8px 10px;
+    font-family: var(--font-display);
+    font-size: 15px;
+    font-weight:700;
+    color: var(--lavender);
+    margin-bottom: 18px;
+  }
+  .level-chip.experto{
+    border-color: rgba(245,196,81,0.5);
+    background: rgba(245,196,81,0.10);
+    color: var(--gold);
+  }
+  .level-chip svg{ width:22px; height:22px; }
+
+  .level-message{
+    text-align:left;
+    background: rgba(255,255,255,0.03);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 16px 18px;
+    font-size: 14.5px;
+    line-height:1.6;
+    color: var(--lavender);
+    margin-bottom: 22px;
+  }
+  .level-message.experto{ border-color: rgba(245,196,81,0.35); }
+
+  .compare-row{
+    display:flex;
+    gap:10px;
+    justify-content:center;
+    margin-bottom: 22px;
+    flex-wrap:wrap;
+  }
+  .compare-box{
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 14px 20px;
+    min-width: 130px;
+  }
+  .compare-box .compare-label{
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing:0.06em;
+    text-transform:uppercase;
+    color: var(--muted);
+    margin-bottom: 6px;
+  }
+  .compare-box .compare-value{
+    font-family: var(--font-display);
+    font-size: 22px;
+    font-weight:700;
+  }
+  .compare-box.delta-up .compare-value{ color: var(--success); }
+  .compare-box.delta-down .compare-value{ color: var(--error); }
+
+  .badge-row{
+    display:flex;
+    gap:10px;
+    justify-content:center;
+    flex-wrap:wrap;
+    margin: 8px 0 26px;
+  }
+  .badge-chip{
+    display:flex;
+    align-items:center;
+    gap:7px;
+    border: 1px solid var(--border);
+    background: rgba(124,92,255,0.07);
+    border-radius: 999px;
+    padding: 7px 14px 7px 8px;
+    font-size: 13px;
+    font-weight:600;
+    color: var(--lavender);
+  }
+  .badge-chip.gold{
+    border-color: rgba(245,196,81,0.5);
+    background: rgba(245,196,81,0.12);
+    color: var(--gold);
+  }
+  .badge-chip svg{ width:20px; height:20px; }
+
+  .save-note{
+    text-align:center;
+    font-size: 13px;
+    color: var(--muted);
+    margin-top: 10px;
+    min-height: 16px;
+  }
+  .save-note.ok{ color: var(--success); }
+
+  footer.legal{
+    max-width: 760px;
+    width:100%;
+    text-align:center;
+    color: var(--muted);
+    font-size: 12px;
+    margin-top: 26px;
+    line-height:1.6;
+  }
+</style>
+</head>
+<body>
+
+<div class="app-header">
+  <div class="brand">
+    <svg class="brand-mark" viewBox="0 0 30 30" fill="none">
+      <circle cx="15" cy="15" r="13" stroke="#7C5CFF" stroke-width="2"/>
+      <path d="M9 17 L13 12 L17 15 L21 9" stroke="#D9D2FF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+    </svg>
+    <span class="brand-name">Desafío de Presentaciones de Impacto</span>
+  </div>
+  <div class="stations-nav" id="stationsNav" style="display:none;">
+    <div class="station-dot" data-station="0"></div>
+    <div class="station-dot" data-station="1"></div>
+    <div class="station-dot" data-station="2"></div>
+  </div>
+</div>
+
+<div class="stage" id="stage"></div>
+
+<footer class="legal">
+  Recurso educativo gamificado &middot; los resultados se guardan únicamente en este navegador
+</footer>
+
+<script>
+/* ---------------------------------------------------------
+   CONTENIDO
+--------------------------------------------------------- */
+const SECTION_META = [
+  {
+    key: "antes",
+    num: "01",
+    title: "Antes de presentar",
+    badgeName: "Claridad Estratégica",
+    badgeCopy: "Sabes definir el propósito y filtrar el contenido antes de abrir el editor de slides. Esa disciplina es la que separa una presentación memorable de una genérica.",
+    badgeIcon: `<circle cx="42" cy="42" r="34" stroke="#7C5CFF" stroke-width="2.5"/><circle cx="42" cy="42" r="20" stroke="#D9D2FF" stroke-width="2"/><circle cx="42" cy="42" r="4" fill="#7C5CFF"/><path d="M42 8 V16 M42 68 V76 M8 42 H16 M68 42 H76" stroke="#7C5CFF" stroke-width="2.5" stroke-linecap="round"/>`
+  },
+  {
+    key: "durante",
+    num: "02",
+    title: "Durante la presentación",
+    badgeName: "Presencia Escénica",
+    badgeCopy: "Dominas la apertura, la voz y el ritmo que mantienen a una audiencia conectada de principio a fin.",
+    badgeIcon: `<path d="M42 12 C50 12 56 18 56 26 V38 C56 46 50 52 42 52 C34 52 28 46 28 38 V26 C28 18 34 12 42 12 Z" stroke="#7C5CFF" stroke-width="2.5"/><path d="M22 34 V38 C22 51 31 61 42 61 C53 61 62 51 62 38 V34" stroke="#D9D2FF" stroke-width="2" stroke-linecap="round"/><path d="M42 61 V72 M32 72 H52" stroke="#D9D2FF" stroke-width="2" stroke-linecap="round"/>`
+  },
+  {
+    key: "despues",
+    num: "03",
+    title: "Después de presentar",
+    badgeName: "Mejora Continua",
+    badgeCopy: "Conviertes cada presentación en aprendizaje: identificas qué funcionó, qué ajustar y cómo dar seguimiento a tu audiencia.",
+    badgeIcon: `<path d="M22 42 A20 20 0 1 1 27 55" stroke="#7C5CFF" stroke-width="2.5" fill="none" stroke-linecap="round"/><path d="M22 30 V42 H34" stroke="#7C5CFF" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/><path d="M55 26 L62 33 L55 40" stroke="#D9D2FF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>`
+  }
+];
+
+/* Banco de preguntas: cada sección tiene dos formularios (A y B) equivalentes
+   en concepto pero con preguntas y opciones distintas, para que un segundo
+   intento no pueda responderse de memoria a partir del primero. */
+const QUESTION_BANK = {
+  antes: {
+    A: [
+      { q: "¿Cuál es la pregunta clave para definir el propósito de una presentación?", options: ["¿Qué quiero que recuerden?", "¿Qué quiero que hagan al terminar?", "¿Qué información técnica debo incluir?"], correct: 1 },
+      { q: "¿Qué elemento ayuda a evitar saturación de contenido?", options: ["Elegir una idea central.", "Usar más imágenes.", "Añadir ejemplos adicionales."], correct: 0 },
+      { q: "¿Qué pregunta ayuda a filtrar contenido innecesario?", options: ["¿Qué datos son interesantes?", "¿Qué ejemplos me gustan más?", "¿Qué NO necesito decir?"], correct: 2 },
+      { q: "¿Qué herramienta se recomienda para organizar la historia antes de diseñar slides?", options: ["Storyboard.", "Lista de temas.", "Agenda detallada."], correct: 0 },
+      { q: "¿Qué debe considerarse primero antes de abrir el software de diseño (PowerPoint, Google Slides, entre otros)?", options: ["El diseño visual.", "El propósito.", "El número de slides."], correct: 1 },
+      { q: "¿Qué aspecto de la audiencia debe conocerse para ajustar el mensaje?", options: ["Qué buscan y qué necesitan escuchar.", "Su edad promedio.", "Su nivel de experiencia técnica exacta."], correct: 0 }
+    ],
+    B: [
+      { q: "¿Cuál debe ser el punto de partida al diseñar cualquier presentación?", options: ["La plantilla de diseño que usaré.", "La acción o decisión que quiero provocar en la audiencia.", "La cantidad de diapositivas que necesito."], correct: 1 },
+      { q: "¿Qué estrategia previene una presentación sobrecargada de información?", options: ["Reducir el mensaje a un solo hilo conductor.", "Añadir subtítulos a cada punto.", "Incluir todas las estadísticas disponibles."], correct: 0 },
+      { q: "Al preparar el contenido, ¿qué pregunta ayuda a descartar información?", options: ["¿Qué le parecerá interesante a mi jefe?", "¿Esto ayuda a lograr el objetivo de la presentación?", "¿Cuántos datos tengo disponibles sobre el tema?"], correct: 1 },
+      { q: "¿Qué recurso ayuda a mapear la narrativa antes de crear las diapositivas?", options: ["Un esquema de storytelling o guión visual.", "Un documento con la agenda del día.", "Una lista de fuentes bibliográficas."], correct: 0 },
+      { q: "Antes de abrir PowerPoint o Google Slides, ¿qué debe estar claro?", options: ["El objetivo y el mensaje central.", "La paleta de colores.", "El formato de exportación final."], correct: 0 },
+      { q: "¿Qué es más importante conocer sobre la audiencia antes de presentar?", options: ["Sus necesidades e intereses frente al tema.", "Su nivel educativo exacto.", "El número de personas que asistirán."], correct: 0 }
+    ]
+  },
+  durante: {
+    A: [
+      { q: "¿Qué tipo de apertura genera conexión inmediata?", options: ["Un dato sorprendente, una historia breve o una pregunta inicial.", "Explicar la agenda completa.", "Comenzar con definiciones técnicas."], correct: 0 },
+      { q: "¿Cuál es el propósito principal del storytelling en una presentación?", options: ["Capturar atención y conectar emocionalmente desde el inicio.", "Reemplazar la explicación de datos técnicos.", "Extender la duración de la presentación para hacerla más memorable."], correct: 0 },
+      { q: "¿Qué elemento vocal mejora la claridad del mensaje?", options: ["Hablar rápido para cubrir más contenido.", "Variar el volumen y el ritmo.", "Mantener un tono plano para sonar formal."], correct: 1 },
+      { q: "¿Qué hace poderosa una pausa?", options: ["Enfatiza y genera expectativa.", "Permite reorganizar los slides.", "Sirve para cambiar de tema abruptamente."], correct: 0 },
+      { q: "¿Qué tipo de humor se recomienda?", options: ["Humor complejo con referencias internas.", "Humor improvisado sin relación al tema.", "Humor natural, breve y relevante."], correct: 2 },
+      { q: "¿Qué indica un buen flujo lógico en una presentación?", options: ["Que cada slide responde por qué viene después del anterior.", "Que todos los slides tienen el mismo diseño.", "Que la presentación es extensa y detallada."], correct: 0 }
+    ],
+    B: [
+      { q: "¿Qué recurso NO se recomienda para abrir una presentación?", options: ["Leer textualmente la agenda completa.", "Compartir una anécdota breve y relevante.", "Hacer una pregunta que invite a reflexionar."], correct: 0 },
+      { q: "¿Por qué se recomienda usar historias durante una presentación?", options: ["Porque hacen la información más memorable y humana.", "Porque sustituyen por completo los datos duros.", "Porque alargan el tiempo de la presentación."], correct: 0 },
+      { q: "¿Qué recurso vocal ayuda a mantener el interés de la audiencia?", options: ["Un tono uniforme durante toda la charla.", "Cambios de ritmo y énfasis según el contenido.", "Hablar en voz baja para generar intimidad."], correct: 1 },
+      { q: "¿Para qué sirve una pausa bien colocada en una presentación?", options: ["Para dar espacio a que una idea importante resuene.", "Para revisar las notas del presentador.", "Para cambiar abruptamente de tema."], correct: 0 },
+      { q: "¿Qué tipo de humor funciona mejor frente a una audiencia?", options: ["Chistes largos preparados con anticipación.", "Comentarios espontáneos sin relación con el tema.", "Humor breve, natural y conectado al contenido."], correct: 2 },
+      { q: "¿Qué caracteriza a una presentación con buen hilo conductor?", options: ["Que cada idea se conecta claramente con la siguiente.", "Que usa la misma plantilla en todas las diapositivas.", "Que cubre la mayor cantidad de temas posible."], correct: 0 }
+    ]
+  },
+  despues: {
+    A: [
+      { q: "¿Qué acción se recomienda inmediatamente después de presentar?", options: ["Revisar la ortografía de los slides.", "Identificar conversaciones clave.", "Cambiar el título de la presentación."], correct: 1 },
+      { q: "¿Qué pregunta de feedback es más útil?", options: ["¿Te gustó mi presentación?", "¿Qué quedó poco claro?", "¿Cuántos slides usé?"], correct: 1 },
+      { q: "¿Qué debe incluir una bitácora de aprendizaje?", options: ["Qué funcionó, qué mejorar, preguntas surgidas, contenido faltante.", "Los nombres de los asistentes.", "La duración exacta de cada sección."], correct: 0 },
+      { q: "¿Qué acción fortalece relaciones profesionales después de presentar?", options: ["Cambiar el diseño de los slides.", "Añadir más datos técnicos.", "Enviar los materiales prometidos."], correct: 2 },
+      { q: "¿Qué pregunta ayuda a reflexionar sobre tu estilo como presentador?", options: ["¿Qué fue lo más memorable de tu presentación?", "¿Qué colores usé?", "¿Cuántos gráficos incluí?"], correct: 0 },
+      { q: "¿Qué hábito distingue a los mejores presentadores?", options: ["Memorizar todos los datos.", "Usar muchos efectos visuales.", "Ser estudiantes permanentes."], correct: 2 }
+    ],
+    B: [
+      { q: "¿Qué se recomienda hacer justo después de terminar de presentar?", options: ["Anotar los comentarios y preguntas más relevantes que surgieron.", "Borrar los apuntes que ya no se necesitan.", "Cambiar el orden de las diapositivas para la próxima vez."], correct: 0 },
+      { q: "¿Qué tipo de pregunta de seguimiento genera mejor retroalimentación?", options: ["¿Cuánto duró la presentación?", "¿Qué parte generó más dudas o confusión?", "¿Cuántas diapositivas tenía la presentación?"], correct: 1 },
+      { q: "¿Qué elementos debe registrar una bitácora de aprendizaje después de presentar?", options: ["Aciertos, áreas de mejora, dudas del público y temas pendientes.", "La lista de asistentes y su cargo.", "El tiempo exacto de cada sección de la charla."], correct: 0 },
+      { q: "¿Qué acción ayuda a fortalecer la relación con la audiencia después de presentar?", options: ["Actualizar el diseño visual de las diapositivas.", "Agregar más cifras al informe.", "Cumplir con el envío de materiales o recursos prometidos."], correct: 2 },
+      { q: "¿Qué pregunta ayuda a evaluar tu propio estilo como presentador o presentadora?", options: ["¿Qué momento de la presentación generó más conexión con la audiencia?", "¿Qué tipografía usé en las diapositivas?", "¿Cuántas imágenes incluí en total?"], correct: 0 },
+      { q: "¿Qué hábito comparten los presentadores más efectivos a largo plazo?", options: ["Repetir siempre el mismo formato de presentación.", "Evitar pedir retroalimentación para no perder tiempo.", "Seguir aprendiendo y ajustando su estilo constantemente."], correct: 2 }
+    ]
+  }
+};
+
+function buildSections(form) {
+  return SECTION_META.map(meta => ({ ...meta, questions: QUESTION_BANK[meta.key][form] }));
+}
+
+function buildAllQuestions(sections) {
+  return sections.flatMap((section, sIdx) =>
+    section.questions.map((q, qIdx) => ({ ...q, sectionIndex: sIdx, questionIndexInSection: qIdx }))
+  );
+}
+
+/* Decide qué formulario (A o B) corresponde al intento que está por comenzar */
+function decideForm(progress) {
+  if (!progress.initial) return "A";       // primer intento del ciclo
+  if (progress.initial && !progress.final) return "B"; // segundo intento: preguntas equivalentes pero distintas
+  return "A"; // ya se completó un ciclo; uno nuevo empieza de nuevo en A
+}
+
+const INTRO_COPY = {
+  heading: "¿Qué tipo de presentador o presentadora eres?",
+  desc: "Antes de recorrer el escenario del mundo inmersivo, contesta el siguiente desafío y descubre el tipo de presentador o presentadora que eres. Luego, cuando termines tu recorrido por el mundo inmersivo, vuelve a contestar el desafío y compara tus respuestas para ver cómo evolucionó tu perfil como presentador o presentadora después de vivir la experiencia inmersiva."
+};
+
+/* Niveles de presentador según puntuación (sobre 18) */
+const LEVELS = [
+  {
+    id: "principiante",
+    min: 0, max: 9,
+    label: "Presentador/a Principiante",
+    message: "Estás construyendo las bases de una presentación con impacto. Te recomendamos volver a recorrer el mundo inmersivo para reforzar los conceptos de cada estación, y repetir el desafío cuando te sientas list@ para ver cuánto avanzaste.",
+    badgeName: "Presentador/a en Formación"
+  },
+  {
+    id: "intermedio",
+    min: 10, max: 14,
+    label: "Presentador/a Intermedio/a",
+    message: "Ya dominas buena parte de los fundamentos. Este es un buen momento para profundizar en los conceptos que aún te generan dudas y reflexionar sobre tu propio estilo al presentar: ¿qué te distingue y qué quieres seguir fortaleciendo?",
+    badgeName: "Presentador/a en Crecimiento"
+  },
+  {
+    id: "experto",
+    min: 15, max: 18,
+    label: "Presentador/a Experto/a",
+    message: "Dominas los fundamentos de una presentación con impacto. Recuerda que siempre hay oportunidades de mejora: sigue practicando, observando a otros presentadores y solicitando retroalimentación honesta después de cada presentación.",
+    badgeName: "Presentador/a Experto/a de Impacto"
+  }
+];
+
+function getLevel(score) {
+  return LEVELS.find(l => score >= l.min && score <= l.max) || LEVELS[0];
+}
+
+function levelBadgeIcon(level) {
+  if (level.id === "experto") {
+    return `<path d="M42 10 L49 30 L70 30 L53 43 L59 63 L42 51 L25 63 L31 43 L14 30 L35 30 Z" stroke="#F5C451" stroke-width="2.5" stroke-linejoin="round" fill="none"/>`;
+  }
+  if (level.id === "intermedio") {
+    return `<path d="M18 60 V44 M34 60 V32 M50 60 V22 M66 60 V38" stroke="#7C5CFF" stroke-width="4" stroke-linecap="round"/><path d="M14 60 H70" stroke="#D9D2FF" stroke-width="2" stroke-linecap="round"/>`;
+  }
+  return `<path d="M42 66 C42 66 24 52 24 36 C24 26 32 20 42 26 C52 20 60 26 60 36 C60 52 42 66 42 66 Z" stroke="#7C5CFF" stroke-width="2.5" fill="none"/>`;
+}
+
+const LETTERS = ["A", "B", "C"];
+const STORAGE_KEY = "dpi_progreso";
+
+/* ---------------------------------------------------------
+   ESTADO
+--------------------------------------------------------- */
+let state = {
+  form: "A",
+  sections: buildSections("A"),
+  allQuestions: buildAllQuestions(buildSections("A")),
+  currentIndex: 0,       // índice global 0..17
+  answers: {},            // { globalIndex: chosenOptionIndex }
+  shownBadges: new Set()  // sectionIndex ya mostrado
+};
+
+const stage = document.getElementById("stage");
+const stationsNav = document.getElementById("stationsNav");
+
+/* ---------------------------------------------------------
+   HELPERS DE STORAGE
+   progreso = { initial: {score, savedAt} | null, final: {score, savedAt} | null }
+--------------------------------------------------------- */
+function loadProgress() {
+  try {
+    const raw = JSON.parse(localStorage.getItem(STORAGE_KEY));
+    if (raw && typeof raw === "object") return { initial: raw.initial || null, final: raw.final || null };
+  } catch (e) {}
+  return { initial: null, final: null };
+}
+
+function saveProgress(progress) {
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(progress));
+    return true;
+  } catch (e) { return false; }
+}
+
+function resetProgress() {
+  try { localStorage.removeItem(STORAGE_KEY); } catch (e) {}
+}
+
+/* ---------------------------------------------------------
+   RENDER: PANTALLA DE INICIO
+--------------------------------------------------------- */
+function renderStart() {
+  stationsNav.style.display = "none";
+  const progress = loadProgress();
+
+  let progressNoteHTML = "";
+  if (progress.initial && !progress.final) {
+    progressNoteHTML = `
+      <div class="progress-note">
+        Tienes un resultado guardado de <strong>${progress.initial.score} de 18</strong>. Si ya recorriste el mundo inmersivo, contesta el desafío ahora: esta vez incluye preguntas distintas pero equivalentes en los mismos temas, para que tu resultado refleje lo que aprendiste y no lo que memorizaste.
+      </div>`;
+  } else if (progress.initial && progress.final) {
+    progressNoteHTML = `
+      <div class="progress-note">
+        Ya tienes resultados guardados de tus dos intentos (${progress.initial.score}/18 y ${progress.final.score}/18). Si vuelves a contestar, comenzará un nuevo ciclo de práctica.
+        <br><button class="btn-link" id="resetBtn">Borrar mi progreso guardado</button>
+      </div>`;
+  }
+
+  stage.innerHTML = `
+    <div class="card">
+      <div class="eyebrow">Desafío gamificado</div>
+      <h1>${INTRO_COPY.heading}</h1>
+      <div class="intro-desc">${INTRO_COPY.desc}</div>
+      ${progressNoteHTML}
+      <div class="journey-preview">
+        ${SECTION_META.map(s => `
+          <div class="journey-step">
+            <span class="num">${s.num}</span>
+            <span class="label">${s.title}</span>
+          </div>
+        `).join("")}
+      </div>
+      <button class="btn btn-primary" id="startBtn">Comenzar desafío</button>
+    </div>
+  `;
+  document.getElementById("startBtn").addEventListener("click", () => {
+    const form = decideForm(progress);
+    state.form = form;
+    state.sections = buildSections(form);
+    state.allQuestions = buildAllQuestions(state.sections);
+    state.currentIndex = 0;
+    state.answers = {};
+    state.shownBadges = new Set();
+    renderQuestion();
+  });
+  const resetBtn = document.getElementById("resetBtn");
+  if (resetBtn) {
+    resetBtn.addEventListener("click", (e) => {
+      e.preventDefault();
+      if (resetBtn.dataset.confirm === "1") {
+        resetProgress();
+        renderStart();
+      } else {
+        resetBtn.dataset.confirm = "1";
+        resetBtn.textContent = "¿Seguro? Haz clic de nuevo para borrar";
+      }
+    });
+  }
+}
+
+/* ---------------------------------------------------------
+   RENDER: PREGUNTA
+--------------------------------------------------------- */
+function renderQuestion() {
+  stationsNav.style.display = "flex";
+  const item = state.allQuestions[state.currentIndex];
+  const section = state.sections[item.sectionIndex];
+
+  document.querySelectorAll(".station-dot").forEach((dot, i) => {
+    dot.classList.toggle("active", i === item.sectionIndex);
+    dot.classList.toggle("done", i < item.sectionIndex);
+  });
+
+  const alreadyAnswered = state.answers.hasOwnProperty(state.currentIndex);
+
+  stage.innerHTML = `
+    <div class="card">
+      <div class="eyebrow">${section.num} &middot; ${section.title}</div>
+      <h2 class="question-text">${item.q}</h2>
+      <div class="options" id="optionsWrap">
+        ${item.options.map((opt, i) => `
+          <button class="option" data-index="${i}">
+            <span class="letter">${LETTERS[i]}</span>
+            <span>${opt}</span>
+          </button>
+        `).join("")}
+      </div>
+      <div id="feedbackWrap"></div>
+      <div class="btn-row">
+        <button class="btn btn-back" id="backBtn">&larr; Volver atrás</button>
+        <button class="btn btn-primary" id="nextBtn" disabled>
+          ${state.currentIndex === state.allQuestions.length - 1 ? "Ver resultados" : "Continuar"}
+        </button>
+      </div>
+      <div style="text-align:center; margin-top:14px; font-family:var(--font-mono); font-size:12px; color:var(--muted);">
+        Pregunta ${item.questionIndexInSection + 1} de ${section.questions.length}
+      </div>
+    </div>
+  `;
+
+  document.querySelectorAll(".option").forEach(btn => {
+    btn.addEventListener("click", () => selectOption(btn, item));
+  });
+  document.getElementById("backBtn").addEventListener("click", () => {
+    if (state.currentIndex > 0) {
+      state.currentIndex--;
+      renderQuestion();
+    } else {
+      renderStart();
+    }
+  });
+  document.getElementById("nextBtn").addEventListener("click", advance);
+
+  if (alreadyAnswered) {
+    lockOptions(item, state.answers[state.currentIndex]);
+    document.getElementById("nextBtn").disabled = false;
+  }
+}
+
+function lockOptions(item, chosen) {
+  document.querySelectorAll(".option").forEach(el => {
+    el.classList.add("locked");
+    const idx = parseInt(el.dataset.index, 10);
+    if (idx === item.correct) el.classList.add("correct");
+    if (idx === chosen) el.classList.add("selected");
+    if (idx === chosen && chosen !== item.correct) el.classList.add("incorrect");
+  });
+
+  const feedbackWrap = document.getElementById("feedbackWrap");
+  if (feedbackWrap) {
+    const isCorrect = chosen === item.correct;
+    feedbackWrap.innerHTML = isCorrect
+      ? `<div class="feedback feedback-correct"><span class="fmark">✓</span><span class="ftext">¡Correcto! Esa es la mejor práctica.</span></div>`
+      : `<div class="feedback feedback-incorrect"><span class="fmark">✕</span><span class="ftext">Incorrecto. La respuesta correcta es la opción ${LETTERS[item.correct]}: "${item.options[item.correct]}"</span></div>`;
+  }
+}
+
+function selectOption(btn, item) {
+  if (state.answers.hasOwnProperty(state.currentIndex)) return;
+  const chosen = parseInt(btn.dataset.index, 10);
+  state.answers[state.currentIndex] = chosen;
+  lockOptions(item, chosen);
+  document.getElementById("nextBtn").disabled = false;
+}
+
+function computeScore() {
+  return state.allQuestions.reduce((total, q, i) => total + (state.answers[i] === q.correct ? 1 : 0), 0);
+}
+
+function advance() {
+  const item = state.allQuestions[state.currentIndex];
+  const isLastInSection = item.questionIndexInSection === state.sections[item.sectionIndex].questions.length - 1;
+
+  if (isLastInSection && !state.shownBadges.has(item.sectionIndex)) {
+    state.shownBadges.add(item.sectionIndex);
+    renderBadge(state.sections[item.sectionIndex]);
+    return;
+  }
+
+  if (state.currentIndex === state.allQuestions.length - 1) {
+    renderResults();
+    return;
+  }
+
+  state.currentIndex++;
+  renderQuestion();
+}
+
+/* ---------------------------------------------------------
+   RENDER: INSIGNIA DE ESTACIÓN
+--------------------------------------------------------- */
+function renderBadge(section) {
+  stage.innerHTML = `
+    <div class="card badge-reveal">
+      <svg class="badge-icon" viewBox="0 0 84 84" fill="none">${section.badgeIcon}</svg>
+      <div class="badge-tag">Insignia desbloqueada</div>
+      <div class="badge-name">${section.badgeName}</div>
+      <div class="badge-copy">${section.badgeCopy}</div>
+      <button class="btn btn-primary" id="continueBtn">
+        ${state.currentIndex === state.allQuestions.length - 1 ? "Ver resultados" : "Continuar a la siguiente estación"}
+      </button>
+    </div>
+  `;
+  document.getElementById("continueBtn").addEventListener("click", () => {
+    if (state.currentIndex === state.allQuestions.length - 1) {
+      renderResults();
+    } else {
+      state.currentIndex++;
+      renderQuestion();
+    }
+  });
+}
+
+/* ---------------------------------------------------------
+   GAUGE SVG
+--------------------------------------------------------- */
+function gaugeSVG(pct, size = 168) {
+  const r = 66;
+  const c = 2 * Math.PI * r;
+  const offset = c * (1 - pct / 100);
+  const cx = size / 2, cy = size / 2;
+  return `
+    <svg width="${size}" height="${size}" viewBox="0 0 ${size} ${size}">
+      <circle cx="${cx}" cy="${cy}" r="${r}" stroke="rgba(147,125,255,0.15)" stroke-width="10" fill="none"/>
+      <circle cx="${cx}" cy="${cy}" r="${r}" stroke="#7C5CFF" stroke-width="10" fill="none"
+        stroke-linecap="round"
+        stroke-dasharray="${c}" stroke-dashoffset="${offset}"
+        transform="rotate(-90 ${cx} ${cy})"/>
+      <text x="${cx}" y="${cy - 4}" text-anchor="middle" class="gauge-score">${Math.round(pct)}%</text>
+      <text x="${cx}" y="${cy + 18}" text-anchor="middle" class="gauge-label">ÍNDICE DE IMPACTO</text>
+    </svg>
+  `;
+}
+
+/* ---------------------------------------------------------
+   RENDER: RESULTADOS
+--------------------------------------------------------- */
+function renderResults() {
+  stationsNav.style.display = "none";
+  const score = computeScore();
+  const pct = (score / 18) * 100;
+  const level = getLevel(score);
+  const progress = loadProgress();
+
+  let comparisonHTML = "";
+  const headingText = "¡Felicidades! Has completado la experiencia inmersiva y el desafío.";
+  let introText = "Sigue explorando el mundo inmersivo y repite el desafío cuando quieras para seguir practicando y afinando tu estilo como presentador o presentadora.";
+
+  const hasPrevious = progress.initial && !progress.final;
+
+  if (hasPrevious) {
+    // Ya existe un resultado guardado de un intento anterior: se compara de forma neutral
+    const previousScore = progress.initial.score;
+    saveProgress({ initial: progress.initial, final: { score, savedAt: Date.now() } });
+    const delta = score - previousScore;
+    const deltaClass = delta > 0 ? "delta-up" : (delta < 0 ? "delta-down" : "");
+    const deltaLabel = delta > 0 ? `+${delta}` : (delta < 0 ? `${delta}` : "Igual");
+    comparisonHTML = `
+      <div class="compare-row">
+        <div class="compare-box">
+          <div class="compare-label">Intento anterior</div>
+          <div class="compare-value">${previousScore}/18</div>
+        </div>
+        <div class="compare-box ${deltaClass}">
+          <div class="compare-label">Cambio</div>
+          <div class="compare-value">${deltaLabel}</div>
+        </div>
+        <div class="compare-box">
+          <div class="compare-label">Este intento</div>
+          <div class="compare-value">${score}/18</div>
+        </div>
+      </div>
+    `;
+    introText = delta > 0
+      ? `Mejoraste ${delta} respuesta${delta === 1 ? "" : "s"} correcta${delta === 1 ? "" : "s"} respecto a tu intento anterior. Así se ve el crecimiento en acción.`
+      : (delta === 0
+          ? "Mantuviste tu puntuación respecto a tu intento anterior. Es un buen momento para repasar las estaciones donde aún tengas dudas."
+          : "Tu puntuación bajó un poco respecto a tu intento anterior; puede pasar cuando repasamos rápido. Vale la pena repasar las estaciones con más calma antes de tu próxima presentación real.");
+  } else {
+    saveProgress({ initial: { score, savedAt: Date.now() }, final: null });
+  }
+
+  const earnedBadges = state.sections.map(s => s);
+  const levelBadgeHTML = `
+    <div class="badge-chip ${level.id === "experto" ? "gold" : ""}">
+      <svg viewBox="0 0 84 84">${levelBadgeIcon(level)}</svg>
+      ${level.badgeName}
+    </div>
+  `;
+
+  stage.innerHTML = `
+    <div class="card" style="text-align:center;">
+      <div class="eyebrow" style="justify-content:center;">Desafío completado</div>
+      <h1>${headingText}</h1>
+      <div class="gauge-wrap">${gaugeSVG(pct)}</div>
+      ${comparisonHTML}
+      <div class="level-chip ${level.id}">
+        <svg viewBox="0 0 84 84">${levelBadgeIcon(level)}</svg>
+        Eres un/a ${level.label}
+      </div>
+      <div class="level-message ${level.id}">${level.message}</div>
+      <div class="badge-row">
+        ${earnedBadges.map(b => `
+          <div class="badge-chip">
+            <svg viewBox="0 0 84 84">${b.badgeIcon}</svg>
+            ${b.badgeName}
+          </div>
+        `).join("")}
+        ${levelBadgeHTML}
+      </div>
+      <div class="intro-desc" style="text-align:left;">${introText}</div>
+      <div class="save-note ok">Resultado guardado en este navegador.</div>
+      <div class="btn-row" style="margin-top:16px;">
+        <button class="btn btn-back" id="backBtn">&larr; Volver atrás</button>
+        <button class="btn btn-primary" id="restartBtn">Volver al inicio</button>
+      </div>
+    </div>
+  `;
+
+  document.getElementById("backBtn").addEventListener("click", () => {
+    state.currentIndex = state.allQuestions.length - 1;
+    renderQuestion();
+  });
+  document.getElementById("restartBtn").addEventListener("click", renderStart);
+}
+
+/* ---------------------------------------------------------
+   INICIO
+--------------------------------------------------------- */
+renderStart();
+</script>
+</body>
+</html>
