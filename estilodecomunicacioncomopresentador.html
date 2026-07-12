@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mi Estilo de Comunicación como Presentador/a — Reflexión Guiada</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --violet: #7C5CFF;
+    --violet-deep: #5B34E8;
+    --navy: #0A0F26;
+    --muted: #5A6285;
+    --border: rgba(124,92,255,0.28);
+    --surface: #FFFFFF;
+    --bg: #F5F4FF;
+    --success: #2FA96B;
+    --font-display: 'Space Grotesk', sans-serif;
+    --font-body: 'Inter', sans-serif;
+    --font-mono: 'IBM Plex Mono', monospace;
+  }
+
+  * { box-sizing: border-box; }
+
+  html, body{
+    margin:0; padding:0;
+    background: var(--bg);
+    color: var(--navy);
+    font-family: var(--font-body);
+  }
+
+  body{
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    padding: 36px 20px 80px;
+  }
+
+  .action-bar{
+    width:100%;
+    max-width: 760px;
+    display:flex;
+    justify-content:flex-end;
+    margin-bottom: 20px;
+  }
+
+  .btn{
+    font-family: var(--font-body);
+    font-weight:600;
+    font-size:14.5px;
+    padding: 12px 22px;
+    border-radius: 10px;
+    border: none;
+    cursor:pointer;
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    transition: transform 0.15s ease, opacity 0.15s ease;
+  }
+  .btn:active{ transform: scale(0.98); }
+  .btn-print{
+    background: var(--navy);
+    color: #fff;
+  }
+  .btn-print:hover{ opacity:0.9; }
+  .btn-send{
+    background: var(--violet);
+    color:#fff;
+    width:100%;
+    justify-content:center;
+    font-size:16px;
+    padding:15px 24px;
+  }
+  .btn-send:hover{ background: var(--violet-deep); }
+
+  .sheet{
+    width:100%;
+    max-width: 760px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 48px 44px;
+    box-shadow: 0 30px 60px -35px rgba(80,60,180,0.35);
+  }
+
+  @media (max-width: 600px){
+    .sheet{ padding: 30px 22px; border-radius:16px; }
+  }
+
+  .eyebrow{
+    font-family: var(--font-mono);
+    font-size: 12px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--violet);
+    margin-bottom: 12px;
+  }
+
+  h1{
+    font-family: var(--font-display);
+    font-size: 30px;
+    line-height:1.25;
+    margin: 0 0 6px;
+    letter-spacing: -0.01em;
+  }
+
+  .subtitle{
+    color: var(--muted);
+    font-size: 14.5px;
+    line-height:1.6;
+    margin: 0 0 30px;
+  }
+
+  .id-row{
+    display:flex;
+    gap: 16px;
+    margin-bottom: 28px;
+  }
+  .id-field{ flex:1; display:flex; flex-direction:column; gap:6px; }
+  .id-field label{
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing:0.06em;
+    text-transform:uppercase;
+    color: var(--muted);
+  }
+
+  input[type="text"], input[type="email"], input[type="date"], textarea{
+    font-family: var(--font-body);
+    font-size: 15px;
+    color: var(--navy);
+    background: #FBFAFF;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 12px 14px;
+    width: 100%;
+    resize: vertical;
+  }
+  textarea{ min-height: 76px; line-height:1.5; }
+  input:focus, textarea:focus{
+    outline:none;
+    border-color: var(--violet);
+    box-shadow: 0 0 0 3px rgba(124,92,255,0.15);
+  }
+
+  .intro-box{
+    background: rgba(124,92,255,0.06);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 18px 20px;
+    font-size: 14px;
+    line-height:1.6;
+    color: var(--muted);
+    margin-bottom: 34px;
+  }
+
+  .section-heading{
+    font-family: var(--font-display);
+    font-size: 19px;
+    font-weight:700;
+    margin: 0 0 22px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .stage{
+    display:flex;
+    gap: 16px;
+    align-items:flex-start;
+    margin-bottom: 22px;
+    padding-bottom: 26px;
+    border-bottom: 1px dashed var(--border);
+  }
+  .stage:last-of-type{ border-bottom:none; }
+
+  .stage-icon{
+    width: 52px; height:52px;
+    flex-shrink:0;
+    border-radius:50%;
+    background: rgba(124,92,255,0.10);
+    display:flex; align-items:center; justify-content:center;
+  }
+  .stage-icon svg{ width:26px; height:26px; }
+
+  .stage-body{ flex:1; }
+  .stage-tag{
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing:0.06em;
+    text-transform:uppercase;
+    color: var(--violet);
+    margin-bottom: 4px;
+  }
+  .stage-title{
+    font-family: var(--font-display);
+    font-size: 18px;
+    font-weight:700;
+    margin-bottom: 16px;
+  }
+
+  .q-block{ margin-bottom: 16px; }
+  .q-block:last-child{ margin-bottom:0; }
+  .q-label{
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--navy);
+    margin-bottom: 8px;
+    line-height:1.5;
+  }
+
+  .pair-row{
+    display:flex;
+    gap: 14px;
+  }
+  .pair-row .q-block{ flex:1; }
+  @media (max-width: 600px){
+    .pair-row{ flex-direction:column; }
+  }
+
+  .num-field{
+    display:flex;
+    align-items:flex-start;
+    gap: 10px;
+    margin-bottom: 12px;
+  }
+  .num-field .num{
+    font-family: var(--font-mono);
+    font-weight:700;
+    color: var(--violet);
+    padding-top: 12px;
+    flex-shrink:0;
+  }
+  .num-field input{ flex:1; }
+
+  .quote-box{
+    text-align:center;
+    font-family: var(--font-display);
+    font-style: italic;
+    font-size: 16px;
+    color: var(--violet-deep);
+    line-height:1.6;
+    padding: 22px 10px;
+    margin: 10px 0 36px;
+  }
+
+  .email-section{
+    background: rgba(124,92,255,0.06);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 24px 24px 26px;
+  }
+  .email-note{
+    font-size: 13.5px;
+    line-height:1.6;
+    color: var(--muted);
+    margin-bottom: 16px;
+  }
+  .email-field{ margin-bottom: 16px; }
+  .email-field label{
+    display:block;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing:0.06em;
+    text-transform:uppercase;
+    color: var(--muted);
+    margin-bottom: 6px;
+  }
+
+  .send-status{
+    text-align:center;
+    font-size: 13px;
+    color: var(--success);
+    margin-top: 12px;
+    min-height: 16px;
+  }
+
+  footer.legal{
+    max-width: 760px;
+    width:100%;
+    text-align:center;
+    color: var(--muted);
+    font-size: 12px;
+    margin-top: 24px;
+    line-height:1.6;
+  }
+
+  /* ---------- Impresión ---------- */
+  @media print{
+    body{ padding:0; background:#fff; }
+    .action-bar, .no-print, footer.legal{ display:none !important; }
+    .sheet{ box-shadow:none; border:none; padding:0; max-width:100%; }
+    textarea, input{ border:1px solid #ccc; background:#fff; }
+    .stage{ break-inside: avoid; }
+    .email-section{ break-inside: avoid; }
+  }
+</style>
+</head>
+<body>
+
+<div class="action-bar no-print">
+  <button class="btn btn-print" id="printBtn">
+    🖨️ Imprimir / Guardar como PDF
+  </button>
+</div>
+
+<div class="sheet">
+  <div class="eyebrow">Presentaciones de Impacto</div>
+  <h1>Mi Estilo de Comunicación como Presentador/a</h1>
+  <p class="subtitle">Reflexión guiada — completa este ejercicio después de recorrer el mundo inmersivo y explorar los recursos sobre presentaciones efectivas.</p>
+
+  <div class="id-row">
+    <div class="id-field">
+      <label for="fullName">Nombre completo</label>
+      <input type="text" id="fullName" placeholder="Escribe tu nombre...">
+    </div>
+    <div class="id-field">
+      <label for="theDate">Fecha</label>
+      <input type="text" id="theDate" placeholder="dd/mm/aaaa">
+    </div>
+  </div>
+
+  <div class="intro-box">
+    El objetivo de esta reflexión es que conozcas tu estilo al presentar, profundices en los conceptos trabajados en el mundo inmersivo, reconozcas tus fortalezas y áreas de oportunidad, y definas cómo vas a ponerlo en práctica, solicitar feedback y mejorar de forma continua.
+  </div>
+
+  <div class="section-heading">Recorrido por las tres etapas</div>
+
+  <div class="stage">
+    <div class="stage-icon">
+      <svg viewBox="0 0 84 84" fill="none">
+        <circle cx="42" cy="42" r="34" stroke="#7C5CFF" stroke-width="3"/>
+        <circle cx="42" cy="42" r="20" stroke="#7C5CFF" stroke-width="2.5" opacity="0.7"/>
+        <circle cx="42" cy="42" r="4" fill="#7C5CFF"/>
+      </svg>
+    </div>
+    <div class="stage-body">
+      <div class="stage-tag">Antes de presentar</div>
+      <div class="stage-title">Claridad Estratégica</div>
+      <div class="q-block">
+        <div class="q-label">¿Cómo defines hoy el propósito de una presentación antes de preparar el contenido?</div>
+        <textarea id="q1"></textarea>
+      </div>
+      <div class="q-block">
+        <div class="q-label">¿Qué quieres cambiar en tu forma de preparar una presentación?</div>
+        <textarea id="q2"></textarea>
+      </div>
+    </div>
+  </div>
+
+  <div class="stage">
+    <div class="stage-icon">
+      <svg viewBox="0 0 84 84" fill="none">
+        <path d="M42 12 C50 12 56 18 56 26 V38 C56 46 50 52 42 52 C34 52 28 46 28 38 V26 C28 18 34 12 42 12 Z" stroke="#7C5CFF" stroke-width="3"/>
+        <path d="M22 34 V38 C22 51 31 61 42 61 C53 61 62 51 62 38 V34" stroke="#7C5CFF" stroke-width="2.5" stroke-linecap="round" opacity="0.7"/>
+        <path d="M42 61 V72 M32 72 H52" stroke="#7C5CFF" stroke-width="2.5" stroke-linecap="round" opacity="0.7"/>
+      </svg>
+    </div>
+    <div class="stage-body">
+      <div class="stage-tag">Durante la presentación</div>
+      <div class="stage-title">Presencia Escénica</div>
+      <div class="q-block">
+        <div class="q-label">¿Cómo describirías tu conexión con la audiencia mientras presentas?</div>
+        <textarea id="q3"></textarea>
+      </div>
+      <div class="q-block">
+        <div class="q-label">¿Qué elemento —apertura, voz, pausas o storytelling— quieres fortalecer?</div>
+        <textarea id="q4"></textarea>
+      </div>
+    </div>
+  </div>
+
+  <div class="stage">
+    <div class="stage-icon">
+      <svg viewBox="0 0 84 84" fill="none">
+        <path d="M22 42 A20 20 0 1 1 27 55" stroke="#7C5CFF" stroke-width="3" fill="none" stroke-linecap="round"/>
+        <path d="M22 30 V42 H34" stroke="#7C5CFF" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+        <path d="M55 26 L62 33 L55 40" stroke="#7C5CFF" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" fill="none" opacity="0.7"/>
+      </svg>
+    </div>
+    <div class="stage-body">
+      <div class="stage-tag">Después de presentar</div>
+      <div class="stage-title">Mejora Continua</div>
+      <div class="q-block">
+        <div class="q-label">¿Cómo sueles dar seguimiento después de una presentación?</div>
+        <textarea id="q5"></textarea>
+      </div>
+      <div class="q-block">
+        <div class="q-label">¿Qué hábito de mejora continua te comprometes a adoptar?</div>
+        <textarea id="q6"></textarea>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-heading">Fortalezas y áreas de oportunidad</div>
+
+  <div class="q-label">Dos fortalezas que reconozco en mi estilo como presentador/a:</div>
+  <div class="num-field"><span class="num">1.</span><input type="text" id="strength1"></div>
+  <div class="num-field"><span class="num">2.</span><input type="text" id="strength2"></div>
+
+  <div class="q-label" style="margin-top:18px;">Dos áreas de oportunidad en las que quiero trabajar:</div>
+  <div class="num-field"><span class="num">1.</span><input type="text" id="opportunity1"></div>
+  <div class="num-field"><span class="num">2.</span><input type="text" id="opportunity2"></div>
+
+  <div class="section-heading" style="margin-top:8px;">Mi compromiso de acción</div>
+  <div class="q-block">
+    <div class="q-label">¿Qué vas a poner en práctica en tu próxima presentación, y a quién le pedirás feedback?</div>
+    <textarea id="commitment" style="min-height:100px;"></textarea>
+  </div>
+
+  <div class="quote-box">
+    "Un gran presentador no nace: se construye presentación tras presentación, feedback tras feedback."
+  </div>
+
+  <div class="email-section">
+    <div class="email-note">
+      Escribe tu correo y presiona "Enviar por email": se abrirá tu aplicación de email con esta reflexión ya redactada (nombre, fecha y tus respuestas), lista para enviarte a ti mismo/a como referencia.
+    </div>
+    <div class="email-field">
+      <label for="userEmail">Tu correo electrónico</label>
+      <input type="email" id="userEmail" placeholder="tucorreo@ejemplo.com">
+    </div>
+    <button class="btn btn-send no-print" id="sendBtn">✉️ Enviar por email</button>
+    <div class="send-status" id="sendStatus"></div>
+  </div>
+</div>
+
+<footer class="legal no-print">
+  Presentaciones de Impacto &middot; tus respuestas no se envían a ningún servidor; solo se usan para redactar tu correo
+</footer>
+
+<script>
+  // Fecha de hoy, formato dd/mm/aaaa, editable
+  (function setToday(){
+    const d = new Date();
+    const dd = String(d.getDate()).padStart(2,"0");
+    const mm = String(d.getMonth()+1).padStart(2,"0");
+    const yyyy = d.getFullYear();
+    document.getElementById("theDate").value = `${dd}/${mm}/${yyyy}`;
+  })();
+
+  document.getElementById("printBtn").addEventListener("click", () => {
+    window.print();
+  });
+
+  function val(id){
+    const el = document.getElementById(id);
+    const v = el.value.trim();
+    return v.length ? v : "(sin respuesta)";
+  }
+
+  document.getElementById("sendBtn").addEventListener("click", () => {
+    const to = "bncarbonell@gmail.com";
+    const subject = "Mi Estilo de Comunicación como Presentador/a — Reflexión Guiada";
+
+    const lines = [
+      "MI ESTILO DE COMUNICACIÓN COMO PRESENTADOR/A",
+      "Reflexión guiada",
+      "",
+      `Nombre completo: ${val("fullName")}`,
+      `Fecha: ${val("theDate")}`,
+      `Correo del participante: ${val("userEmail")}`,
+      "",
+      "— RECORRIDO POR LAS TRES ETAPAS —",
+      "",
+      "01 · Antes de presentar · Claridad Estratégica",
+      "¿Cómo defines hoy el propósito de una presentación antes de preparar el contenido?",
+      val("q1"),
+      "",
+      "¿Qué quieres cambiar en tu forma de preparar una presentación?",
+      val("q2"),
+      "",
+      "02 · Durante la presentación · Presencia Escénica",
+      "¿Cómo describirías tu conexión con la audiencia mientras presentas?",
+      val("q3"),
+      "",
+      "¿Qué elemento —apertura, voz, pausas o storytelling— quieres fortalecer?",
+      val("q4"),
+      "",
+      "03 · Después de presentar · Mejora Continua",
+      "¿Cómo sueles dar seguimiento después de una presentación?",
+      val("q5"),
+      "",
+      "¿Qué hábito de mejora continua te comprometes a adoptar?",
+      val("q6"),
+      "",
+      "— FORTALEZAS Y ÁREAS DE OPORTUNIDAD —",
+      "",
+      "Fortalezas:",
+      `1. ${val("strength1")}`,
+      `2. ${val("strength2")}`,
+      "",
+      "Áreas de oportunidad:",
+      `1. ${val("opportunity1")}`,
+      `2. ${val("opportunity2")}`,
+      "",
+      "— MI COMPROMISO DE ACCIÓN —",
+      "¿Qué vas a poner en práctica en tu próxima presentación, y a quién le pedirás feedback?",
+      val("commitment"),
+      "",
+      "\"Un gran presentador no nace: se construye presentación tras presentación, feedback tras feedback.\""
+    ];
+
+    const body = lines.join("\n");
+    const mailto = `mailto:${to}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+
+    window.location.href = mailto;
+
+    const status = document.getElementById("sendStatus");
+    status.textContent = "Se abrió tu aplicación de correo con la reflexión lista para enviar.";
+    setTimeout(() => { status.textContent = ""; }, 6000);
+  });
+</script>
+
+</body>
+</html>
