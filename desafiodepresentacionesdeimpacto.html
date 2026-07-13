@@ -536,7 +536,9 @@ const SECTION_META = [
     num: "01",
     title: "Antes de presentar",
     badgeName: "Claridad Estratégica",
-    badgeCopy: "Sabes definir el propósito y filtrar el contenido antes de abrir el editor de slides. Esa disciplina es la que separa una presentación memorable de una genérica.",
+    badgeCopyHigh: "Sabes definir el propósito y filtrar el contenido antes de abrir el editor de slides. Esa disciplina es la que separa una presentación memorable de una genérica.",
+    badgeCopyMid: "Vas por buen camino definiendo el propósito y filtrando el contenido, aunque todavía hay conceptos de esta etapa que puedes afinar.",
+    badgeCopyLow: "Esta etapa te generó más dudas de lo esperado. Vale la pena repasar cómo definir el propósito y filtrar el contenido antes de diseñar tus diapositivas.",
     badgeIcon: `<circle cx="42" cy="42" r="34" stroke="#7C5CFF" stroke-width="2.5"/><circle cx="42" cy="42" r="20" stroke="#D9D2FF" stroke-width="2"/><circle cx="42" cy="42" r="4" fill="#7C5CFF"/><path d="M42 8 V16 M42 68 V76 M8 42 H16 M68 42 H76" stroke="#7C5CFF" stroke-width="2.5" stroke-linecap="round"/>`
   },
   {
@@ -544,7 +546,9 @@ const SECTION_META = [
     num: "02",
     title: "Durante la presentación",
     badgeName: "Presencia Escénica",
-    badgeCopy: "Dominas la apertura, la voz y el ritmo que mantienen a una audiencia conectada de principio a fin.",
+    badgeCopyHigh: "Dominas la apertura, la voz y el ritmo que mantienen a una audiencia conectada de principio a fin.",
+    badgeCopyMid: "Tienes buenas bases de presencia escénica, aunque conviene seguir practicando la apertura, la voz y el ritmo.",
+    badgeCopyLow: "Esta etapa te resultó difícil. Repasa los conceptos de apertura, voz y ritmo para fortalecer tu presencia frente a la audiencia.",
     badgeIcon: `<path d="M42 12 C50 12 56 18 56 26 V38 C56 46 50 52 42 52 C34 52 28 46 28 38 V26 C28 18 34 12 42 12 Z" stroke="#7C5CFF" stroke-width="2.5"/><path d="M22 34 V38 C22 51 31 61 42 61 C53 61 62 51 62 38 V34" stroke="#D9D2FF" stroke-width="2" stroke-linecap="round"/><path d="M42 61 V72 M32 72 H52" stroke="#D9D2FF" stroke-width="2" stroke-linecap="round"/>`
   },
   {
@@ -552,7 +556,9 @@ const SECTION_META = [
     num: "03",
     title: "Después de presentar",
     badgeName: "Mejora Continua",
-    badgeCopy: "Conviertes cada presentación en aprendizaje: identificas qué funcionó, qué ajustar y cómo dar seguimiento a tu audiencia.",
+    badgeCopyHigh: "Conviertes cada presentación en aprendizaje: identificas qué funcionó, qué ajustar y cómo dar seguimiento a tu audiencia.",
+    badgeCopyMid: "Tienes una buena base para el seguimiento después de presentar, aunque puedes profundizar en cómo convertirlo en aprendizaje continuo.",
+    badgeCopyLow: "Esta etapa te costó más. Vale la pena repasar qué hacer después de presentar para dar seguimiento y mejorar continuamente.",
     badgeIcon: `<path d="M22 42 A20 20 0 1 1 27 55" stroke="#7C5CFF" stroke-width="2.5" fill="none" stroke-linecap="round"/><path d="M22 30 V42 H34" stroke="#7C5CFF" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/><path d="M55 26 L62 33 L55 40" stroke="#D9D2FF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>`
   }
 ];
@@ -636,7 +642,7 @@ function decideForm(progress) {
 
 const INTRO_COPY = {
   heading: "¿Qué tipo de presentador o presentadora eres?",
-  desc: "Antes de recorrer el escenario del mundo inmersivo, contesta el siguiente desafío y descubre el tipo de presentador o presentadora que eres. Luego, cuando termines tu recorrido por el mundo inmersivo, vuelve a contestar el desafío y compara tus respuestas para ver cómo evolucionó tu perfil como presentador o presentadora después de vivir la experiencia inmersiva."
+  desc: "Contesta el siguiente desafío y descubre el tipo de presentador o presentadora que eres hoy. Puedes repetirlo más adelante para comparar tus respuestas y ver cómo evolucionó tu perfil como presentador o presentadora."
 };
 
 /* Niveles de presentador según puntuación (sobre 18) */
@@ -645,7 +651,7 @@ const LEVELS = [
     id: "principiante",
     min: 0, max: 9,
     label: "Presentador/a Principiante",
-    message: "Estás construyendo las bases de una presentación con impacto. Te recomendamos volver a recorrer el mundo inmersivo para reforzar los conceptos de cada estación, y repetir el desafío cuando te sientas list@ para ver cuánto avanzaste.",
+    message: "Estás construyendo las bases de una presentación con impacto. Te recomendamos repasar los conceptos de cada estación y repetir el desafío más adelante para ver cuánto avanzaste.",
     badgeName: "Presentador/a en Formación"
   },
   {
@@ -730,7 +736,7 @@ function renderStart() {
   if (progress.initial && !progress.final) {
     progressNoteHTML = `
       <div class="progress-note">
-        Tienes un resultado guardado de <strong>${progress.initial.score} de 18</strong>. Si ya recorriste el mundo inmersivo, contesta el desafío ahora: esta vez incluye preguntas distintas pero equivalentes en los mismos temas, para que tu resultado refleje lo que aprendiste y no lo que memorizaste.
+        Tienes un resultado guardado de <strong>${progress.initial.score} de 18</strong>. Si estás list@ para tu segundo intento, contesta el desafío ahora: esta vez incluye preguntas distintas pero equivalentes en los mismos temas, para que tu resultado refleje lo que aprendiste y no lo que memorizaste.
       </div>`;
   } else if (progress.initial && progress.final) {
     progressNoteHTML = `
@@ -871,13 +877,20 @@ function computeScore() {
   return state.allQuestions.reduce((total, q, i) => total + (state.answers[i] === q.correct ? 1 : 0), 0);
 }
 
+function sectionScore(sectionIndex) {
+  return state.allQuestions.reduce((total, q, i) => {
+    if (q.sectionIndex === sectionIndex && state.answers[i] === q.correct) return total + 1;
+    return total;
+  }, 0);
+}
+
 function advance() {
   const item = state.allQuestions[state.currentIndex];
   const isLastInSection = item.questionIndexInSection === state.sections[item.sectionIndex].questions.length - 1;
 
   if (isLastInSection && !state.shownBadges.has(item.sectionIndex)) {
     state.shownBadges.add(item.sectionIndex);
-    renderBadge(state.sections[item.sectionIndex]);
+    renderBadge(state.sections[item.sectionIndex], item.sectionIndex);
     return;
   }
 
@@ -893,13 +906,29 @@ function advance() {
 /* ---------------------------------------------------------
    RENDER: INSIGNIA DE ESTACIÓN
 --------------------------------------------------------- */
-function renderBadge(section) {
+function renderBadge(section, sectionIndex) {
+  const correct = sectionScore(sectionIndex);
+  const total = section.questions.length;
+
+  let tag, copy;
+  if (correct >= 5) {
+    tag = "Insignia desbloqueada";
+    copy = section.badgeCopyHigh;
+  } else if (correct >= 3) {
+    tag = "Estación completada";
+    copy = section.badgeCopyMid;
+  } else {
+    tag = "Estación completada";
+    copy = section.badgeCopyLow;
+  }
+
   stage.innerHTML = `
     <div class="card badge-reveal">
       <svg class="badge-icon" viewBox="0 0 84 84" fill="none">${section.badgeIcon}</svg>
-      <div class="badge-tag">Insignia desbloqueada</div>
+      <div class="badge-tag">${tag}</div>
       <div class="badge-name">${section.badgeName}</div>
-      <div class="badge-copy">${section.badgeCopy}</div>
+      <div class="badge-copy">${copy}</div>
+      <div class="badge-copy" style="margin-top:-18px; font-size:13px; opacity:0.8;">${correct} de ${total} respuestas correctas en esta estación</div>
       <button class="btn btn-primary" id="continueBtn">
         ${state.currentIndex === state.allQuestions.length - 1 ? "Ver resultados" : "Continuar a la siguiente estación"}
       </button>
@@ -947,8 +976,8 @@ function renderResults() {
   const progress = loadProgress();
 
   let comparisonHTML = "";
-  const headingText = "¡Felicidades! Has completado la experiencia inmersiva y el desafío.";
-  let introText = "Sigue explorando el mundo inmersivo y repite el desafío cuando quieras para seguir practicando y afinando tu estilo como presentador o presentadora.";
+  const headingText = "¡Felicidades! Has completado el desafío.";
+  let introText = "Repite el desafío más adelante para ver cómo evoluciona tu estilo como presentador o presentadora.";
 
   const hasPrevious = progress.initial && !progress.final;
 
