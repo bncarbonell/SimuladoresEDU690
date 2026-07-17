@@ -375,6 +375,47 @@
     line-height:1.3;
     margin:0;
   }
+
+  /* ---------- Mode toggle ---------- */
+  .mode-toggle{
+    position:fixed; top:18px; left:18px; z-index:60;
+    background:var(--plum); color:var(--cream);
+    border:none; padding:10px 18px; border-radius:999px;
+    font-family:'Sora',sans-serif; font-size:12.5px; font-weight:700;
+    letter-spacing:0.02em;
+    cursor:pointer;
+    box-shadow:0 12px 24px -10px rgba(74,35,64,0.45);
+    transition:background .18s ease, transform .18s ease;
+  }
+  .mode-toggle:hover{background:var(--plum-soft); transform:translateY(-1px);}
+
+  /* ---------- Slide mode controls ---------- */
+  .slide-controls{
+    position:fixed; bottom:22px; left:50%; transform:translateX(-50%);
+    z-index:60; display:none; align-items:center; gap:14px;
+    background:#fff; border:1px solid var(--line); border-radius:999px;
+    padding:8px 12px;
+    box-shadow:0 16px 34px -16px rgba(74,35,64,0.4);
+  }
+  body.slide-mode .slide-controls{display:flex;}
+  .slide-controls button{
+    background:var(--lilac); border:none; width:38px; height:38px;
+    border-radius:50%; display:flex; align-items:center; justify-content:center;
+    cursor:pointer; color:var(--plum);
+  }
+  .slide-controls button:hover{background:var(--gold); color:#fff;}
+  .slide-controls button svg{width:18px;height:18px;}
+  .slide-counter{font-size:12.5px; color:var(--plum-soft); font-weight:700; min-width:46px; text-align:center;}
+
+  /* ---------- Slide mode: one slide-item visible at a time ---------- */
+  body.slide-mode .slide-item{display:none !important;}
+  body.slide-mode .slide-item.slide-active{display:flex !important;}
+  body.slide-mode .slide-item{
+    min-height:100vh; max-height:100vh; width:100%;
+    overflow-y:auto; box-sizing:border-box;
+  }
+  body.slide-mode .program-nav{display:none;}
+  body.slide-mode{overflow:hidden;}
 </style>
 </head>
 <body>
@@ -393,8 +434,20 @@
   <button class="navdot" data-target="cta" aria-label="Explora el mundo"><span class="dotlabel">Entra al mundo</span><span class="dot"></span></button>
 </nav>
 
+<button class="mode-toggle" id="modeToggle" type="button">🎞 Ver como diapositivas</button>
+
+<div class="slide-controls">
+  <button id="prevSlide" type="button" aria-label="Diapositiva anterior">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6l-6 6 6 6"/></svg>
+  </button>
+  <span class="slide-counter" id="slideCounter">1 / 10</span>
+  <button id="nextSlide" type="button" aria-label="Siguiente diapositiva">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg>
+  </button>
+</div>
+
 <!-- ===== PORTADA ===== -->
-<header class="hero" id="portada">
+<header class="hero slide-item" id="portada">
   <div class="curtain left" aria-hidden="true"></div>
   <div class="curtain right" aria-hidden="true"></div>
   <div class="playbill">
@@ -403,7 +456,7 @@
     <h1>Presentaciones<br>de Impacto</h1>
     <p class="sub">Un objeto virtual de aprendizaje que introduce, contextualiza y da acceso a un mundo inmersivo diseñado para transformar la manera de comunicar en público.</p>
     <div class="meta">
-      <div><b>Realidad Virtual y Medios Inmersivos en la Educación</b>Curso</div>
+      <div><b>EDU690: Realidad Virtual y Medios Inmersivos en la Educación</b>Curso</div>
       <div><b>Dra. Mariluz Serrano</b>Profesora</div>
       <div><b>Universidad del Sagrado Corazón</b>Universidad</div>
     </div>
@@ -412,12 +465,12 @@
 </header>
 
 <!-- ===== FRASE ===== -->
-<section class="quote-slide" id="frase">
+<section class="quote-slide slide-item" id="frase">
   <p>No todo experto sabe comunicar su conocimiento.</p>
 </section>
 
 <!-- ===== ESCENA 1 — Tu tema específico ===== -->
-<section id="escena1">
+<section id="escena1" class="slide-item">
   <div class="inner">
     <div class="eyebrow"><span class="kicker-num">Escena 1</span> · Tu tema específico</div>
     <div class="grid2">
@@ -440,7 +493,7 @@
 </section>
 
 <!-- ===== ESCENA 2 — Objetivos de aprendizaje ===== -->
-<section id="escena2" style="background:var(--blush);">
+<section id="escena2" class="slide-item" style="background:var(--blush);">
   <div class="inner">
     <div class="eyebrow"><span class="kicker-num">Escena 2</span> · Objetivos de aprendizaje</div>
     <h2>Al salir del auditorio, el visitante puede…</h2>
@@ -454,12 +507,12 @@
 </section>
 
 <!-- ===== ESCENA 3 — Estrategias / gamificación ===== -->
-<section id="escena3">
+<section id="escena3" class="slide-item">
   <div class="inner">
     <div class="eyebrow"><span class="kicker-num">Escena 3</span> · Estrategias activas y gamificación</div>
     <div class="card">
-      <h2 style="font-size:26px;">Aprender haciendo, no leyendo</h2>
-      <p>El diseño responde a un reto personal de retención: el contenido que solo se lee se olvida. Por eso cada elemento del mundo invita a <em>hacer</em> algo — responder, comparar, reflexionar — en vez de solo consumir información.</p>
+      <h2 style="font-size:26px;">Aprender haciendo, jugando y reflexionando</h2>
+      <p>Este entorno inmersivo promueve una experiencia activa donde el estudiante explora, interactúa y reflexiona sobre su propio estilo de presentación. Cada recurso está diseñado para apoyar un aprendizaje significativo que va más allá de la lectura pasiva.</p>
       <div class="journey">
         <div class="step"><span class="k">Desafío gamificado</span>Quiz con bancos de preguntas A/B antes de comenzar el recorrido, y otro al final para comparar respuestas.</div>
         <div class="step"><span class="k">Insignia de cierre</span>Puntaje guardado en el navegador que reconoce el progreso entre el "antes" y el "después".</div>
@@ -470,7 +523,7 @@
 </section>
 
 <!-- ===== ESCENA 4 — ADDIE ===== -->
-<section id="escena4" style="background:var(--lilac);">
+<section id="escena4" class="slide-item" style="background:var(--lilac);">
   <div class="inner">
     <div class="eyebrow"><span class="kicker-num">Escena 4</span> · Fundamento ADDIE</div>
     <h2>Las cinco fases, aplicadas a mi auditorio virtual</h2>
@@ -500,7 +553,7 @@
 </section>
 
 <!-- ===== ESCENA 5 — TPACK ===== -->
-<section id="escena5">
+<section id="escena5" class="slide-item">
   <div class="inner">
     <div class="eyebrow"><span class="kicker-num">Escena 5</span> · Integración TPACK</div>
     <h2>Contenido, pedagogía y tecnología en una sola decisión</h2>
@@ -523,32 +576,40 @@
 </section>
 
 <!-- ===== ESCENA 6 — Decisión ética ===== -->
-<section id="escena6" style="background:var(--blush);">
+<section id="escena6" class="slide-item" style="background:var(--blush);">
   <div class="inner">
     <div class="eyebrow"><span class="kicker-num">Escena 6</span> · Decisión ética</div>
-    <h2>Un espacio seguro para practicar sin ser juzgado/a</h2>
+    <h2>Decisiones éticas: pensamiento crítico y privacidad</h2>
     <div class="card">
-      <p>El puntaje del desafío gamificado y el progreso de cada visitante se guardan solo en su propio navegador (localStorage), sin ranking público ni comparación entre participantes.</p>
-      <p>Hablar en público ya genera ansiedad de por sí; que alguien viera "cuánto sabías antes" en público podría desincentivar la participación honesta. Proteger esa privacidad fue una decisión ética deliberada, para que la vulnerabilidad de aprender a comunicarse no se convierta en una fuente adicional de exposición.</p>
+      <p>Algunas decisiones éticas consideradas en este espacio incluyen:</p>
+      <ul class="pill-list">
+        <li><strong>Evitar el copy-paste de IA:</strong> promover pensamiento crítico y producción auténtica.</li>
+        <li><strong>Reflexión personal, no respuestas automáticas:</strong> diseñar actividades que requieren pensar, no solo contestar.</li>
+        <li><strong>Modelar el uso ético de la IA generativa</strong> como herramienta de apoyo, no de sustitución.</li>
+        <li><strong>Espacios de reflexión sin juicio</strong> para practicar con confianza.</li>
+        <li><strong>No recopilar datos personales</strong> del visitante.</li>
+      </ul>
     </div>
   </div>
 </section>
 
 <!-- ===== ESCENA 7 — Accesibilidad / diseño ===== -->
-<section id="escena7">
+<section id="escena7" class="slide-item">
   <div class="inner">
     <div class="eyebrow"><span class="kicker-num">Escena 7</span> · Consideraciones de accesibilidad</div>
     <h2>Un recorrido navegable de más de una forma</h2>
     <ul class="pill-list">
-      <li><strong>Contraste y color:</strong> paleta clara con suficiente contraste texto/fondo en carteles y formularios.</li>
-      <li><strong>Texto además de audio:</strong> los carteles del auditorio comunican por escrito, sin depender solo del audio del entorno.</li>
-      <li><strong>Evidencia portátil:</strong> la reflexión se puede imprimir o enviar por correo, para quien prefiera trabajarla fuera de la VR.</li>
+      <li><strong>Accesibilidad visual:</strong> tipografías legibles, contraste adecuado, paneles grandes, navegación clara.</li>
+      <li><strong>Accesibilidad cognitiva:</strong> contenido segmentado, sin sobrecarga, que guía al estudiante paso a paso.</li>
+      <li><strong>Accesibilidad tecnológica:</strong> recursos que funcionan en distintos dispositivos y velocidades de internet.</li>
+      <li><strong>Diversos estilos de aprendizaje:</strong> visual, auditivo y kinestésico, aprovechando la exploración activa dentro del entorno inmersivo.</li>
+      <li><strong>Evitar barreras innecesarias:</strong> no exigir registro, no pedir datos personales, no usar plataformas que excluyan.</li>
     </ul>
   </div>
 </section>
 
 <!-- ===== CTA final ===== -->
-<section class="cta-section" id="cta">
+<section class="cta-section slide-item" id="cta">
   <div class="inner cta-card">
     <div class="eyebrow" style="justify-content:center;">Última escena</div>
     <h2>Ahora, entra al auditorio</h2>
@@ -557,12 +618,6 @@
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
       Explora el mundo inmersivo
     </a>
-    <div class="recursos" style="justify-content:center; margin-top:34px;">
-      <a href="https://view.genially.com/6a4f0621eaa2fcd55288b7cf" target="_blank" rel="noopener">Mapa conceptual (Genially)</a>
-      <a href="https://www.thinglink.com/scene/2133014396073411046" target="_blank" rel="noopener">Escena interactiva (Thinglink)</a>
-      <a href="https://bncarbonell.github.io/SimuladoresEDU690/estilodecomunicacioncomopresentador.html" target="_blank" rel="noopener">Mi estilo de comunicación</a>
-      <a href="https://bncarbonell.github.io/SimuladoresEDU690/desafiodepresentacionesdeimpacto.html" target="_blank" rel="noopener">Desafío gamificado</a>
-    </div>
   </div>
 </section>
 
@@ -571,12 +626,38 @@
 <script>
   const sections = ["portada","frase","escena1","escena2","escena3","escena4","escena5","escena6","escena7","cta"];
   const dots = document.querySelectorAll(".navdot");
-  dots.forEach(btn=>{
-    btn.addEventListener("click", ()=>{
-      document.getElementById(btn.dataset.target).scrollIntoView({behavior:"smooth"});
+  let mode = "scroll";
+  let slideIndex = 0;
+
+  function goToSlide(id){
+    const idx = sections.indexOf(id);
+    if(idx === -1) return;
+    if(mode === "slide"){
+      slideIndex = idx;
+      renderSlide();
+    } else {
+      document.getElementById(id).scrollIntoView({behavior:"smooth"});
+    }
+  }
+
+  function renderSlide(){
+    sections.forEach((id, i)=>{
+      const el = document.getElementById(id);
+      if(!el) return;
+      el.classList.toggle("slide-active", i === slideIndex);
+      if(i === slideIndex) el.scrollTop = 0;
     });
+    dots.forEach(d=>d.classList.toggle("active", d.dataset.target === sections[slideIndex]));
+    const counter = document.getElementById("slideCounter");
+    if(counter) counter.textContent = (slideIndex + 1) + " / " + sections.length;
+  }
+
+  dots.forEach(btn=>{
+    btn.addEventListener("click", ()=> goToSlide(btn.dataset.target));
   });
+
   const observer = new IntersectionObserver((entries)=>{
+    if(mode !== "scroll") return;
     entries.forEach(entry=>{
       if(entry.isIntersecting){
         dots.forEach(d=>d.classList.toggle("active", d.dataset.target===entry.target.id));
@@ -586,6 +667,31 @@
   sections.forEach(id=>{
     const el = document.getElementById(id);
     if(el) observer.observe(el);
+  });
+
+  const modeToggle = document.getElementById("modeToggle");
+  modeToggle.addEventListener("click", ()=>{
+    mode = (mode === "scroll") ? "slide" : "scroll";
+    document.body.classList.toggle("slide-mode", mode === "slide");
+    modeToggle.textContent = (mode === "scroll") ? "🎞 Ver como diapositivas" : "📜 Ver como página";
+    if(mode === "slide"){
+      slideIndex = 0;
+      renderSlide();
+    }
+    window.scrollTo(0,0);
+  });
+
+  document.getElementById("prevSlide").addEventListener("click", ()=>{
+    if(slideIndex > 0){ slideIndex--; renderSlide(); }
+  });
+  document.getElementById("nextSlide").addEventListener("click", ()=>{
+    if(slideIndex < sections.length - 1){ slideIndex++; renderSlide(); }
+  });
+
+  document.addEventListener("keydown", (e)=>{
+    if(mode !== "slide") return;
+    if(e.key === "ArrowRight" && slideIndex < sections.length - 1){ slideIndex++; renderSlide(); }
+    if(e.key === "ArrowLeft" && slideIndex > 0){ slideIndex--; renderSlide(); }
   });
 </script>
 
