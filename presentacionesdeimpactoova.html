@@ -392,11 +392,13 @@
 
   /* ---------- Slide mode controls ---------- */
   .slide-controls{
-    position:fixed; bottom:22px; left:50%; transform:translateX(-50%);
+    position:static;
     z-index:60; display:none; align-items:center; gap:14px;
     background:#fff; border:1px solid var(--line); border-radius:999px;
     padding:8px 12px;
+    margin:10px auto 16px;
     box-shadow:0 16px 34px -16px rgba(74,35,64,0.4);
+    flex:0 0 auto;
   }
   body.slide-mode .slide-controls{display:flex;}
   .slide-controls button{
@@ -408,15 +410,23 @@
   .slide-controls button svg{width:18px;height:18px;}
   .slide-counter{font-size:12.5px; color:var(--plum-soft); font-weight:700; min-width:46px; text-align:center;}
 
-  /* ---------- Slide mode: one slide-item visible at a time ---------- */
-  body.slide-mode .slide-item{display:none !important;}
-  body.slide-mode .slide-item.slide-active{display:flex !important;}
-  body.slide-mode .slide-item{
-    min-height:100vh; max-height:100vh; width:100%;
-    overflow-y:auto; box-sizing:border-box;
+  /* ---------- Slide mode: one slide-item visible at a time, control bar reserves its own space ---------- */
+  body.slide-mode{
+    display:flex; flex-direction:column;
+    height:100vh; overflow:hidden;
   }
+  body.slide-mode .slide-item{display:none !important;}
+  body.slide-mode .slide-item.slide-active{
+    display:flex !important;
+    flex:1 1 auto;
+    min-height:0;
+    max-height:none;
+    width:100%;
+    overflow-y:auto;
+    box-sizing:border-box;
+  }
+  body.slide-mode .colofon{display:none;}
   body.slide-mode .program-nav{display:none;}
-  body.slide-mode{overflow:hidden;}
 </style>
 </head>
 <body class="slide-mode">
@@ -436,16 +446,6 @@
 </nav>
 
 <button class="mode-toggle" id="modeToggle" type="button">📜 Ver como página</button>
-
-<div class="slide-controls">
-  <button id="prevSlide" type="button" aria-label="Diapositiva anterior">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6l-6 6 6 6"/></svg>
-  </button>
-  <span class="slide-counter" id="slideCounter">1 / 10</span>
-  <button id="nextSlide" type="button" aria-label="Siguiente diapositiva">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg>
-  </button>
-</div>
 
 <!-- ===== PORTADA ===== -->
 <header class="hero slide-item" id="portada">
@@ -497,7 +497,7 @@
 <section id="escena2" class="slide-item" style="background:var(--blush);">
   <div class="inner">
     <div class="eyebrow"><span class="kicker-num">Escena 2</span> · Objetivos de aprendizaje</div>
-    <h2>Al salir del auditorio, el visitante puede…</h2>
+    <h2>Al salir del auditorio, el visitante podrá…</h2>
     <ul class="pill-list">
       <li><strong>Identificar</strong> su propio estilo de comunicación como presentador/a, con áreas de fortaleza y de oportunidad.</li>
       <li><strong>Aplicar</strong> estrategias concretas antes, durante y después de una presentación.</li>
@@ -623,6 +623,16 @@
 </section>
 
 <div class="colofon">Bárbara N. Carbonell · EDU690 · Presentaciones de Impacto</div>
+
+<div class="slide-controls">
+  <button id="prevSlide" type="button" aria-label="Diapositiva anterior">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6l-6 6 6 6"/></svg>
+  </button>
+  <span class="slide-counter" id="slideCounter">1 / 10</span>
+  <button id="nextSlide" type="button" aria-label="Siguiente diapositiva">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg>
+  </button>
+</div>
 
 <script>
   const sections = ["portada","frase","escena1","escena2","escena3","escena4","escena5","escena6","escena7","cta"];
