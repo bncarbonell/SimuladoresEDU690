@@ -283,6 +283,10 @@
     font-size:11px; letter-spacing:0.1em; text-transform:uppercase;
     color:var(--gold); font-weight:700; display:block; margin-bottom:6px;
   }
+  .journey.journey-4{grid-template-columns:repeat(4,1fr); gap:10px;}
+  .journey.journey-4 .step{padding:14px 12px; font-size:13.5px;}
+  .journey.journey-4 .step .k{font-size:10px;}
+  @media (max-width:760px){.journey.journey-4{grid-template-columns:1fr;}}
 
   /* ---------- Two-column badges (TPACK) ---------- */
   .badge-grid{
@@ -473,7 +477,7 @@
 <!-- ===== ESCENA 1 — Tu tema específico ===== -->
 <section id="escena1" class="slide-item">
   <div class="inner">
-    <div class="eyebrow"><span class="kicker-num">Escena 1</span> · Tu tema específico</div>
+    <div class="eyebrow"><span class="kicker-num">Escena 1</span> · Introducción</div>
     <div class="grid2">
       <div>
         <h2>Un recorrido de concienciación para comunicar con impacto</h2>
@@ -514,10 +518,11 @@
     <div class="card">
       <h2 style="font-size:26px;">Aprender haciendo, jugando y reflexionando</h2>
       <p>Este entorno inmersivo promueve una experiencia activa donde el estudiante explora, interactúa y reflexiona sobre su propio estilo de presentación. Cada recurso está diseñado para apoyar un aprendizaje significativo que va más allá de la lectura pasiva.</p>
-      <div class="journey">
+      <div class="journey journey-4">
         <div class="step"><span class="k">Desafío gamificado</span>Quiz con bancos de preguntas A/B antes de comenzar el recorrido, y otro al final para comparar respuestas.</div>
         <div class="step"><span class="k">Insignia de cierre</span>Puntaje guardado en el navegador que reconoce el progreso entre el "antes" y el "después".</div>
         <div class="step"><span class="k">Reflexión guiada</span>Documento imprimible/enviable por correo para hacer insight sobre el estilo propio de comunicación.</div>
+        <div class="step"><span class="k">Práctica Reflexiva</span>Reto opcional de grabarse presentando, aplicar lo aprendido y recibir retroalimentación personalizada de la facilitadora.</div>
       </div>
     </div>
   </div>
