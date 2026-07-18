@@ -179,7 +179,7 @@
       </div>
       <div class="option">
         <span class="tag">Opción B</span>
-        <p style="margin:0;">Por correo electrónico — envíalo como enlace privado o como archivo adjunto:</p>
+        <p style="margin:0;">Por email — envíalo como enlace privado o como archivo adjunto:</p>
         <a class="btn" href="mailto:bncarbonell@gmail.com?subject=Video%20-%20Pr%C3%A1ctica%20con%20Impacto">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg>
           bncarbonell@gmail.com
@@ -193,23 +193,23 @@
 
     <div class="question">
       <label>1. ¿Cómo te sentiste grabándote mientras presentabas?</label>
-      <textarea placeholder="Escribe tu respuesta aquí..."></textarea>
+      <textarea id="q1" placeholder="Escribe tu respuesta aquí..."></textarea>
     </div>
     <div class="question">
       <label>2. ¿Cuáles estrategias que aprendiste en el recorrido incorporaste?</label>
-      <textarea placeholder="Escribe tu respuesta aquí..."></textarea>
+      <textarea id="q2" placeholder="Escribe tu respuesta aquí..."></textarea>
     </div>
     <div class="question">
       <label>3. ¿Cómo te ves ahora como presentador/a, comparado con como te veías antes?</label>
-      <textarea placeholder="Escribe tu respuesta aquí..."></textarea>
+      <textarea id="q3" placeholder="Escribe tu respuesta aquí..."></textarea>
     </div>
     <div class="question">
       <label>4. ¿Qué fue lo más retador de este ejercicio, y por qué?</label>
-      <textarea placeholder="Escribe tu respuesta aquí..."></textarea>
+      <textarea id="q4" placeholder="Escribe tu respuesta aquí..."></textarea>
     </div>
     <div class="question">
       <label>5. ¿Qué te gustaría seguir fortaleciendo en tus próximas presentaciones?</label>
-      <textarea placeholder="Escribe tu respuesta aquí..."></textarea>
+      <textarea id="q5" placeholder="Escribe tu respuesta aquí..."></textarea>
     </div>
   </section>
 
@@ -235,10 +235,39 @@
     </div>
   </section>
 
+  <button class="print-btn" id="emailBtn" style="background:var(--plum); color:var(--cream); margin-bottom:14px;" type="button">
+    📧 Enviar mis respuestas de autorreflexión por email
+  </button>
   <button class="print-btn" onclick="window.print()">🖨 Imprimir o guardar como PDF</button>
 
   <div class="colofon">Bárbara N. Carbonell · Presentaciones de Impacto</div>
 
 </div>
+
+<script>
+  document.getElementById('emailBtn').addEventListener('click', function(){
+    const questions = [
+      "1. ¿Cómo te sentiste grabándote mientras presentabas?",
+      "2. ¿Cuáles estrategias que aprendiste en el recorrido incorporaste?",
+      "3. ¿Cómo te ves ahora como presentador/a, comparado con como te veías antes?",
+      "4. ¿Qué fue lo más retador de este ejercicio, y por qué?",
+      "5. ¿Qué te gustaría seguir fortaleciendo en tus próximas presentaciones?"
+    ];
+    const ids = ["q1","q2","q3","q4","q5"];
+    let body = "Mis respuestas de autorreflexión — Práctica con Impacto\n\n";
+    ids.forEach((id, i) => {
+      const val = document.getElementById(id).value.trim() || "(sin respuesta)";
+      body += questions[i] + "\n" + val + "\n\n";
+    });
+    const subject = "Autorreflexión - Práctica con Impacto";
+    const mailto = "mailto:bncarbonell@gmail.com?subject=" + encodeURIComponent(subject) + "&body=" + encodeURIComponent(body);
+    const link = document.createElement('a');
+    link.href = mailto;
+    link.style.display = 'none';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  });
+</script>
 </body>
 </html>
