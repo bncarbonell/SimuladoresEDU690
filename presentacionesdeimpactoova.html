@@ -128,8 +128,8 @@
     font-weight:600;
   }
   h2{font-size:clamp(28px,4vw,40px); font-weight:600; margin-bottom:20px;}
-  p{margin:0 0 16px 0; font-size:16.5px;}
-  .lede{font-size:19px; color:var(--plum-soft);}
+  p{margin:0 0 16px 0; font-size:18.5px;}
+  .lede{font-size:20.5px; color:var(--plum-soft);}
 
   .card{
     background:#fff;
@@ -149,8 +149,8 @@
   .pill-list li{
     background:var(--blush);
     border-radius:12px;
-    padding:12px 16px;
-    font-size:15px;
+    padding:14px 18px;
+    font-size:17.5px;
   }
   .pill-list strong{color:var(--plum);}
 
@@ -277,6 +277,7 @@
     background:var(--lilac);
     border-radius:14px;
     padding:18px;
+    font-size:16.5px;
   }
   .journey .step .k{
     font-size:11px; letter-spacing:0.1em; text-transform:uppercase;
@@ -418,7 +419,7 @@
   body.slide-mode{overflow:hidden;}
 </style>
 </head>
-<body>
+<body class="slide-mode">
 
 <!-- ===== Side program nav ===== -->
 <nav class="program-nav" aria-label="Navegación del programa">
@@ -434,7 +435,7 @@
   <button class="navdot" data-target="cta" aria-label="Explora el mundo"><span class="dotlabel">Entra al mundo</span><span class="dot"></span></button>
 </nav>
 
-<button class="mode-toggle" id="modeToggle" type="button">🎞 Ver como diapositivas</button>
+<button class="mode-toggle" id="modeToggle" type="button">📜 Ver como página</button>
 
 <div class="slide-controls">
   <button id="prevSlide" type="button" aria-label="Diapositiva anterior">
@@ -530,23 +531,23 @@
     <div class="badge-grid" style="grid-template-columns:repeat(2,1fr); gap:14px;">
       <div class="badge">
         <span class="tag ck">Análisis</span>
-        <p style="margin:0; font-size:14.5px;">Identifiqué la necesidad: profesionales que dominan su contenido pero no siempre saben comunicarlo, y sus retos típicos antes, durante y después de presentar.</p>
+        <p style="margin:0; font-size:16.5px;">Identifiqué la necesidad: profesionales que dominan su contenido pero no siempre saben comunicarlo, y sus retos típicos antes, durante y después de presentar.</p>
       </div>
       <div class="badge">
         <span class="tag pk">Diseño</span>
-        <p style="margin:0; font-size:14.5px;">Diseñé un recorrido de tres estaciones sobre la estructura física del auditorio, con un desafío diagnóstico al inicio y una reflexión guiada al cierre.</p>
+        <p style="margin:0; font-size:16.5px;">Diseñé un recorrido de tres estaciones sobre la estructura física del auditorio, con un desafío diagnóstico al inicio y una reflexión guiada al cierre.</p>
       </div>
       <div class="badge">
         <span class="tag tk">Desarrollo</span>
-        <p style="margin:0; font-size:14.5px;">Produje los activos — infografías, video, quiz gamificado con bancos A/B, formulario de reflexión — y los integré como carteles y pizarras dentro de FrameVR.</p>
+        <p style="margin:0; font-size:16.5px;">Produje los activos — infografías, video, quiz gamificado con bancos A/B, formulario de reflexión — y los integré como carteles y pizarras dentro de FrameVR.</p>
       </div>
       <div class="badge">
         <span class="tag ck">Implementación</span>
-        <p style="margin:0; font-size:14.5px;">Publiqué el mundo en FrameVR, verifiqué accesos y probé el recorrido completo antes de compartirlo con visitantes reales.</p>
+        <p style="margin:0; font-size:16.5px;">Publiqué el mundo en FrameVR, verifiqué accesos y probé el recorrido completo antes de compartirlo con visitantes reales.</p>
       </div>
       <div class="badge" style="grid-column:1 / -1;">
         <span class="tag pk">Evaluación</span>
-        <p style="margin:0; font-size:14.5px;">El desafío inicial y el desafío final comparan el progreso de cada visitante, y la reflexión guiada añade una capa cualitativa de autoevaluación sobre su estilo como presentador o presentadora.</p>
+        <p style="margin:0; font-size:16.5px;">El desafío inicial y el desafío final comparan el progreso de cada visitante, y la reflexión guiada añade una capa cualitativa de autoevaluación sobre su estilo como presentador o presentadora.</p>
       </div>
     </div>
   </div>
@@ -561,15 +562,15 @@
     <div class="badge-grid">
       <div class="badge">
         <span class="tag ck">Contenido</span>
-        <p style="margin:0; font-size:14.5px;">Comunicación efectiva y destrezas de presentación: preparación, delivery y acciones posteriores.</p>
+        <p style="margin:0; font-size:16.5px;">Comunicación efectiva y destrezas de presentación: preparación, delivery y acciones posteriores.</p>
       </div>
       <div class="badge">
         <span class="tag pk">Pedagogía</span>
-        <p style="margin:0; font-size:14.5px;">Aprendizaje experiencial y autoevaluación guiada, con práctica de bajo riesgo antes de la aplicación real.</p>
+        <p style="margin:0; font-size:16.5px;">Aprendizaje experiencial y autoevaluación guiada, con práctica de bajo riesgo antes de la aplicación real.</p>
       </div>
       <div class="badge here">
         <span class="tag tk">Tecnología</span>
-        <p style="margin:0; font-size:14.5px;">FrameVR como espacio inmersivo, más gamificación web (HTML/JS con localStorage) para el quiz y la insignia.</p>
+        <p style="margin:0; font-size:16.5px;">FrameVR como espacio inmersivo, más gamificación web (HTML/JS con localStorage) para el quiz y la insignia.</p>
       </div>
     </div>
   </div>
@@ -626,7 +627,7 @@
 <script>
   const sections = ["portada","frase","escena1","escena2","escena3","escena4","escena5","escena6","escena7","cta"];
   const dots = document.querySelectorAll(".navdot");
-  let mode = "scroll";
+  let mode = "slide";
   let slideIndex = 0;
 
   function goToSlide(id){
@@ -693,6 +694,11 @@
     if(e.key === "ArrowRight" && slideIndex < sections.length - 1){ slideIndex++; renderSlide(); }
     if(e.key === "ArrowLeft" && slideIndex > 0){ slideIndex--; renderSlide(); }
   });
+
+  // Estado inicial: arranca en modo diapositivas (una escena a la vez)
+  if(mode === "slide"){
+    renderSlide();
+  }
 </script>
 
 </body>
