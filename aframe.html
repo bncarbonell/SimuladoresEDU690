@@ -1,0 +1,111 @@
+<html>
+  <head>
+    <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
+  </head>
+
+  <body>
+    <a-scene>
+
+      <!-- Cámara con cursor para interacción -->
+      <a-entity camera look-controls>
+        <a-entity cursor="fuse: false; rayOrigin: mouse"
+                  position="0 0 -1"
+                  geometry="primitive: ring; radiusInner: 0.02; radiusOuter: 0.03"
+                  material="color: white; shader: flat">
+        </a-entity>
+      </a-entity>
+
+      <!-- Imagen base -->
+      <a-plane src="tu-imagen.jpg"
+               position="0 1.5 -4"
+               width="4"
+               height="2.5">
+      </a-plane>
+
+      <!-- HOTSPOT 1 -->
+      <a-sphere position="-1 2 -3.8"
+                radius="0.08"
+                color="#FF4444"
+                class="hotspot"
+                id="h1">
+      </a-sphere>
+
+      <a-plane id="panel1"
+               position="-1 1.2 -3.8"
+               width="1.8"
+               height="0.8"
+               color="#222"
+               opacity="0.85"
+               visible="false">
+        <a-text value="Información del hotspot 1"
+                align="center"
+                color="#FFF"
+                width="1.6"
+                position="0 0 0.1">
+        </a-text>
+      </a-plane>
+
+      <!-- HOTSPOT 2 -->
+      <a-sphere position="0 2.3 -3.8"
+                radius="0.08"
+                color="#44AAFF"
+                class="hotspot"
+                id="h2">
+      </a-sphere>
+
+      <a-plane id="panel2"
+               position="0 1.2 -3.8"
+               width="1.8"
+               height="0.8"
+               color="#222"
+               opacity="0.85"
+               visible="false">
+        <a-text value="Información del hotspot 2"
+                align="center"
+                color="#FFF"
+                width="1.6"
+                position="0 0 0.1">
+        </a-text>
+      </a-plane>
+
+      <!-- HOTSPOT 3 -->
+      <a-sphere position="1 1.8 -3.8"
+                radius="0.08"
+                color="#33CC66"
+                class="hotspot"
+                id="h3">
+      </a-sphere>
+
+      <a-plane id="panel3"
+               position="1 1.2 -3.8"
+               width="1.8"
+               height="0.8"
+               color="#222"
+               opacity="0.85"
+               visible="false">
+        <a-text value="Información del hotspot 3"
+                align="center"
+                color="#FFF"
+                width="1.6"
+                position="0 0 0.1">
+        </a-text>
+      </a-plane>
+
+      <!-- Script de interacción -->
+      <script>
+        document.querySelector('#h1').addEventListener('click', () => {
+          document.querySelector('#panel1').setAttribute('visible', true);
+        });
+
+        document.querySelector('#h2').addEventListener('click', () => {
+          document.querySelector('#panel2').setAttribute('visible', true);
+        });
+
+        document.querySelector('#h3').addEventListener('click', () => {
+          document.querySelector('#panel3').setAttribute('visible', true);
+        });
+      </script>
+
+    </a-scene>
+  </body>
+</html>
