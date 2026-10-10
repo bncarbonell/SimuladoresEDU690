@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Referencias de contenido, accesibilidad, imágenes y herramientas utilizadas en Bienestar y Lectura.">
+  <title>Referencias | Bienestar y Lectura</title>
+  <style>
+    :root {
+      --bg: #f6f7f2;
+      --surface: #ffffff;
+      --text: #26332d;
+      --muted: #66736b;
+      --accent: #54745f;
+      --accent-dark: #355542;
+      --line: #e1e7df;
+      --soft: #edf2e9;
+      --shadow: 0 14px 40px rgba(38, 51, 45, .07);
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      color: var(--text);
+      background: var(--bg);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      line-height: 1.65;
+    }
+    a { color: var(--accent-dark); text-decoration-thickness: 1px; text-underline-offset: 3px; overflow-wrap: anywhere; }
+    a:hover { color: var(--accent); }
+    a:focus-visible, button:focus-visible {
+      outline: 3px solid #91b49a;
+      outline-offset: 3px;
+      border-radius: 4px;
+    }
+    .hero {
+      padding: 64px 24px 56px;
+      background: linear-gradient(135deg, #e8eee4 0%, #f6f7f2 68%, #e9efe7 100%);
+      border-bottom: 1px solid var(--line);
+    }
+    .hero-inner, main, footer { width: min(100% - 40px, 980px); margin-inline: auto; }
+    .eyebrow {
+      display: inline-block;
+      margin: 0 0 12px;
+      color: var(--accent-dark);
+      font-size: .78rem;
+      font-weight: 750;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+    }
+    h1 {
+      max-width: 760px;
+      margin: 0;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: clamp(2.3rem, 6vw, 4rem);
+      font-weight: 500;
+      letter-spacing: -.04em;
+      line-height: 1.1;
+    }
+    .intro { max-width: 650px; margin: 18px 0 0; color: var(--muted); font-size: 1.08rem; }
+    .hero-nav { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 26px; }
+    .hero-nav a {
+      display: inline-block;
+      padding: 8px 13px;
+      background: rgba(255,255,255,.72);
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      font-size: .9rem;
+      text-decoration: none;
+    }
+    main { padding-block: 38px 64px; }
+    .section {
+      margin: 0 0 24px;
+      padding: clamp(22px, 4vw, 34px);
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: 20px;
+      box-shadow: var(--shadow);
+      scroll-margin-top: 20px;
+    }
+    .section-heading { display: flex; align-items: flex-start; gap: 14px; margin-bottom: 20px; }
+    .number {
+      display: grid;
+      flex: 0 0 42px;
+      width: 42px;
+      height: 42px;
+      place-items: center;
+      color: var(--accent-dark);
+      background: var(--soft);
+      border-radius: 13px;
+      font-weight: 750;
+    }
+    h2 {
+      margin: 0;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: clamp(1.45rem, 3vw, 1.9rem);
+      font-weight: 500;
+      line-height: 1.25;
+    }
+    .section-description { margin: 5px 0 0; color: var(--muted); font-size: .95rem; }
+    .reference-list { display: grid; gap: 0; margin: 0; padding: 0; list-style: none; }
+    .reference-list li { padding: 17px 0; border-top: 1px solid var(--line); }
+    .reference-list li:first-child { border-top: 0; padding-top: 0; }
+    .reference-list li:last-child { padding-bottom: 0; }
+    .reference { margin: 0; padding-left: 1.35rem; text-indent: -1.35rem; }
+    .reference + .reference { margin-top: 8px; }
+    .note { margin-top: 20px; padding: 14px 16px; background: var(--soft); border-radius: 12px; color: var(--accent-dark); font-size: .92rem; }
+    footer { padding: 0 0 36px; color: var(--muted); font-size: .88rem; text-align: center; }
+    .top-link { display: inline-block; margin-top: 12px; }
+    @media (max-width: 560px) {
+      .hero { padding: 46px 18px 38px; }
+      .hero-inner, main, footer { width: min(100% - 28px, 980px); }
+      .section { border-radius: 15px; padding: 21px 18px; }
+      .section-heading { gap: 11px; }
+      .number { flex-basis: 36px; width: 36px; height: 36px; border-radius: 11px; }
+    }
+    @media print {
+      body { background: #fff; }
+      .hero { padding: 24px 0; background: #fff; }
+      .hero-nav, .top-link { display: none; }
+      .hero-inner, main, footer { width: 100%; }
+      .section { box-shadow: none; break-inside: avoid; }
+      a { color: inherit; }
+    }
+  </style>
+</head>
+<body>
+  <header class="hero" id="inicio">
+    <div class="hero-inner">
+      <p class="eyebrow">Bienestar y Lectura</p>
+      <h1>Referencias</h1>
+      <p class="intro">Fuentes de contenido, accesibilidad, imágenes y herramientas utilizadas en el desarrollo de Bienestar y Lectura.</p>
+      <nav class="hero-nav" aria-label="Secciones de referencias">
+        <a href="#contenido">Contenido</a>
+        <a href="#accesibilidad">Accesibilidad</a>
+        <a href="#imagenes">Imágenes</a>
+        <a href="#herramientas">Plantillas y herramientas</a>
+        <a href="#redaccion">Apoyo a la redacción</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="section" id="contenido" aria-labelledby="titulo-contenido">
+      <div class="section-heading">
+        <span class="number" aria-hidden="true">01</span>
+        <div>
+          <h2 id="titulo-contenido">Referencias de contenido</h2>
+          <p class="section-description">Fuentes relacionadas con hábitos, aprendizaje, motivación y cambio de comportamiento.</p>
+        </div>
+      </div>
+      <ul class="reference-list">
+        <li><p class="reference">Clear, J. (2018). <em>Atomic habits: An easy &amp; proven way to build good habits &amp; break bad ones.</em> Avery.</p></li>
+        <li><p class="reference">Mattar, J. (2018). Constructivism and connectivism in education technology: Active, situated, authentic, experiential, and anchored learning. <em>RIED. Revista Iberoamericana de Educación a Distancia, 21</em>(2), 201–217.</p></li>
+        <li><p class="reference">Merriam, S. B., &amp; Baumgartner, L. M. (2020). <em>Learning in adulthood: A comprehensive guide</em> (4th ed.). Jossey-Bass.</p></li>
+        <li><p class="reference">Mishra, P. (2019). Considering contextual knowledge: The TPACK diagram gets an upgrade. <em>Journal of Digital Learning in Teacher Education, 35</em>(2), 76–78.</p></li>
+        <li><p class="reference">Morris, T. H. (2019). Self-directed learning: A fundamental competence in a rapidly changing world. <em>International Review of Education, 65</em>(4), 633–653. <a href="https://doi.org/10.1007/s11159-019-09793-2" target="_blank" rel="noopener noreferrer">https://doi.org/10.1007/s11159-019-09793-2</a></p></li>
+        <li><p class="reference">Prochaska, J. O., Velicer, W. F., &amp; Redding, C. A. (2022). The transtheoretical model of behavior change. En K. B. Glanz, B. K. Rimer, &amp; K. Viswanath (Eds.), <em>Health behavior: Theory, research, and practice</em> (6th ed.). Jossey-Bass.</p></li>
+        <li><p class="reference">Ryan, R. M., &amp; Deci, E. L. (2020). Intrinsic and extrinsic motivation from a self-determination theory perspective: Definitions, theory, practices, and future directions. <em>Contemporary Educational Psychology, 61</em>, 101860. <a href="https://doi.org/10.1016/j.cedpsych.2020.101860" target="_blank" rel="noopener noreferrer">https://doi.org/10.1016/j.cedpsych.2020.101860</a></p></li>
+      </ul>
+    </section>
+
+    <section class="section" id="accesibilidad" aria-labelledby="titulo-accesibilidad">
+      <div class="section-heading">
+        <span class="number" aria-hidden="true">02</span>
+        <div>
+          <h2 id="titulo-accesibilidad">Referencias de accesibilidad</h2>
+          <p class="section-description">Orientaciones para crear experiencias digitales accesibles.</p>
+        </div>
+      </div>
+      <ul class="reference-list">
+        <li><p class="reference">CAST. (2024). <em>Universal Design for Learning Guidelines Version 3.0.</em> CAST.</p></li>
+        <li><p class="reference">World Wide Web Consortium. (2023). <em>Web Content Accessibility Guidelines (WCAG) 2.2.</em> <a href="https://www.w3.org/TR/WCAG22/" target="_blank" rel="noopener noreferrer">https://www.w3.org/TR/WCAG22/</a></p></li>
+      </ul>
+    </section>
+
+    <section class="section" id="imagenes" aria-labelledby="titulo-imagenes">
+      <div class="section-heading">
+        <span class="number" aria-hidden="true">03</span>
+        <div>
+          <h2 id="titulo-imagenes">Referencias de imágenes</h2>
+          <p class="section-description">Créditos de las imágenes utilizadas en la página.</p>
+        </div>
+      </div>
+      <h3>Banners de la página de inicio</h3>
+      <ul class="reference-list">
+        <li><p class="reference">Gemini. (2026). <em>Imágenes generadas mediante inteligencia artificial para la página Bienestar y Lectura</em> [Imagen generada por IA].</p></li>
+      </ul>
+      <h3>Otras imágenes</h3>
+      <ul class="reference-list">
+        <li><p class="reference">Loaiza, R. (s. f.). <em>A person holding a camera with a video on it</em> [Fotografía]. Unsplash. <a href="https://unsplash.com/photos/tRgPdw77Ns8" target="_blank" rel="noopener noreferrer">https://unsplash.com/photos/tRgPdw77Ns8</a></p></li>
+        <li><p class="reference">Rehman, F. (s. f.). <em>Person holding black iPad with green plant</em> [Fotografía]. Unsplash. <a href="https://unsplash.com/photos/dJpupM4LiS4" target="_blank" rel="noopener noreferrer">https://unsplash.com/photos/dJpupM4LiS4</a></p></li>
+        <li><p class="reference">Sorkin, S. (s. f.). <em>Person wearing VR smartphone headset inside room</em> [Fotografía]. Unsplash. <a href="https://unsplash.com/photos/NN9HQkDgguc" target="_blank" rel="noopener noreferrer">https://unsplash.com/photos/NN9HQkDgguc</a></p></li>
+        <li><p class="reference">Vecteezy. (s. f.). <em>Learning at work stock photos</em> [Fotografía]. Vecteezy. <a href="https://www.vecteezy.com/free-photos/learning-at-work" target="_blank" rel="noopener noreferrer">https://www.vecteezy.com/free-photos/learning-at-work</a></p></li>
+      </ul>
+    </section>
+
+    <section class="section" id="herramientas" aria-labelledby="titulo-herramientas">
+      <div class="section-heading">
+        <span class="number" aria-hidden="true">04</span>
+        <div>
+          <h2 id="titulo-herramientas">Creación de plantillas y herramientas interactivas</h2>
+          <p class="section-description">Plataformas y herramientas empleadas en el proceso de creación.</p>
+        </div>
+      </div>
+      <ul class="reference-list">
+        <li><p class="reference">Anthropic. (2026). <em>Claude</em> [Modelo de inteligencia artificial]. <a href="https://claude.ai" target="_blank" rel="noopener noreferrer">https://claude.ai</a></p></li>
+        <li><p class="reference">Google. (2026). <em>Google AI Studio</em> [Plataforma de desarrollo de IA]. <a href="https://aistudio.google.com" target="_blank" rel="noopener noreferrer">https://aistudio.google.com</a></p></li>
+        <li><p class="reference">Lovable. (2026). <em>Lovable</em> [Plataforma de desarrollo de aplicaciones con IA]. <a href="https://lovable.dev" target="_blank" rel="noopener noreferrer">https://lovable.dev</a></p></li>
+      </ul>
+    </section>
+
+    <section class="section" id="redaccion" aria-labelledby="titulo-redaccion">
+      <div class="section-heading">
+        <span class="number" aria-hidden="true">05</span>
+        <div>
+          <h2 id="titulo-redaccion">Brainstorming y apoyo a la redacción</h2>
+          <p class="section-description">Herramientas de inteligencia artificial utilizadas como apoyo.</p>
+        </div>
+      </div>
+      <ul class="reference-list">
+        <li><p class="reference">Anthropic. (2026). <em>Claude</em> [Modelo de inteligencia artificial]. <a href="https://claude.ai" target="_blank" rel="noopener noreferrer">https://claude.ai</a></p></li>
+        <li><p class="reference">Microsoft. (2026). <em>Microsoft Copilot</em> [Asistente de inteligencia artificial]. <a href="https://copilot.microsoft.com" target="_blank" rel="noopener noreferrer">https://copilot.microsoft.com</a></p></li>
+        <li><p class="reference">OpenAI. (2026). <em>ChatGPT</em> [Modelo de inteligencia artificial]. <a href="https://chatgpt.com" target="_blank" rel="noopener noreferrer">https://chatgpt.com</a></p></li>
+      </ul>
+    </section>
+
+    <p class="note">Nota: esta página organiza en formato web las referencias incluidas en el documento PDF proporcionado. Verifica los datos bibliográficos y los créditos de uso de imágenes antes de publicar.</p>
+  </main>
+
+  <footer>
+    <p>Bienestar y Lectura · Referencias</p>
+    <a class="top-link" href="#inicio">Volver al inicio ↑</a>
+  </footer>
+</body>
+</html>
