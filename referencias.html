@@ -1,236 +1,73 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es-PR">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="Referencias de contenido, accesibilidad, imágenes y herramientas utilizadas en Bienestar y Lectura.">
-  <title>Referencias | Bienestar y Lectura</title>
-  <style>
-    :root {
-      --bg: #f6f7f2;
-      --surface: #ffffff;
-      --text: #26332d;
-      --muted: #66736b;
-      --accent: #54745f;
-      --accent-dark: #355542;
-      --line: #e1e7df;
-      --soft: #edf2e9;
-      --shadow: 0 14px 40px rgba(38, 51, 45, .07);
-    }
-    * { box-sizing: border-box; }
-    html { scroll-behavior: smooth; }
-    body {
-      margin: 0;
-      color: var(--text);
-      background: var(--bg);
-      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      line-height: 1.65;
-    }
-    a { color: var(--accent-dark); text-decoration-thickness: 1px; text-underline-offset: 3px; overflow-wrap: anywhere; }
-    a:hover { color: var(--accent); }
-    a:focus-visible, button:focus-visible {
-      outline: 3px solid #91b49a;
-      outline-offset: 3px;
-      border-radius: 4px;
-    }
-    .hero {
-      padding: 64px 24px 56px;
-      background: linear-gradient(135deg, #e8eee4 0%, #f6f7f2 68%, #e9efe7 100%);
-      border-bottom: 1px solid var(--line);
-    }
-    .hero-inner, main, footer { width: min(100% - 40px, 980px); margin-inline: auto; }
-    .eyebrow {
-      display: inline-block;
-      margin: 0 0 12px;
-      color: var(--accent-dark);
-      font-size: .78rem;
-      font-weight: 750;
-      letter-spacing: .12em;
-      text-transform: uppercase;
-    }
-    h1 {
-      max-width: 760px;
-      margin: 0;
-      font-family: Georgia, "Times New Roman", serif;
-      font-size: clamp(2.3rem, 6vw, 4rem);
-      font-weight: 500;
-      letter-spacing: -.04em;
-      line-height: 1.1;
-    }
-    .intro { max-width: 650px; margin: 18px 0 0; color: var(--muted); font-size: 1.08rem; }
-    .hero-nav { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 26px; }
-    .hero-nav a {
-      display: inline-block;
-      padding: 8px 13px;
-      background: rgba(255,255,255,.72);
-      border: 1px solid var(--line);
-      border-radius: 999px;
-      font-size: .9rem;
-      text-decoration: none;
-    }
-    main { padding-block: 38px 64px; }
-    .section {
-      margin: 0 0 24px;
-      padding: clamp(22px, 4vw, 34px);
-      background: var(--surface);
-      border: 1px solid var(--line);
-      border-radius: 20px;
-      box-shadow: var(--shadow);
-      scroll-margin-top: 20px;
-    }
-    .section-heading { display: flex; align-items: flex-start; gap: 14px; margin-bottom: 20px; }
-    .number {
-      display: grid;
-      flex: 0 0 42px;
-      width: 42px;
-      height: 42px;
-      place-items: center;
-      color: var(--accent-dark);
-      background: var(--soft);
-      border-radius: 13px;
-      font-weight: 750;
-    }
-    h2 {
-      margin: 0;
-      font-family: Georgia, "Times New Roman", serif;
-      font-size: clamp(1.45rem, 3vw, 1.9rem);
-      font-weight: 500;
-      line-height: 1.25;
-    }
-    .section-description { margin: 5px 0 0; color: var(--muted); font-size: .95rem; }
-    .reference-list { display: grid; gap: 0; margin: 0; padding: 0; list-style: none; }
-    .reference-list li { padding: 17px 0; border-top: 1px solid var(--line); }
-    .reference-list li:first-child { border-top: 0; padding-top: 0; }
-    .reference-list li:last-child { padding-bottom: 0; }
-    .reference { margin: 0; padding-left: 1.35rem; text-indent: -1.35rem; }
-    .reference + .reference { margin-top: 8px; }
-    .note { margin-top: 20px; padding: 14px 16px; background: var(--soft); border-radius: 12px; color: var(--accent-dark); font-size: .92rem; }
-    footer { padding: 0 0 36px; color: var(--muted); font-size: .88rem; text-align: center; }
-    .top-link { display: inline-block; margin-top: 12px; }
-    @media (max-width: 560px) {
-      .hero { padding: 46px 18px 38px; }
-      .hero-inner, main, footer { width: min(100% - 28px, 980px); }
-      .section { border-radius: 15px; padding: 21px 18px; }
-      .section-heading { gap: 11px; }
-      .number { flex-basis: 36px; width: 36px; height: 36px; border-radius: 11px; }
-    }
-    @media print {
-      body { background: #fff; }
-      .hero { padding: 24px 0; background: #fff; }
-      .hero-nav, .top-link { display: none; }
-      .hero-inner, main, footer { width: 100%; }
-      .section { box-shadow: none; break-inside: avoid; }
-      a { color: inherit; }
-    }
-  </style>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Créditos y referencias · Bienestar y Lectura</title>
+<meta name="description" content="Créditos, fundamentos, declaración de uso de inteligencia artificial y referencias en formato APA 7.">
+<meta name="author" content="Bárbara Carbonell">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Lora:wght@600;700&display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#FBF8F1}
+@media (prefers-color-scheme:dark){body{background:#14201C}}
+
+.cr{--bg:#FBF8F1;--text:#1F2A27;--muted:#4A5552;--forest:#2E5B4C;--sage:#E3EDE6;--sage-mid:#5C8A77;--card:#FFFFFF;--gold:#F2D388;--band-text:#FFFFFF;--link:#2E5B4C;--accent:#A4452A;
+ font-family:Carlito,Calibri,"Segoe UI",system-ui,-apple-system,Arial,sans-serif;font-size:1.0625rem;line-height:1.6;color:var(--text);background:var(--bg);
+ max-width:56rem;margin:0 auto;padding:1.25rem 1rem 3rem;box-sizing:border-box}
+@media (prefers-color-scheme:dark){.cr{--bg:#14201C;--text:#E8EFEA;--muted:#B9C7BF;--forest:#9FD3BC;--sage:#1F322B;--sage-mid:#5C8A77;--card:#1A2B25;--band-text:#FFFFFF;--link:#9FD3BC}
+ .cr .band{background:#2E5B4C}}
+.cr *,.cr *::before,.cr *::after{box-sizing:border-box}
+.cr h1,.cr h2,.cr h3{font-family:Lora,Georgia,"Times New Roman",serif;color:var(--forest);line-height:1.2;margin:0 0 .4em}
+.cr h1{font-size:2.25rem;font-size:clamp(1.9rem,5vw,2.5rem)}
+.cr h2{font-size:1.5rem;margin:2rem 0 .75rem;padding-bottom:.25rem;border-bottom:2px solid var(--forest)}
+.cr h3{font-size:1.1rem;margin-bottom:.25rem}
+.cr p{margin:0 0 .75em}
+.cr .band{background:#2E5B4C;color:var(--band-text);padding:1.25rem 1.5rem;border-radius:.9rem}
+.cr .band h1,.cr .band p{color:var(--band-text);margin-bottom:.2em}
+.cr .eyebrow{font-size:.8125rem;letter-spacing:.12em;text-transform:uppercase;font-weight:700;color:var(--gold)!important;margin:0 0 .35rem}
+.cr .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(15rem,1fr));gap:.75rem}
+.cr .card{background:var(--card);border:1.5px solid var(--sage-mid);border-radius:.75rem;padding:.8rem 1rem}
+.cr .card p{margin:0;font-size:.975rem;line-height:1.5}
+.cr .panel{background:var(--sage);border-radius:.75rem;padding:.9rem 1.1rem}
+.cr .panel p{font-size:.975rem;line-height:1.55}.cr .panel p:last-child{margin-bottom:0}
+.cr .refs p{padding-left:2rem;text-indent:-2rem;font-size:.95rem;line-height:1.5;margin:0 0 .6rem;overflow-wrap:anywhere}
+.cr a{color:var(--link);text-decoration:underline;text-underline-offset:.15em}
+.cr a:hover{text-decoration-thickness:2px}
+.cr a:focus-visible{outline:3px solid var(--accent);outline-offset:2px;border-radius:2px}
+@media print{.cr{background:#fff;color:#000;max-width:none}.cr .band{background:#2E5B4C;-webkit-print-color-adjust:exact;print-color-adjust:exact}.cr a{color:#000}.cr section{break-inside:auto}.cr .refs p{break-inside:avoid}}
+
+</style>
 </head>
 <body>
-  <header class="hero" id="inicio">
-    <div class="hero-inner">
-      <p class="eyebrow">Bienestar y Lectura</p>
-      <h1>Referencias</h1>
-      <p class="intro">Fuentes de contenido, accesibilidad, imágenes y herramientas utilizadas en el desarrollo de Bienestar y Lectura.</p>
-      <nav class="hero-nav" aria-label="Secciones de referencias">
-        <a href="#contenido">Contenido</a>
-        <a href="#accesibilidad">Accesibilidad</a>
-        <a href="#imagenes">Imágenes</a>
-        <a href="#herramientas">Plantillas y herramientas</a>
-        <a href="#redaccion">Apoyo a la redacción</a>
-      </nav>
-    </div>
-  </header>
+<main class="cr" id="creditos-referencias">
 
-  <main>
-    <section class="section" id="contenido" aria-labelledby="titulo-contenido">
-      <div class="section-heading">
-        <span class="number" aria-hidden="true">01</span>
-        <div>
-          <h2 id="titulo-contenido">Referencias de contenido</h2>
-          <p class="section-description">Fuentes relacionadas con hábitos, aprendizaje, motivación y cambio de comportamiento.</p>
-        </div>
-      </div>
-      <ul class="reference-list">
-        <li><p class="reference">Clear, J. (2018). <em>Atomic habits: An easy &amp; proven way to build good habits &amp; break bad ones.</em> Avery.</p></li>
-        <li><p class="reference">Mattar, J. (2018). Constructivism and connectivism in education technology: Active, situated, authentic, experiential, and anchored learning. <em>RIED. Revista Iberoamericana de Educación a Distancia, 21</em>(2), 201–217.</p></li>
-        <li><p class="reference">Merriam, S. B., &amp; Baumgartner, L. M. (2020). <em>Learning in adulthood: A comprehensive guide</em> (4th ed.). Jossey-Bass.</p></li>
-        <li><p class="reference">Mishra, P. (2019). Considering contextual knowledge: The TPACK diagram gets an upgrade. <em>Journal of Digital Learning in Teacher Education, 35</em>(2), 76–78.</p></li>
-        <li><p class="reference">Morris, T. H. (2019). Self-directed learning: A fundamental competence in a rapidly changing world. <em>International Review of Education, 65</em>(4), 633–653. <a href="https://doi.org/10.1007/s11159-019-09793-2" target="_blank" rel="noopener noreferrer">https://doi.org/10.1007/s11159-019-09793-2</a></p></li>
-        <li><p class="reference">Prochaska, J. O., Velicer, W. F., &amp; Redding, C. A. (2022). The transtheoretical model of behavior change. En K. B. Glanz, B. K. Rimer, &amp; K. Viswanath (Eds.), <em>Health behavior: Theory, research, and practice</em> (6th ed.). Jossey-Bass.</p></li>
-        <li><p class="reference">Ryan, R. M., &amp; Deci, E. L. (2020). Intrinsic and extrinsic motivation from a self-determination theory perspective: Definitions, theory, practices, and future directions. <em>Contemporary Educational Psychology, 61</em>, 101860. <a href="https://doi.org/10.1016/j.cedpsych.2020.101860" target="_blank" rel="noopener noreferrer">https://doi.org/10.1016/j.cedpsych.2020.101860</a></p></li>
-      </ul>
-    </section>
+<header class="band"><p class="eyebrow">Bienestar y Lectura · Lectura consciente</p><h1>Créditos y referencias</h1>
+<p style="margin:0;font-size:12pt">Las personas, herramientas y fuentes detrás de este sitio.</p></header>
 
-    <section class="section" id="accesibilidad" aria-labelledby="titulo-accesibilidad">
-      <div class="section-heading">
-        <span class="number" aria-hidden="true">02</span>
-        <div>
-          <h2 id="titulo-accesibilidad">Referencias de accesibilidad</h2>
-          <p class="section-description">Orientaciones para crear experiencias digitales accesibles.</p>
-        </div>
-      </div>
-      <ul class="reference-list">
-        <li><p class="reference">CAST. (2024). <em>Universal Design for Learning Guidelines Version 3.0.</em> CAST.</p></li>
-        <li><p class="reference">World Wide Web Consortium. (2023). <em>Web Content Accessibility Guidelines (WCAG) 2.2.</em> <a href="https://www.w3.org/TR/WCAG22/" target="_blank" rel="noopener noreferrer">https://www.w3.org/TR/WCAG22/</a></p></li>
-      </ul>
-    </section>
+<section aria-labelledby="cr"><h2 id="cr">Créditos</h2>
+<div class="grid">
+<div class="card"><h3>Autoría y desarrollo</h3><p>Bárbara Carbonell. Autoría, diseño y desarrollo del sitio Bienestar y Lectura y de sus recursos descargables.</p></div>
+<div class="card"><h3>Fotografía</h3><p>La imagen de la sección «Sobre mí» es la fotografía profesional de Bárbara Carbonell, tomada de su perfil de LinkedIn.</p></div>
+<div class="card"><h3>Imágenes ilustrativas</h3><p>Generadas con inteligencia artificial mediante Gemini (Google, 2026a) y ChatGPT (OpenAI, 2026).</p></div>
+<div class="card"><h3>Creación de la página web</h3><p>Google AI Studio (Google, 2026b) y Lovable (Lovable, 2026).</p></div>
+<div class="card"><h3>Lluvia de ideas y diseño</h3><p>Claude (Anthropic, 2026) y Copilot (Microsoft, 2026) como apoyo en la generación de ideas y en el diseño de contenidos y recursos.</p></div>
+<div class="card"><h3>Accesibilidad</h3><p>El sitio y los recursos se diseñaron con las pautas del Diseño Universal para el Aprendizaje (CAST, 2024) y las Pautas de Accesibilidad para el Contenido Web 2.2 (World Wide Web Consortium [W3C], 2023).</p></div>
+</div></section>
 
-    <section class="section" id="imagenes" aria-labelledby="titulo-imagenes">
-      <div class="section-heading">
-        <span class="number" aria-hidden="true">03</span>
-        <div>
-          <h2 id="titulo-imagenes">Referencias de imágenes</h2>
-          <p class="section-description">Créditos de las imágenes utilizadas en la página.</p>
-        </div>
-      </div>
-      <h3>Banners de la página de inicio</h3>
-      <ul class="reference-list">
-        <li><p class="reference">Gemini. (2026). <em>Imágenes generadas mediante inteligencia artificial para la página Bienestar y Lectura</em> [Imagen generada por IA].</p></li>
-      </ul>
-      <h3>Otras imágenes</h3>
-      <ul class="reference-list">
-        <li><p class="reference">Loaiza, R. (s. f.). <em>A person holding a camera with a video on it</em> [Fotografía]. Unsplash. <a href="https://unsplash.com/photos/tRgPdw77Ns8" target="_blank" rel="noopener noreferrer">https://unsplash.com/photos/tRgPdw77Ns8</a></p></li>
-        <li><p class="reference">Rehman, F. (s. f.). <em>Person holding black iPad with green plant</em> [Fotografía]. Unsplash. <a href="https://unsplash.com/photos/dJpupM4LiS4" target="_blank" rel="noopener noreferrer">https://unsplash.com/photos/dJpupM4LiS4</a></p></li>
-        <li><p class="reference">Sorkin, S. (s. f.). <em>Person wearing VR smartphone headset inside room</em> [Fotografía]. Unsplash. <a href="https://unsplash.com/photos/NN9HQkDgguc" target="_blank" rel="noopener noreferrer">https://unsplash.com/photos/NN9HQkDgguc</a></p></li>
-        <li><p class="reference">Vecteezy. (s. f.). <em>Learning at work stock photos</em> [Fotografía]. Vecteezy. <a href="https://www.vecteezy.com/free-photos/learning-at-work" target="_blank" rel="noopener noreferrer">https://www.vecteezy.com/free-photos/learning-at-work</a></p></li>
-      </ul>
-    </section>
+<section aria-labelledby="fu"><h2 id="fu">Fundamentos y evidencia</h2>
+<div class="panel"><p><b>Beneficios de la lectura.</b> Las afirmaciones sobre los efectos de la lectura en la salud, el bienestar y la vida social se basan en investigación publicada (Bavishi et al., 2016; Carney y Robertson, 2022; Chang et al., 2021; Dodell-Feder y Tamir, 2018; Järvholm et al., 2025; Mumper y Gerrig, 2017; Phul et al., 2024; Sahakian et al., 2026; Singh et al., 2024; Sirisena et al., 2025; Su et al., 2022). La mayoría de estos estudios son observacionales: muestran asociaciones, no prueban que leer sea la causa.</p>
+<p><b>Recursos para leer y registrar tu lectura.</b> Para llevar el registro de tus lecturas puedes usar Bookly (s. f.), The StoryGraph (s. f.) o Goodreads (s. f.). Para encontrar bibliotecas, consulta el Directorio Nacional de Bibliotecas de Puerto Rico (s. f.), San Juan Community Library (s. f.), Library of Congress (s. f.) y Library Technology Guides (s. f.). Para leer o escuchar libros hay opciones como Libby (OverDrive, s. f.), Open Library (s. f.), Project Gutenberg (s. f.), Storytel (s. f.) y Audible (s. f.). Para comunidad lectora y recomendaciones: Fable (s. f.) y Book Riot (s. f.).</p>
+<p style="margin-bottom:0"><b>Diseño del aprendizaje y de los hábitos.</b> El diseño del sitio se apoya en marcos sobre aprendizaje autodirigido y heutagogía (Blaschke, 2021; Garrison, 2017), motivación y teoría sociocognitiva (Schunk y DiBenedetto, 2020), cambio de conducta (DiClemente y Graydon, 2020), formación de hábitos (Clear, 2018) e integración de tecnología y contenido (Mishra, 2019).</p></div></section>
 
-    <section class="section" id="herramientas" aria-labelledby="titulo-herramientas">
-      <div class="section-heading">
-        <span class="number" aria-hidden="true">04</span>
-        <div>
-          <h2 id="titulo-herramientas">Creación de plantillas y herramientas interactivas</h2>
-          <p class="section-description">Plataformas y herramientas empleadas en el proceso de creación.</p>
-        </div>
-      </div>
-      <ul class="reference-list">
-        <li><p class="reference">Anthropic. (2026). <em>Claude</em> [Modelo de inteligencia artificial]. <a href="https://claude.ai" target="_blank" rel="noopener noreferrer">https://claude.ai</a></p></li>
-        <li><p class="reference">Google. (2026). <em>Google AI Studio</em> [Plataforma de desarrollo de IA]. <a href="https://aistudio.google.com" target="_blank" rel="noopener noreferrer">https://aistudio.google.com</a></p></li>
-        <li><p class="reference">Lovable. (2026). <em>Lovable</em> [Plataforma de desarrollo de aplicaciones con IA]. <a href="https://lovable.dev" target="_blank" rel="noopener noreferrer">https://lovable.dev</a></p></li>
-      </ul>
-    </section>
+<section aria-labelledby="ia"><h2 id="ia">Declaración de uso de inteligencia artificial</h2>
+<div class="panel"><p>En la elaboración de este sitio y de sus recursos se usaron herramientas de inteligencia artificial generativa como apoyo: Claude (Anthropic, 2026) y Copilot (Microsoft, 2026) para la lluvia de ideas y el diseño; Gemini (Google, 2026a) y ChatGPT (OpenAI, 2026) para la generación de imágenes; y Google AI Studio (Google, 2026b) y Lovable (Lovable, 2026) para la creación de la página web.</p>
+<p style="margin-bottom:0">La autora revisó y editó los resultados y es responsable del contenido final. La fotografía de la sección «Sobre mí» no fue generada con inteligencia artificial.</p></div></section>
 
-    <section class="section" id="redaccion" aria-labelledby="titulo-redaccion">
-      <div class="section-heading">
-        <span class="number" aria-hidden="true">05</span>
-        <div>
-          <h2 id="titulo-redaccion">Brainstorming y apoyo a la redacción</h2>
-          <p class="section-description">Herramientas de inteligencia artificial utilizadas como apoyo.</p>
-        </div>
-      </div>
-      <ul class="reference-list">
-        <li><p class="reference">Anthropic. (2026). <em>Claude</em> [Modelo de inteligencia artificial]. <a href="https://claude.ai" target="_blank" rel="noopener noreferrer">https://claude.ai</a></p></li>
-        <li><p class="reference">Microsoft. (2026). <em>Microsoft Copilot</em> [Asistente de inteligencia artificial]. <a href="https://copilot.microsoft.com" target="_blank" rel="noopener noreferrer">https://copilot.microsoft.com</a></p></li>
-        <li><p class="reference">OpenAI. (2026). <em>ChatGPT</em> [Modelo de inteligencia artificial]. <a href="https://chatgpt.com" target="_blank" rel="noopener noreferrer">https://chatgpt.com</a></p></li>
-      </ul>
-    </section>
+<section aria-labelledby="rf"><h2 id="rf">Referencias</h2>
+<div class="refs"><p>Anthropic. (2026). <i>Claude</i> [Modelo de lenguaje de gran tamaño]. <a href="https://claude.ai">https://claude.ai</a></p><p>Audible. (s. f.). <i>Audible</i> [Sitio web]. Recuperado el 18 de octubre de 2026 de <a href="https://www.audible.com/">https://www.audible.com/</a></p><p>Bavishi, A., Slade, M. D., &amp; Levy, B. R. (2016). A chapter a day: Association of book reading with longevity. <i>Social Science &amp; Medicine, 164</i>, 44–48. <a href="https://doi.org/10.1016/j.socscimed.2016.07.014">https://doi.org/10.1016/j.socscimed.2016.07.014</a></p><p>Blaschke, L. M. (2021). The dynamic mix of heutagogy and technology: Preparing learners for lifelong learning. <i>British Journal of Educational Technology, 52</i>(4), 1629–1645. <a href="https://doi.org/10.1111/bjet.13105">https://doi.org/10.1111/bjet.13105</a></p><p>Book Riot. (s. f.). <i>Book Riot</i> [Sitio web]. Recuperado el 18 de octubre de 2026 de <a href="https://bookriot.com/">https://bookriot.com/</a></p><p>Bookly. (s. f.). <i>Bookly: Book tracker and reading tracker</i>. Recuperado el 18 de octubre de 2026 de <a href="https://getbookly.com/">https://getbookly.com/</a></p><p>Carney, J., &amp; Robertson, C. (2022). Five studies evaluating the impact on mental health and mood of recalling, reading, and discussing fiction. <i>PLOS ONE, 17</i>(4), Article e0266323. <a href="https://doi.org/10.1371/journal.pone.0266323">https://doi.org/10.1371/journal.pone.0266323</a></p><p>CAST. (2024). <i>Universal Design for Learning guidelines version 3.0</i>. <a href="https://udlguidelines.cast.org">https://udlguidelines.cast.org</a></p><p>Chang, Y.-H., Wu, I.-C., &amp; Hsiung, C. A. (2021). Reading activity prevents long-term decline in cognitive function in older people: Evidence from a 14-year longitudinal study. <i>International Psychogeriatrics, 33</i>(1), 63–74. <a href="https://doi.org/10.1017/S1041610220001621">https://doi.org/10.1017/S1041610220001621</a></p><p>Clear, J. (2018). <i>Atomic habits: An easy &amp; proven way to build good habits &amp; break bad ones</i>. Avery.</p><p>DiClemente, C. C., &amp; Graydon, M. M. (2020). Changing behavior using the transtheoretical model. En M. S. Hagger, L. D. Cameron, K. Hamilton, N. Hankonen, &amp; T. Lintunen (Eds.), <i>The handbook of behavior change</i> (pp. 135–157). Cambridge University Press.</p><p><i>Directorio Nacional de Bibliotecas de Puerto Rico</i>. (s. f.). Recuperado el 18 de octubre de 2026 de <a href="https://bibliotecaspr.info/">https://bibliotecaspr.info/</a></p><p>Dodell-Feder, D., &amp; Tamir, D. I. (2018). Fiction reading has a small positive impact on social cognition: A meta-analysis. <i>Journal of Experimental Psychology: General, 147</i>(11), 1713–1727. <a href="https://doi.org/10.1037/xge0000395">https://doi.org/10.1037/xge0000395</a></p><p>Fable. (s. f.). <i>Fable</i> [Sitio web]. Recuperado el 18 de octubre de 2026 de <a href="https://fable.co/">https://fable.co/</a></p><p>Garrison, D. R. (2017). <i>Self-directed learning and distance education</i>. Routledge.</p><p>Goodreads. (s. f.). <i>Goodreads</i> [Sitio web]. Recuperado el 18 de octubre de 2026 de <a href="https://www.goodreads.com/">https://www.goodreads.com/</a></p><p>Google. (2026a). <i>Gemini</i> [Modelo de lenguaje de gran tamaño]. <a href="https://gemini.google.com">https://gemini.google.com</a></p><p>Google. (2026b). <i>Google AI Studio</i> [Software]. <a href="https://aistudio.google.com">https://aistudio.google.com</a></p><p>Järvholm, K., Ohlsson, A., Bernhardsson, K., Gustafsson, A. W., Johnsson, P., Malmström, M., Wistrand, J., &amp; Forslid, T. (2025). Shared reading as an intervention to improve health and well-being in adults: A scoping review. <i>Frontiers in Psychology, 16</i>, Article 1484839. <a href="https://doi.org/10.3389/fpsyg.2025.1484839">https://doi.org/10.3389/fpsyg.2025.1484839</a></p><p>Library of Congress. (s. f.). <i>Library of Congress</i> [Sitio web]. Recuperado el 18 de octubre de 2026 de <a href="https://www.loc.gov/">https://www.loc.gov/</a></p><p>Library Technology Guides. (s. f.). <i>Library Technology Guides</i> [Directorio de bibliotecas públicas de Estados Unidos]. Recuperado el 18 de octubre de 2026 de <a href="https://librarytechnology.org/libraries/uspublic/">https://librarytechnology.org/libraries/uspublic/</a></p><p>Lovable. (2026). <i>Lovable</i> [Software]. <a href="https://lovable.dev">https://lovable.dev</a></p><p>Microsoft. (2026). <i>Copilot</i> [Modelo de lenguaje de gran tamaño]. <a href="https://copilot.microsoft.com">https://copilot.microsoft.com</a></p><p>Mishra, P. (2019). Considering contextual knowledge: The TPACK diagram gets an upgrade. <i>Journal of Digital Learning in Teacher Education, 35</i>(2), 76–78. <a href="https://doi.org/10.1080/21532974.2019.1588611">https://doi.org/10.1080/21532974.2019.1588611</a></p><p>Mumper, M. L., &amp; Gerrig, R. J. (2017). Leisure reading and social cognition: A meta-analysis. <i>Psychology of Aesthetics, Creativity, and the Arts, 11</i>(1), 109–120. <a href="https://doi.org/10.1037/aca0000089">https://doi.org/10.1037/aca0000089</a></p><p>OpenAI. (2026). <i>ChatGPT</i> [Modelo de lenguaje de gran tamaño]. <a href="https://chatgpt.com">https://chatgpt.com</a></p><p>Open Library. (s. f.). <i>Open Library</i> [Sitio web]. Recuperado el 18 de octubre de 2026 de <a href="https://openlibrary.org/">https://openlibrary.org/</a></p><p>OverDrive. (s. f.). <i>Libby</i> [Aplicación web]. Recuperado el 18 de octubre de 2026 de <a href="https://libbyapp.com/shelf">https://libbyapp.com/shelf</a></p><p>Phul, A., Gorring, H., &amp; Stokes, D. (2024). &laquo;Wellbeing through reading&raquo;: The impact of a public library and healthcare library partnership initiative in England. <i>Evidence Based Library and Information Practice, 19</i>(2), 74–93. <a href="https://doi.org/10.18438/eblip30475">https://doi.org/10.18438/eblip30475</a></p><p>Project Gutenberg. (s. f.). <i>Project Gutenberg</i> [Libros electrónicos en español]. Recuperado el 18 de octubre de 2026 de <a href="https://www.gutenberg.org/browse/languages/es">https://www.gutenberg.org/browse/languages/es</a></p><p>Sahakian, B. J., Perrin, V., &amp; Langley, C. (2026). Reading and associations with brain health, cognition, well-being, and mental health. <i>Psychological Medicine</i>. <a href="https://doi.org/10.1017/S0033291726002271">https://doi.org/10.1017/S0033291726002271</a></p><p>San Juan Community Library. (s. f.). <i>San Juan Community Library | Biblioteca Comunitaria de San Juan</i>. Recuperado el 18 de octubre de 2026 de <a href="https://www.yourlibrarysanjuan.org/">https://www.yourlibrarysanjuan.org/</a></p><p>Schunk, D. H., &amp; DiBenedetto, M. K. (2020). Motivation and social cognitive theory. <i>Contemporary Educational Psychology, 60</i>, Article 101832. <a href="https://doi.org/10.1016/j.cedpsych.2019.101832">https://doi.org/10.1016/j.cedpsych.2019.101832</a></p><p>Singh, B., Murphy, A., Maher, C., &amp; Smith, A. E. (2024). Time to form a habit: A systematic review and meta-analysis of health behaviour habit formation and its determinants. <i>Healthcare, 12</i>(23), Article 2488. <a href="https://doi.org/10.3390/healthcare12232488">https://doi.org/10.3390/healthcare12232488</a></p><p>Sirisena, M., Redgate, S., Kaner, E., Wearn, A., Hackett, S., Wojciechowska, A., &amp; Lhussier, M. (2025). Reading for wellbeing: A realist review of evidence. <i>Perspectives in Public Health</i>. <a href="https://doi.org/10.1177/17579139251371961">https://doi.org/10.1177/17579139251371961</a></p><p>The StoryGraph. (s. f.). <i>The StoryGraph</i> [Sitio web]. Recuperado el 18 de octubre de 2026 de <a href="https://thestorygraph.com/">https://thestorygraph.com/</a></p><p>Storytel. (s. f.). <i>Storytel Argentina</i> [Sitio web]. Recuperado el 18 de octubre de 2026 de <a href="https://www.storytel.com/ar">https://www.storytel.com/ar</a></p><p>Su, S., Shi, L., Zheng, Y., Sun, Y., Huang, X., Zhang, A., Que, J., Sun, X., Shi, J., Bao, Y., Deng, J., &amp; Lu, L. (2022). Leisure activities and the risk of dementia: A systematic review and meta-analysis. <i>Neurology, 99</i>(15), e1651–e1663. <a href="https://doi.org/10.1212/WNL.0000000000200929">https://doi.org/10.1212/WNL.0000000000200929</a></p><p>World Wide Web Consortium. (2023). <i>Web content accessibility guidelines (WCAG) 2.2</i>. <a href="https://www.w3.org/TR/WCAG22/">https://www.w3.org/TR/WCAG22/</a></p></div></section>
 
-    <p class="note">Nota: esta página organiza en formato web las referencias incluidas en el documento PDF proporcionado. Verifica los datos bibliográficos y los créditos de uso de imágenes antes de publicar.</p>
-  </main>
-
-  <footer>
-    <p>Bienestar y Lectura · Referencias</p>
-    <a class="top-link" href="#inicio">Volver al inicio ↑</a>
-  </footer>
+</main>
 </body>
 </html>
